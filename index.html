@@ -7,10 +7,12 @@
 
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
-  <!-- Additional Fonts -->
   <link href="https://fonts.cdnfonts.com/css/ica-rubrik-black" rel="stylesheet">
   <link href="https://fonts.cdnfonts.com/css/poppins" rel="stylesheet">
-
+  
+  <!-- FontAwesome for Social Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  
   <!-- CSS Stylesheet -->
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -30,8 +32,8 @@
   <section id="home" class="section">
     <h1>Welcome to My World</h1>
     <p>I'm TayMcQuaya, a developer and artist passionate about pixel art, gaming, AI, and more.</p>
-
-    <!-- Enhanced Profile Picture -->
+    
+    <!-- Profile Picture -->
     <div class="profile-pic-container">
       <img src="images/outer.png" alt="Profile Picture" class="profile-pic">
     </div>
@@ -40,37 +42,31 @@
   <!-- About Me Section -->
   <section id="about-me" class="section">
     <h2>About Me</h2>
-    <p>[Your story about getting into programming, AI, and crypto.]</p>
+    <p>Your story about getting into programming, AI, and crypto.</p>
   </section>
 
   <!-- Portfolio Section with 3D Slider -->
   <section id="portfolio" class="section">
     <h2>My Work</h2>
-
-    <!-- Slider Wrapper -->
     <div class="slider-wrapper">
       <!-- 3D Slider -->
       <div class="portfolio-slider" style="--quantity: 10">
-        <!-- Your images with onclick events -->
         <div class="item" style="--position: 1"><img src="images/art1.png" alt="Artwork 1" onclick="openModal(this)"></div>
         <div class="item" style="--position: 2"><img src="images/art2.png" alt="Artwork 2" onclick="openModal(this)"></div>
         <div class="item" style="--position: 3"><img src="images/art3.png" alt="Artwork 3" onclick="openModal(this)"></div>
-        <div class="item" style="--position: 4"><img src="images/art4.png" alt="Artwork 4" onclick="openModal(this)"></div>
-        <div class="item" style="--position: 5"><img src="images/art5.png" alt="Artwork 5" onclick="openModal(this)"></div>
-        <div class="item" style="--position: 6"><img src="images/art6.png" alt="Artwork 6" onclick="openModal(this)"></div>
-        <div class="item" style="--position: 7"><img src="images/art7.gif" alt="Artwork 7" onclick="openModal(this)"></div>
-        <div class="item" style="--position: 8"><img src="images/art8.gif" alt="Artwork 8" onclick="openModal(this)"></div>
-        <div class="item" style="--position: 9"><img src="images/art9.gif" alt="Artwork 9" onclick="openModal(this)"></div>
-        <div class="item" style="--position: 10"><img src="images/art10.gif" alt="Artwork 10" onclick="openModal(this)"></div>
+        <!-- Add more artwork as needed -->
       </div>
     </div>
   </section>
 
-  <!-- Contact Me Section -->
+  <!-- Contact Section with Social Media Icons -->
   <section id="contact-me" class="section">
     <h2>Get in Touch</h2>
-    <p>Email: <a href="mailto:your.email@example.com">taymcquaya@gmail.com</a></p>
-    <p>Twitter: <a href="https://twitter.com/yourhandle" target="_blank">@TayMcQuaya</a></p>
+    <div class="social-icons">
+      <a href="https://twitter.com/taymcquaya" target="_blank"><i class="fab fa-twitter"></i></a>
+      <a href="https://github.com/taymcquaya" target="_blank"><i class="fab fa-github"></i></a>
+      <a href="mailto:taymcquaya@gmail.com"><i class="fas fa-envelope"></i></a>
+    </div>
   </section>
 
   <!-- Modal for Enlarged Images -->
@@ -81,6 +77,5 @@
 
   <!-- JavaScript -->
   <script src="script.js"></script>
-
 </body>
 </html>

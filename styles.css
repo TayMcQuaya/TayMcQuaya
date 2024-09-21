@@ -6,19 +6,29 @@
 body {
   margin: 0;
   font-family: 'Roboto', sans-serif;
-  background-color: #e6eaee; /* Dark blue */
+  background-color: #e6eaee;
   color: #225bb3;
   scroll-behavior: smooth;
-  background-image:
-    repeating-linear-gradient(
-      to right, transparent 0 100px,
-      #25283b22 100px 101px
-    ),
-    repeating-linear-gradient(
-      to bottom, transparent 0 100px,
-      #25283b22 100px 101px
-    );
+  background-image: repeating-linear-gradient(
+    to right, transparent 0 100px, #25283b22 100px 101px
+  ), repeating-linear-gradient(
+    to bottom, transparent 0 100px, #25283b22 100px 101px
+  );
   background-attachment: fixed;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #225bb3;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: #e6eaee;
 }
 
 nav {
@@ -43,7 +53,7 @@ nav ul li {
 nav ul li a {
   color: #ffffff;
   text-decoration: none;
-  font-size: 24px; /* Increased font size */
+  font-size: 24px;
 }
 
 .section {
@@ -54,70 +64,56 @@ nav ul li a {
 
 /* Headings and Paragraphs */
 h1 {
-  font-size: 4em; /* Increased font size */
+  font-size: 4em;
   font-family: 'ICA Rubrik', sans-serif;
 }
 
 h2 {
-  font-size: 3em; /* Increased font size */
+  font-size: 3em;
   font-family: 'Poppins', sans-serif;
 }
 
 p {
-  font-size: 1.5em; /* Increased font size */
+  font-size: 1.5em;
   line-height: 1.6;
 }
 
-/* Profile Picture Styles */
+/* Profile Picture */
 .profile-pic-container {
   display: flex;
   justify-content: center;
   align-items: center;
   padding-top: 30px;
-  
 }
 
 .profile-pic {
-  width: 300px; /* Adjust size */
+  width: 300px;
   height: 300px;
   border-radius: 50%;
   border: 10px solid #ffffff;
   box-shadow: 0 0 15px rgba(0,0,0,0.3);
 }
 
-/* Portfolio Section Styles */
+/* Portfolio Section */
 #portfolio {
-  position: relative;
-  padding-bottom: 100px; /* Adjusted padding to prevent overlap */
+  padding-bottom: 100px;
 }
 
-#portfolio h2 {
-  margin-top: 0; /* Remove any top margin */
-  height: 180px;
-  padding-top: 50px; /* Adjust padding as needed */
-  padding-bottom: 50px;
-  z-index: 2; /* Ensure title is above other elements */
-  position: relative; /* Ensure it positions relative to its parent */
-}
-
-/* Slider Wrapper to Center the Slider */
 .slider-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 500px; /* Adjust as needed */
+  height: 500px;
   position: relative;
 }
 
-/* 3D Slider Styles */
 .portfolio-slider {
   position: relative;
-  width: 300px; /* Adjust width */
-  height: 300px; /* Adjust height */
+  width: 300px;
+  height: 300px;
   transform-style: preserve-3d;
   transform: perspective(1000px) rotateX(0deg);
-  animation: autoRun 40s linear infinite; /* Slowed down rotation */
-  z-index: 1;
+  animation: autoRun 40s linear infinite;
 }
 
 @keyframes autoRun {
@@ -132,20 +128,18 @@ p {
 .portfolio-slider .item {
   position: absolute;
   inset: 0;
-  transform:
-    rotateY(calc((var(--position) - 1) * (360deg / var(--quantity))))
-    translateZ(550px); /* Adjusted translateZ value */
+  transform: rotateY(calc((var(--position) - 1) * (360deg / var(--quantity)))) translateZ(550px);
 }
 
 .portfolio-slider .item img {
-  width: 100%; /* Adjust to desired percentage */
-  height: auto; /* Maintain aspect ratio */
-  max-width: 300px; /* Set maximum width */
-  object-fit: cover; /* Fill the container, cropping if necessary */
+  width: 100%;
+  height: auto;
+  max-width: 300px;
+  object-fit: cover;
   cursor: pointer;
 }
 
-/* Modal Styles */
+/* Modal */
 .modal {
   display: none;
   position: fixed;
@@ -174,22 +168,34 @@ p {
   cursor: pointer;
 }
 
-/* Adjusting Sections */
-#contact-me {
-  padding-top: 50px; /* Adjusted padding */
+/* Social Media Icons */
+.social-icons {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
 }
 
-/* Responsive Styles */
+.social-icons a {
+  color: #225bb3;
+  margin: 0 10px;
+  font-size: 2.5em;
+}
+
+.social-icons a:hover {
+  color: #050505;
+}
+
+/* Contact Section */
+#contact-me {
+  padding-top: 50px;
+}
+
 @media screen and (max-width: 1023px) {
   .portfolio-slider {
     width: 240px;
     height: 240px;
   }
-  .portfolio-slider .item {
-    transform:
-      rotateY(calc((var(--position) - 1) * (360deg / var(--quantity))))
-      translateZ(250px);
-  }
+  
   h1 {
     font-size: 3em;
   }
@@ -207,35 +213,13 @@ p {
     width: 200px;
     height: 200px;
   }
-  .portfolio-slider .item {
-    transform:
-      rotateY(calc((var(--position) - 1) * (360deg / var(--quantity))))
-      translateZ(200px);
-  }
+  
   h1 {
     font-size: 2.5em;
   }
-  h2 {
-    font-size: 2em;
-  }
+  
   .profile-pic {
     width: 150px;
     height: 150px;
   }
-}
-
-/* Additional Styling */
-body::before {
-  position: absolute;
-  width: min(1400px, 90vw);
-  top: 10%;
-  left: 50%;
-  height: 90%;
-  transform: translateX(-50%);
-  content: '';
-  background-image: url(images/bg.png);
-  background-size: 100%;
-  background-repeat: no-repeat;
-  background-position: top center;
-  pointer-events: none;
 }
