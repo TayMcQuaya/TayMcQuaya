@@ -19,16 +19,18 @@ body {
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 16px; /* Increased width for a bigger scrollbar */
 }
 
 ::-webkit-scrollbar-thumb {
   background-color: #225bb3; 
-  border-radius: 5px;
+  border-radius: 8px;
+  border: 4px solid #e6eaee; /* Adds padding inside the thumb */
 }
 
 ::-webkit-scrollbar-track {
-  background: #e6eaee;
+  background: #f0f2f5; /* Slightly different background for contrast */
+  border-radius: 8px;
 }
 
 nav {
@@ -54,10 +56,11 @@ nav ul li a {
   color: #ffffff;
   text-decoration: none;
   font-size: 24px;
+  font-family: 'ICA Rubrik', sans-serif;
 }
 
 .section {
-  padding: 100px 20px;
+  padding: 50px 20px;
   text-align: center;
   position: relative;
 }
@@ -70,7 +73,7 @@ h1 {
 
 h2 {
   font-size: 3em;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'ICA Rubrik', sans-serif;
 }
 
 p {
@@ -107,13 +110,12 @@ p {
   align-items: center;
   height: 500px;
   position: relative;
-  padding-top: 100px;
 }
 
 .portfolio-slider {
   position: relative;
-  width: 300px;
-  height: 300px;
+  width: 250px;
+  height: 250px;
   transform-style: preserve-3d;
   transform: perspective(1000px) rotateX(0deg);
   animation: autoRun 40s linear infinite;
@@ -131,7 +133,7 @@ p {
 .portfolio-slider .item {
   position: absolute;
   inset: 0;
-  transform: rotateY(calc((var(--position) - 1) * (360deg / var(--quantity)))) translateZ(550px);
+  transform: rotateY(calc((var(--position) - 1) * (360deg / var(--quantity)))) translateZ(450px);
 }
 
 .portfolio-slider .item img {
@@ -190,7 +192,7 @@ p {
 
 /* Contact Section */
 #contact-me {
-  padding-top: 250px;
+  padding-top: 0px;
 }
 
 @media screen and (max-width: 1023px) {
