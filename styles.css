@@ -23,7 +23,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #225bb3;
+  background-color: #225bb3; 
   border-radius: 5px;
 }
 
@@ -90,7 +90,7 @@ p {
   width: 300px;
   height: 300px;
   border-radius: 50%;
-  border: 10px solid #ffffff;
+  border: 10px solid #225bb3;
   box-shadow: 0 0 15px rgba(0,0,0,0.3);
 }
 
