@@ -763,9 +763,3 @@ body .section:first-of-type {
   max-width: 100%;
 }
 
-#gif1, #gif2, #gif3, #gif4 {
-  width: 90%;
-  max-width: 400px;
-  margin: 0 auto;
-  display: block;
-}
