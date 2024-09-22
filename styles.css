@@ -481,3 +481,74 @@ p {
 #about-me p strong {
   font-size: 1.4em; /* Make the intro stand out */
 }
+
+
+/* Artwork Grid Styling */
+.artworks-grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.artwork-item {
+  position: relative;
+  width: 100%;
+  padding-top: 100%;
+  overflow: hidden;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.artwork-item img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease, border 0.3s ease;
+  border-radius: 10px;
+  border: 5px solid transparent; /* Invisible border by default */
+}
+
+.artwork-item:hover img {
+  transform: scale(1.1);
+  border-color: #225bb3; /* Blue border on hover */
+}
+
+/* Ensure the footer sticks to the bottom */
+body, html {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+.section {
+  flex: 1; /* This makes the section take up the remaining space */
+}
+
+.footer {
+  background-color: #225bb3;
+  color: #ffffff;
+  text-align: center;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  position: relative;
+  width: 100%;
+  bottom: 0;
+}
+
+.footer a {
+  color: #FFD700; /* Gold color for better visibility */
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer a:hover {
+  color: #FFA500; /* Orange color on hover for interactive feedback */
+  text-decoration: underline;
+}
