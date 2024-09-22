@@ -566,7 +566,7 @@ html, body {
 }
 
 /* Navigation styles */
-nav {
+body nav {
   position: fixed;
   top: 0;
   left: 0;
@@ -576,7 +576,7 @@ nav {
   z-index: 1000;
 }
 
-nav ul {
+body nav ul {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -585,20 +585,20 @@ nav ul {
   list-style-type: none;
 }
 
-nav ul li {
+body nav ul li {
   margin: 5px 10px;
 }
 
-nav ul li a {
+body nav ul li a {
   color: #ffffff;
   text-decoration: none;
-  font-size: 18px;
+  font-size: 24px;
   font-family: 'ICA Rubrik', sans-serif;
   padding: 5px 10px;
 }
 
 /* Adjust content to account for fixed nav */
-.section:first-of-type {
+body .section:first-of-type {
   margin-top: 60px; /* Adjust this value based on your nav height */
 }
 
@@ -641,7 +641,7 @@ nav ul li a {
   }
 
   nav ul li a {
-    font-size: 14px;
+    font-size: 18px !important;
     padding: 3px 6px;
   }
 
@@ -694,7 +694,7 @@ nav ul li a {
 
 @media screen and (max-width: 480px) {
   nav ul li a {
-    font-size: 12px;
+    font-size: 16px !important;
   }
 
   h1 {
