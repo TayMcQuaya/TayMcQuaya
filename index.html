@@ -23,7 +23,10 @@
     <ul>
       <li><a href="#home">Home</a></li>
       <li><a href="#about-me">About Me</a></li>
-      <li><a href="#portfolio">Portfolio</a></li>
+      <li><a href="#artworks">Artworks</a></li>
+      <li><a href="#games">Games</a></li>
+      <li><a href="#websites">Websites</a></li>
+      <li><a href="#apps">Apps</a></li>
       <li><a href="#contact-me">Contact Me</a></li>
     </ul>
   </nav>
@@ -46,8 +49,8 @@
   </section>
 
   <!-- Portfolio Section with 3D Slider -->
-  <section id="portfolio" class="section">
-    <h2>My Work</h2>
+  <section id="artwork" class="section">
+    <h2>Artworks</h2>
     <div class="slider-wrapper">
       <!-- 3D Slider -->
       <div class="portfolio-slider" style="--quantity: 10">
@@ -64,8 +67,44 @@
         <!-- Add more artwork as needed -->
       </div>
     </div>
+    <p><a href="artworks.html" class="see-more-link">See more</a></p>
   </section>
 
+  <!-- Games Section -->
+<section id="games" class="section">
+  <h2>Games</h2>
+  <div class="video-container">
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/YOUR_VIDEO_ID" frameborder="0" allowfullscreen></iframe>
+  </div>
+  <p><a href="https://taymcquaya.github.io/FlopyTromp2D/" target="_blank" class="action-link">PLAY NOW</a></p>
+</section>
+
+<!-- Websites Section -->
+<section id="websites" class="section">
+  <h2>Websites</h2>
+  <div class="websites-container">
+    <div class="website-item">
+      <img src="images/website1.png" alt="Website 1" onclick="openModal(this)">
+      <p><a href="https://web3resort.com" target="_blank" class="action-link">VISIT</a></p>
+    </div>
+    <!-- Add more items as needed -->
+  </div>
+</section>
+
+<!-- Apps Section -->
+<section id="apps" class="section">
+  <h2>Apps</h2>
+  <div class="apps-container">
+    <div class="app-item">
+      <img id="gif1" src="images/app1.1.gif" alt="App GIF 1" onclick="openModal(this)">
+      <img id="gif2" src="images/app1.2.gif" alt="App GIF 2" style="display: none;" onclick="openModal(this)">
+      <p><a href="https://https://github.com/TayMcQuaya/OpenOPen" target="_blank" class="action-link">DOWNLOAD</a></p>
+    </div>
+    <!-- Add more items as needed -->
+  </div>
+</section>
+  
+  
   <!-- Contact Section with Social Media Icons -->
   <section id="contact-me" class="section">
     <h2>Get in Touch</h2>
@@ -86,4 +125,10 @@
   <!-- JavaScript -->
   <script src="script.js"></script>
 </body>
+
+<!-- Footer -->
+<footer class="footer">
+  <p>© 2024 All rights reserved</p>
+</footer>
+
 </html>
