@@ -763,3 +763,40 @@ body .section:first-of-type {
   max-width: 100%;
 }
 
+/* Neo Tokyo Page Styles */
+.neo-tokyo-section {
+  padding: 50px 20px;
+  text-align: center;
+  position: relative;
+  margin-top: 60px;
+}
+
+.neo-tokyo-section h1 {
+  font-size: 4em;
+  font-family: 'ICA Rubrik', sans-serif;
+  color: #225bb3;
+}
+
+.neo-tokyo-section .content {
+  font-family: 'Poppins', sans-serif;
+  color: #225bb3;
+  max-width: 850px;
+  margin: 0 auto;
+  line-height: 1.8;
+  padding: 20px;
+  text-align: left;
+}
+
+.neo-tokyo-section .content p {
+  margin-bottom: 20px;
+  font-size: 1.2em;
+}
+
+@media screen and (max-width: 767px) {
+  .neo-tokyo-section h1 {
+      font-size: 3em;
+  }
+  .neo-tokyo-section .content p {
+      font-size: 1em;
+  }
+}
