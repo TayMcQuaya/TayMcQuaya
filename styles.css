@@ -552,3 +552,220 @@ body {
   color: #FFA500; /* Orange color on hover for interactive feedback */
   text-decoration: underline;
 }
+
+
+/* for mobile*/
+
+/* Existing styles remain the same */
+
+/* Ensure no horizontal scrolling */
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+  position: relative;
+}
+
+/* Navigation styles */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #225bb3;
+  padding: 10px 0;
+  z-index: 1000;
+}
+
+nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+}
+
+nav ul li {
+  margin: 5px 10px;
+}
+
+nav ul li a {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 18px;
+  font-family: 'ICA Rubrik', sans-serif;
+  padding: 5px 10px;
+}
+
+/* Adjust content to account for fixed nav */
+.section:first-of-type {
+  margin-top: 60px; /* Adjust this value based on your nav height */
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 1023px) {
+  nav ul li a {
+    font-size: 16px;
+  }
+
+  h1 {
+    font-size: 3em;
+  }
+
+  h2 {
+    font-size: 2.5em;
+  }
+
+  .profile-pic {
+    width: 250px;
+    height: 250px;
+  }
+
+  .portfolio-slider {
+    width: 220px;
+    height: 220px;
+  }
+
+  .video-container iframe {
+    height: 350px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  nav ul {
+    flex-wrap: wrap;
+  }
+
+  nav ul li {
+    margin: 5px;
+  }
+
+  nav ul li a {
+    font-size: 14px;
+    padding: 3px 6px;
+  }
+
+  h1 {
+    font-size: 2.5em;
+  }
+
+  h2 {
+    font-size: 2em;
+  }
+
+  p {
+    font-size: 1.2em;
+  }
+
+  .profile-pic {
+    width: 200px;
+    height: 200px;
+  }
+
+  .portfolio-slider {
+    width: 180px;
+    height: 180px;
+  }
+
+  .slider-wrapper {
+    height: 400px;
+  }
+
+  .video-container iframe {
+    height: 300px;
+  }
+
+  .website-item img {
+    max-width: 90%;
+  }
+
+  .app-title, .website-title {
+    font-size: 2em;
+  }
+
+  .app-description, .website-description {
+    font-size: 1.2em;
+  }
+
+  .artworks-grid-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (max-width: 480px) {
+  nav ul li a {
+    font-size: 12px;
+  }
+
+  h1 {
+    font-size: 2em;
+  }
+
+  h2 {
+    font-size: 1.8em;
+  }
+
+  p {
+    font-size: 1em;
+  }
+
+  .profile-pic {
+    width: 150px;
+    height: 150px;
+  }
+
+  .portfolio-slider {
+    width: 150px;
+    height: 150px;
+  }
+
+  .slider-wrapper {
+    height: 350px;
+  }
+
+  .video-container iframe {
+    height: 250px;
+  }
+
+  .artworks-grid-container {
+    grid-template-columns: 1fr;
+  }
+
+  .action-link {
+    font-size: 1.2em;
+    padding: 8px 16px;
+  }
+
+  .social-icons a {
+    font-size: 2em;
+  }
+}
+
+/* Improve touch targets for mobile */
+@media (hover: none) and (pointer: coarse) {
+  nav ul li a,
+  .action-link,
+  .social-icons a,
+  .artwork-item,
+  .app-item img {
+    padding: 12px;
+  }
+}
+
+/* Center the GIFs in the OpenOPen area */
+.app-item {
+  text-align: center;
+}
+
+.app-item img {
+  margin: 0 auto;
+  display: block;
+  max-width: 100%;
+}
+
+#gif1, #gif2, #gif3, #gif4 {
+  width: 90%;
+  max-width: 400px;
+  margin: 0 auto;
+  display: block;
+}
