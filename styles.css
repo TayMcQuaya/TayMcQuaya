@@ -689,7 +689,7 @@ p {
 }
 
 .website-item::before {
-  content: 'VIEW PROJECT';
+  content: 'VISIT LIVE SITE →';
   position: absolute;
   top: 50%;
   left: 50%;
