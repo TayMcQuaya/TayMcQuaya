@@ -1131,6 +1131,26 @@ body .section:first-of-type {
   p {
     font-size: 1.2em;
   }
+  
+  /* Fix text wrapping for hero section */
+  #home p {
+    padding: 0 20px;
+    word-wrap: break-word;
+    max-width: 90%;
+    margin: 0 auto;
+  }
+  
+  /* Fix typewriter effect on mobile - make it visible */
+  #home .typewriter {
+    display: inline !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    white-space: normal;
+    border-right: none;
+    animation: none;
+    width: auto !important;
+    clip-path: none !important;
+  }
 
   .profile-pic {
     width: 200px;
@@ -1150,8 +1170,35 @@ body .section:first-of-type {
     height: 300px;
   }
 
+  /* Center website items on mobile */
+  .website-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+  
+  .website-item a {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+  
   .website-item img {
     max-width: 90%;
+    margin: 0 auto;
+  }
+  
+  /* Make all website previews same size on mobile */
+  .website-item img[src*="website1.png"],
+  .website-item img[src*="website2.gif"],
+  .website-item img[src*="website3.gif"] {
+    max-width: 90%;
+  }
+  
+  /* Hide visit live site button on mobile */
+  .website-item a::before {
+    display: none;
   }
 
   .app-title, .website-title {
@@ -1275,5 +1322,84 @@ body .section:first-of-type {
   }
   .neo-tokyo-section .content p {
       font-size: 1em;
+  }
+  
+  /* Adjust first section layout on mobile */
+  #home {
+    padding-top: 80px !important;
+    min-height: 100vh !important;
+  }
+  
+  /* Make first section fonts larger but fit viewport on mobile */
+  #home h1 {
+    font-size: 2.5em !important;
+    margin-top: -20px !important;
+    margin-bottom: 15px !important;
+    padding-left: 20px !important;
+  }
+  
+  #home p {
+    font-size: 1.2em !important;
+    margin-bottom: 20px !important;
+    padding-left: 45px !important;
+  }
+  
+  /* Fix hero text visibility and cursor on mobile */
+  #home p,
+  #home p .typewriter {
+    clip-path: none !important;
+    animation: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+  
+  /* Hide typewriter cursor on mobile */
+  #home p .typewriter::after {
+    display: none !important;
+  }
+  
+  /* Make profile picture larger and centered on mobile */
+  .profile-pic-container {
+    width: 250px !important;
+    height: 250px !important;
+    margin: 0 auto 0 !important;
+    display: block !important;
+    transform: none !important;
+  }
+  
+  .profile-pic {
+    width: 250px !important;
+    height: 250px !important;
+  }
+  
+  /* Center website GIFs on mobile */
+  .websites-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .website-item {
+    width: 90%;
+    max-width: 400px;
+    margin: 0 auto 40px;
+  }
+  
+  .website-item img {
+    width: 100%;
+    height: auto;
+  }
+  
+  /* Make ExO Heroes and ComicMaker GIFs larger on mobile */
+  #gif3,
+  .website-item img[alt="ComicMaker Pro V2"] {
+    width: 110% !important;
+    max-width: 440px !important;
+    height: auto;
+  }
+  
+  /* Hide visit buttons on mobile to prevent overlap */
+  .website-item a::before {
+    display: none !important;
   }
 }
