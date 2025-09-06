@@ -159,6 +159,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }, 100); // Small delay to ensure page is ready
 });
 
+
 // GIF Switching Logic
 window.onload = function() {
   const gif1 = document.getElementById('gif1');

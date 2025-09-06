@@ -673,40 +673,59 @@ p {
 
 .website-item {
   position: relative;
-  overflow: hidden;
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.website-item a {
+  position: relative;
+  display: inline-block;
 }
 
 .website-item img {
   display: block;
-  margin: 0 auto;
   width: 100%;
+  max-width: 1000px;
   height: auto;
   cursor: pointer;
   border: 5px solid #225bb3;
   border-radius: 10px;
   transition: all 0.4s ease;
-  position: relative;
 }
 
-.website-item::before {
+/* Specific size for all website previews */
+.website-item img[src*="website1.png"],
+.website-item img[src*="website2.gif"],
+.website-item img[src*="website3.gif"] {
+  max-width: 800px;
+}
+
+/* Button positioned relative to the link wrapper */
+.website-item a::before {
   content: 'VISIT LIVE SITE →';
   position: absolute;
   top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0);
-  background: rgba(34, 91, 179, 0.9);
+  left: -180px;
+  transform: translateY(-50%);
+  background: #225bb3;
   color: white;
   padding: 15px 30px;
   border-radius: 5px;
   font-weight: bold;
   font-size: 1.2em;
   z-index: 2;
-  transition: transform 0.3s ease;
+  opacity: 0;
+  transition: opacity 0.3s ease, left 0.3s ease;
   pointer-events: none;
+  white-space: nowrap;
+  box-shadow: 0 5px 20px rgba(34, 91, 179, 0.3);
 }
 
-.website-item:hover::before {
-  transform: translate(-50%, -50%) scale(1);
+.website-item a:hover::before {
+  opacity: 1;
+  left: -200px;
 }
 
 .website-item img:hover {
@@ -714,6 +733,7 @@ p {
   filter: brightness(0.8);
   box-shadow: 0 10px 40px rgba(34, 91, 179, 0.3);
 }
+
 
 /* Footer Styles */
 .footer {
