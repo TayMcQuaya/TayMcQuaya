@@ -25,8 +25,9 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #e6eaee;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   z-index: 9999;
@@ -34,16 +35,84 @@ body {
 }
 
 .loader {
-  width: 60px;
-  height: 60px;
-  border: 5px solid rgba(255, 255, 255, 0.3);
-  border-top-color: #fff;
+  position: relative;
+  width: 120px;
+  height: 120px;
+}
+
+.loader-circle {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border: 3px solid transparent;
+  border-top-color: #225bb3;
   border-radius: 50%;
-  animation: spin 1s linear infinite;
+  animation: spin 1.5s linear infinite;
+}
+
+.loader-circle:nth-child(2) {
+  width: 80%;
+  height: 80%;
+  top: 10%;
+  left: 10%;
+  border-top-color: #4a7fd7;
+  animation: spin-reverse 1s linear infinite;
+}
+
+.loader-circle:nth-child(3) {
+  width: 60%;
+  height: 60%;
+  top: 20%;
+  left: 20%;
+  border-top-color: #6b9eff;
+  animation: spin 0.75s linear infinite;
+}
+
+.loader-dot {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  background: #225bb3;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: pulse-grow 1.5s ease-in-out infinite;
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes spin-reverse {
+  0% { transform: rotate(360deg); }
+  100% { transform: rotate(0deg); }
+}
+
+@keyframes pulse-grow {
+  0%, 100% { 
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 0.5;
+  }
+  50% { 
+    transform: translate(-50%, -50%) scale(1.2);
+    opacity: 1;
+  }
+}
+
+.loader-text {
+  margin-top: 30px;
+  color: #225bb3;
+  font-family: 'ICA Rubrik', sans-serif;
+  font-size: 1.4em;
+  letter-spacing: 2px;
+  animation: fade-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes fade-pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
 }
 
 .loader-wrapper.fade-out {
@@ -196,7 +265,7 @@ nav ul li a:hover {
 
 /* Headings and Paragraphs */
 h1 {
-  font-size: 4em;
+  font-size: 4.5em;
   font-family: 'ICA Rubrik', sans-serif;
   color: #225bb3;
   position: relative;
@@ -208,7 +277,7 @@ h1 {
 }
 
 h2 {
-  font-size: 3em;
+  font-size: 4.2em;
   font-family: 'ICA Rubrik', sans-serif;
   position: relative;
   display: inline-block;
@@ -233,7 +302,7 @@ h2::after {
 }
 
 p {
-  font-size: 1.5em;
+  font-size: 1.7em;
   line-height: 1.6;
   text-align: center;
   /*font-weight: bold;*/
@@ -295,7 +364,7 @@ p {
   width: 370px;
   height: 370px;
   border-radius: 50%;
-  background: linear-gradient(45deg, #667eea, #764ba2, #f093fb, #f5576c);
+  background: linear-gradient(45deg, #225bb3, #4a7fd7, #6b9eff, #225bb3);
   background-size: 400% 400%;
   animation: gradient-rotate 4s ease infinite;
   z-index: -1;
@@ -448,7 +517,7 @@ p {
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background: linear-gradient(45deg, #667eea, #764ba2);
+  background: linear-gradient(45deg, #225bb3, #4a7fd7);
   transform: translate(-50%, -50%) scale(0);
   transition: transform 0.3s ease;
   z-index: -1;
@@ -457,6 +526,7 @@ p {
 .social-icons a:hover {
   color: #ffffff;
   transform: translateY(-5px) rotate(5deg);
+  box-shadow: 0 10px 25px rgba(34, 91, 179, 0.3);
 }
 
 .social-icons a:hover::before {
@@ -763,7 +833,7 @@ p {
 
 /* App and Website Titles */
 .app-title, .website-title {
-  font-size: 2.5em;
+  font-size: 2.8em;
   font-weight: bold;
   margin-top: 50px;
   color: #225bb3;
@@ -771,7 +841,7 @@ p {
 
 /* App and Website Descriptions */
 .app-description, .website-description {
-  font-size: 1.5em;
+  font-size: 1.6em;
   color: #225bb3;
   margin-top: 10px;
   margin-bottom: 15px;
@@ -816,7 +886,7 @@ p {
 
 
 .custom-text {
-  font-size: 1.5em;
+  font-size: 1.8em;
   text-align: center;
   color: #225bb3; /* Adjust to match your color scheme */
   margin: 80px 0; /* Space above and below the text */
@@ -834,7 +904,7 @@ p {
 
 #about-me p {
   margin-bottom: 20px; /* Add space between paragraphs */
-  font-size: 1.2em; /* Slightly larger font for readability */
+  font-size: 1.4em; /* Slightly larger font for readability */
 }
 
 #about-me p strong {

@@ -4,7 +4,15 @@ document.addEventListener('DOMContentLoaded', function() {
   if (!document.querySelector('.loader-wrapper')) {
     const loaderWrapper = document.createElement('div');
     loaderWrapper.className = 'loader-wrapper';
-    loaderWrapper.innerHTML = '<div class="loader"></div>';
+    loaderWrapper.innerHTML = `
+      <div class="loader">
+        <div class="loader-circle"></div>
+        <div class="loader-circle"></div>
+        <div class="loader-circle"></div>
+        <div class="loader-dot"></div>
+      </div>
+      <div class="loader-text">LOADING</div>
+    `;
     document.body.insertBefore(loaderWrapper, document.body.firstChild);
     
     // Remove loader after content loads

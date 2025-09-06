@@ -12,10 +12,33 @@
             padding: 20px;
             color: #225bb3;
             font-family: 'Poppins', sans-serif;
+            margin-top: 80px;
         }
-        .policy-content h1, .policy-content h2 {
+        .policy-content h1 {
             font-family: 'ICA Rubrik', sans-serif;
             text-align: center;
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+        .policy-content h2 {
+            font-family: 'ICA Rubrik', sans-serif;
+            text-align: center !important;
+            font-size: 2em;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            display: block;
+            width: 100%;
+            position: relative;
+        }
+        /* Keep animation but ensure centering */
+        .policy-content h2::after {
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+        }
+        .policy-content p {
+            text-align: center;
+            line-height: 1.6;
+            margin-bottom: 20px;
         }
     </style>
 </head>
