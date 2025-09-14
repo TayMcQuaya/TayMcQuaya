@@ -702,6 +702,20 @@ p {
   max-width: 800px;
 }
 
+/* Make JavaScript Journey image 70% width on all screen sizes */
+.website-item img[alt="JavaScript Journey"] {
+  width: 70% !important;
+  max-width: none !important;
+  height: auto !important;
+  display: block !important;
+  margin: 0 auto !important;
+}
+
+/* Adjust button position for JavaScript Journey due to smaller image */
+.website-item:has(img[alt="JavaScript Journey"]) a::before {
+  left: -20px !important;
+}
+
 /* Button positioned relative to the link wrapper */
 .website-item a::before {
   content: 'VISIT LIVE SITE →';
@@ -1396,6 +1410,15 @@ body .section:first-of-type {
     width: 110% !important;
     max-width: 440px !important;
     height: auto;
+  }
+  
+  /* Make JavaScript Journey image full width on mobile */
+  .website-item img[alt="JavaScript Journey"] {
+    width: 100% !important;
+    max-width: none !important;
+    height: auto !important;
+    display: block !important;
+    margin: 0 auto !important;
   }
   
   /* Hide visit buttons on mobile to prevent overlap */
