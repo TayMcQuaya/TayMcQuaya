@@ -8,7 +8,7 @@ Welcome to my GitHub profile! I’m a **developer**, **pixel artist**, and **Web
 
 I’m a **grinding developer** who loves to dive into new challenges and learn along the way. Here’s a taste of what I’ve been up to:  
 
-- **Web Development**: I’ve been building sleek, interactive websites, including my own project **[TeamMurica.xyz](https://www.teammurica.xyz/)**, and taking on commissions for custom sites.  
+- **Web Development**: I’ve been building sleek, interactive websites, including my current main project **[PanelHause.app](https://www.panelhaus.app/)**, and taking on commissions for custom sites.  
 - **Bots & Automation**: Currently working on a **trading bot** and social media automation tools to make life easier (and more efficient).  
 - **Pixel Art**: When I’m not coding, you’ll find me crafting pixel art that brings games and projects to life.  
 - **Web3 & NFTs**: I’m deep into the Web3 space, exploring decentralized tech and building tools for the future.  
