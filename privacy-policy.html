@@ -1,87 +1,357 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Privacy Policy | TayMcQuaya</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
-    <style>
-        .policy-content {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            color: #225bb3;
-            font-family: 'Poppins', sans-serif;
-            margin-top: 80px;
-        }
-        .policy-content h1 {
-            font-family: 'ICA Rubrik', sans-serif;
-            text-align: center;
-            font-size: 3em;
-            margin-bottom: 20px;
-        }
-        .policy-content h2 {
-            font-family: 'ICA Rubrik', sans-serif;
-            text-align: center !important;
-            font-size: 2em;
-            margin-top: 40px;
-            margin-bottom: 20px;
-            display: block;
-            width: 100%;
-            position: relative;
-        }
-        /* Keep animation but ensure centering */
-        .policy-content h2::after {
-            left: 50% !important;
-            transform: translateX(-50%) !important;
-        }
-        .policy-content p {
-            text-align: center;
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Privacy Policy | TayMcQuaya</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Privacy Policy for TayMcQuaya's pixel world portfolio.">
+
+  <link rel="icon" type="image/x-icon" href="../TayMcQuaya_Website/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="../TayMcQuaya_Website/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../TayMcQuaya_Website/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../TayMcQuaya_Website/apple-touch-icon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Mono:wght@400;700&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg-deep: #1a0f0a;
+  --bg-dusk: #2a1810;
+  --cyber-blue: #f59e0b;
+  --hot-magenta: #ef4444;
+  --pixel-gold: #fbbf24;
+  --sunset-orange: #f97316;
+  --lavender: #d4a574;
+  --retro-green: #84cc16;
+  --text: #fde8c8;
+  --muted: #8b7355;
+  --font-display: 'Press Start 2P', monospace;
+  --font-body: 'Space Mono', monospace;
+  --font-ui: 'Silkscreen', monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--cyber-blue) var(--bg-deep);
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-deep);
+  color: var(--text);
+  overflow-x: hidden;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-deep); }
+::-webkit-scrollbar-thumb { background: var(--cyber-blue); border-radius: 0; }
+
+a { color: var(--cyber-blue); text-decoration: none; transition: color 0.2s; }
+a:hover { color: var(--pixel-gold); text-shadow: 0 0 8px var(--pixel-gold); }
+
+/* NAVBAR */
+#navbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 9999;
+  padding: 0 20px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(26, 15, 10, 0.9);
+  border-bottom: 3px solid var(--cyber-blue);
+  box-shadow: 0 4px 30px rgba(245, 158, 11, 0.2);
+  backdrop-filter: blur(10px);
+}
+.nav-links { display: flex; gap: 10px; list-style: none; }
+.nav-link {
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  color: var(--lavender);
+  padding: 10px 20px;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.nav-link:hover, .nav-link.active {
+  color: var(--cyber-blue);
+  border-color: var(--cyber-blue);
+  background: rgba(245, 158, 11, 0.08);
+  text-shadow: 0 0 8px var(--cyber-blue);
+}
+.nav-logo {
+  position: absolute;
+  left: 24px;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--pixel-gold);
+  text-shadow: 0 0 10px var(--pixel-gold);
+}
+.hamburger {
+  display: none;
+  position: absolute;
+  right: 20px;
+  flex-direction: column;
+  gap: 4px;
+  background: none;
+  border: none;
+  padding: 8px;
+  z-index: 10001;
+  cursor: pointer;
+}
+.hamburger span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--cyber-blue);
+  transition: all 0.3s;
+}
+.hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(4px, 4px); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(4px, -4px); }
+
+.mobile-menu {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(26, 15, 10, 0.97);
+  z-index: 10000;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu .nav-link { font-size: 1.2rem; padding: 16px 32px; }
+
+/* PAGE LAYOUT */
+main {
+  flex: 1;
+  padding: 120px 20px 80px;
+  max-width: 900px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.page-title {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  color: var(--pixel-gold);
+  text-align: center;
+  text-shadow: 3px 3px 0 var(--hot-magenta), 0 0 20px rgba(251, 191, 36, 0.4);
+  letter-spacing: 2px;
+  line-height: 1.4;
+  margin-bottom: 16px;
+}
+
+.page-subtitle {
+  font-family: var(--font-ui);
+  font-size: 0.85rem;
+  text-align: center;
+  color: var(--muted);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 50px;
+}
+
+.policy-card {
+  background: linear-gradient(180deg, rgba(42, 24, 16, 0.6), rgba(26, 15, 10, 0.8));
+  border: 2px solid var(--cyber-blue);
+  box-shadow: 0 0 40px rgba(245, 158, 11, 0.15), inset 0 0 60px rgba(245, 158, 11, 0.04);
+  padding: 40px 36px;
+  position: relative;
+}
+
+.policy-card::before {
+  content: '';
+  position: absolute;
+  top: -2px; left: -2px; right: -2px; bottom: -2px;
+  border: 1px solid rgba(251, 191, 36, 0.3);
+  pointer-events: none;
+}
+
+.policy-section { margin-bottom: 32px; }
+.policy-section:last-child { margin-bottom: 0; }
+
+.policy-section h2 {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  color: var(--cyber-blue);
+  text-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+  margin-bottom: 14px;
+  letter-spacing: 1px;
+  line-height: 1.5;
+  border-left: 4px solid var(--sunset-orange);
+  padding-left: 14px;
+}
+
+.policy-section p {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--text);
+  line-height: 1.8;
+}
+
+.policy-section a { color: var(--pixel-gold); }
+.policy-section a:hover { color: var(--sunset-orange); }
+
+/* FOOTER */
+#footer {
+  position: relative;
+  padding: 30px 20px;
+  background: var(--bg-deep);
+  border-top: 2px solid #3a2a1e;
+  text-align: center;
+}
+.footer-ground {
+  position: absolute;
+  top: -4px; left: 0; right: 0;
+  height: 4px;
+  background: repeating-linear-gradient(90deg, #3a2a1e 0px, #3a2a1e 8px, #2a1810 8px, #2a1810 16px);
+}
+.footer-copy {
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+}
+.footer-links {
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  color: var(--muted);
+  margin-bottom: 18px;
+}
+.footer-links a { color: var(--lavender); }
+.back-to-top {
+  display: inline-block;
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  color: var(--cyber-blue);
+  border: 1px solid var(--cyber-blue);
+  padding: 8px 18px;
+  transition: all 0.2s;
+  letter-spacing: 1px;
+}
+.back-to-top:hover {
+  background: var(--cyber-blue);
+  color: var(--bg-deep);
+  text-shadow: none;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+  .nav-logo { left: 16px; font-size: 0.85rem; }
+  main { padding: 100px 16px 60px; }
+  .page-title { font-size: 1.2rem; letter-spacing: 1px; }
+  .policy-card { padding: 28px 20px; }
+  .policy-section h2 { font-size: 0.8rem; }
+  .policy-section p { font-size: 0.9rem; }
+}
+</style>
 </head>
 <body>
-    <nav>
-        <ul>
-            <li><a href="index.html#home">Home</a></li>
-            <li><a href="index.html#about-me">About Me</a></li>
-            <li><a href="artworks.html">Artworks</a></li>
-            <li><a href="index.html#games">Games</a></li>
-            <li><a href="index.html#websites">Websites</a></li>
-            <li><a href="index.html#apps">Apps</a></li>
-            <li><a href="index.html#contact-me">Contact Me</a></li>
-        </ul>
-    </nav>
 
-    <div class="policy-content">
-        <h1>Privacy Policy</h1>
-        <p>Last updated: 23.09.2024</p>
+<nav id="navbar">
+  <div class="nav-logo">TMCQ</div>
+  <ul class="nav-links">
+    <li><a href="index.html#hero" class="nav-link"><i class="fas fa-mountain-sun"></i> Rooftop</a></li>
+    <li><a href="index.html#about" class="nav-link"><i class="fas fa-scroll"></i> About</a></li>
+    <li><a href="index.html#gallery" class="nav-link"><i class="fas fa-palette"></i> Art</a></li>
+    <li><a href="index.html#projects" class="nav-link"><i class="fas fa-gamepad"></i> Projects</a></li>
+    <li><a href="index.html#skills" class="nav-link"><i class="fas fa-flask"></i> Skills</a></li>
+    <li><a href="index.html#contact" class="nav-link"><i class="fas fa-envelope"></i> Contact</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
 
-        <h2>1. Information We Collect</h2>
-        <p>This website does not actively collect personal information. However, we use Google Analytics to understand how visitors interact with our site. This service may collect data such as your IP address and browsing behavior.</p>
+<div class="mobile-menu" id="mobile-menu">
+  <a href="index.html#hero" class="nav-link"><i class="fas fa-mountain-sun"></i> Rooftop</a>
+  <a href="index.html#about" class="nav-link"><i class="fas fa-scroll"></i> About</a>
+  <a href="index.html#gallery" class="nav-link"><i class="fas fa-palette"></i> Art</a>
+  <a href="index.html#projects" class="nav-link"><i class="fas fa-gamepad"></i> Projects</a>
+  <a href="index.html#skills" class="nav-link"><i class="fas fa-flask"></i> Skills</a>
+  <a href="index.html#contact" class="nav-link"><i class="fas fa-envelope"></i> Contact</a>
+</div>
 
-        <h2>2. Use of Information</h2>
-        <p>Any information collected is used solely for improving the website experience and is not shared with third parties.</p>
+<main>
+  <h1 class="page-title">Privacy Policy</h1>
+  <p class="page-subtitle">Last updated: 23.09.2024</p>
 
-        <h2>3. Cookies</h2>
-        <p>This website uses cookies for analytics purposes. You can control cookie settings through your browser preferences.</p>
-
-        <h2>4. Third-Party Links</h2>
-        <p>This website may contain links to external sites. We are not responsible for the privacy practices of these sites.</p>
-
-        <h2>5. Changes to This Policy</h2>
-        <p>We may update this policy occasionally. Please check this page for the latest version.</p>
-
-        <h2>6. Contact</h2>
-        <p>For any questions regarding this policy, please contact taymcquaya@gmail.com.</p>
+  <div class="policy-card">
+    <div class="policy-section">
+      <h2>1. Information We Collect</h2>
+      <p>This website does not actively collect personal information. However, we use Google Analytics to understand how visitors interact with our site. This service may collect data such as your IP address and browsing behavior.</p>
     </div>
 
-    <footer class="footer">
-        <p>© 2025 TayMcQuaya. All rights reserved.</p>
-        <p><a href="privacy-policy.html">Privacy Policy</a> | <a href="terms-of-service.html">Terms of Service</a></p>
-        <p>Contact: <a href="mailto:taymcquaya@gmail.com">taymcquaya@gmail.com</a></p>
-    </footer>
+    <div class="policy-section">
+      <h2>2. Use of Information</h2>
+      <p>Any information collected is used solely for improving the website experience and is not shared with third parties.</p>
+    </div>
+
+    <div class="policy-section">
+      <h2>3. Cookies</h2>
+      <p>This website uses cookies for analytics purposes. You can control cookie settings through your browser preferences.</p>
+    </div>
+
+    <div class="policy-section">
+      <h2>4. Third-Party Links</h2>
+      <p>This website may contain links to external sites. We are not responsible for the privacy practices of these sites.</p>
+    </div>
+
+    <div class="policy-section">
+      <h2>5. Changes to This Policy</h2>
+      <p>We may update this policy occasionally. Please check this page for the latest version.</p>
+    </div>
+
+    <div class="policy-section">
+      <h2>6. Contact</h2>
+      <p>For any questions regarding this policy, please contact <a href="mailto:taymcquaya@gmail.com">taymcquaya@gmail.com</a>.</p>
+    </div>
+  </div>
+</main>
+
+<footer id="footer">
+  <div class="footer-ground"></div>
+  <p class="footer-copy">&copy; 2026 TayMcQuaya. All rights reserved.</p>
+  <p class="footer-links">
+    <a href="privacy-policy.html">Privacy Policy</a> | <a href="terms-of-service.html">Terms of Service</a>
+  </p>
+  <a href="#" class="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">&#x1F680; Back to Top</a>
+</footer>
+
+<script>
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobile-menu');
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('open');
+    mobileMenu.classList.toggle('open');
+  });
+  mobileMenu.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', () => {
+      hamburger.classList.remove('open');
+      mobileMenu.classList.remove('open');
+    });
+  });
+</script>
 </body>
 </html>

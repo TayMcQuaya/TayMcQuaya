@@ -2,225 +2,2874 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>TayMcQuaya | Developer & Artist</title>
+  <title>TayMcQuaya | Developer & Pixel Artist</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="TayMcQuaya - A passionate developer and pixel artist specializing in Web3, game development, and AI-driven projects. Explore my portfolio, artworks, and applications.">
-  <meta name="keywords" content="TayMcQuaya, pixel art, game development, Web3, AI, NFTs, programming, C#, Java, JavaScript, Python, HTML, CSS">
+  <meta name="description" content="TayMcQuaya - A passionate developer and pixel artist specializing in Web3, game development, and AI-driven projects. Explore my pixel world portfolio.">
+  <meta name="keywords" content="TayMcQuaya, pixel art, game development, Web3, AI, NFTs, programming, C#, Java, JavaScript, Python">
   <meta name="author" content="TayMcQuaya">
   <meta name="robots" content="index, follow">
-  
-  <!-- Open Graph Meta Tags for Social Media -->
-  <meta property="og:title" content="TayMcQuaya | Developer & Artist">
-  <meta property="og:description" content="I'm TayMcQuaya, a developer and pixel artist passionate about game development, Web3, AI, and NFTs. Check out my portfolio!">
-  <meta property="og:image" content="https://www.taymcquaya.com/images/outer.png"> 
+
+  <meta property="og:title" content="TayMcQuaya | Developer & Pixel Artist">
+  <meta property="og:description" content="Enter the Pixel World - explore my portfolio of games, pixel art, Web3 tools, and more.">
+  <meta property="og:image" content="https://www.taymcquaya.com/images/outer.png">
   <meta property="og:url" content="https://www.taymcquaya.com">
   <meta property="og:type" content="website">
-  
-  <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="TayMcQuaya | Developer & Artist">
-  <meta name="twitter:description" content="Explore my portfolio of game development, pixel art, and Web3 projects.">
+  <meta name="twitter:title" content="TayMcQuaya | Developer & Pixel Artist">
+  <meta name="twitter:description" content="Enter the Pixel World - explore my portfolio of games, pixel art, Web3 tools, and more.">
   <meta name="twitter:image" content="https://www.taymcquaya.com/images/outer.png">
   <meta name="twitter:site" content="@taymcquaya">
-  
-  <!-- Favicon -->
-  <!-- Standard Favicon (ICO format for best browser support) -->
-<link rel="icon" type="image/x-icon" href="/favicon.ico">
 
-<!-- PNG Favicons for modern browsers -->
-<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="icon" type="image/x-icon" href="../TayMcQuaya_Website/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="../TayMcQuaya_Website/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="../TayMcQuaya_Website/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../TayMcQuaya_Website/apple-touch-icon.png">
 
-<!-- Apple Touch Icon (For iPhones & iPads) -->
-<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Mono:wght@400;700&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-<!-- Android Chrome Icons -->
-<link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
-<link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png">
+<style>
+/* ============================================
+   CSS RESET & VARIABLES
+   ============================================ */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-<!-- Web App Manifest (Optional but Recommended) -->
-<link rel="manifest" href="/site.webmanifest">
+:root {
+  --bg-deep: #1a0f0a;
+  --bg-dusk: #2a1810;
+  --cyber-blue: #f59e0b;
+  --hot-magenta: #ef4444;
+  --pixel-gold: #fbbf24;
+  --sunset-orange: #f97316;
+  --lavender: #d4a574;
+  --retro-green: #84cc16;
+  --text: #fde8c8;
+  --muted: #8b7355;
+  --font-display: 'Press Start 2P', monospace;
+  --font-body: 'Space Mono', monospace;
+  --font-ui: 'Silkscreen', monospace;
+}
 
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
-  <link href="https://fonts.cdnfonts.com/css/ica-rubrik-black" rel="stylesheet">
-  <link href="https://fonts.cdnfonts.com/css/poppins" rel="stylesheet">
-  
-  <!-- FontAwesome for Social Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  
-  <!-- CSS Stylesheet -->
-  <link rel="stylesheet" href="styles.css">
+html {
+  scroll-behavior: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--cyber-blue) var(--bg-deep);
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-deep);
+  color: var(--text);
+  overflow-x: hidden;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-deep); }
+::-webkit-scrollbar-thumb { background: var(--cyber-blue); border-radius: 0; }
+
+img { image-rendering: pixelated; }
+
+a { color: var(--cyber-blue); text-decoration: none; transition: color 0.2s; }
+a:hover { color: var(--hot-magenta); }
+
+/* ============================================
+   CUSTOM CURSOR
+   ============================================ */
+@media (pointer: fine) {
+  body { cursor: crosshair; }
+  a, button, .clickable, .nav-link, .artwork-frame, .arcade-btn, .social-icon {
+    cursor: pointer;
+  }
+}
+
+/* ============================================
+   SCROLL PROGRESS BAR
+   ============================================ */
+#scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0%;
+  background: linear-gradient(90deg, var(--cyber-blue), var(--hot-magenta), var(--pixel-gold));
+  z-index: 10000;
+  transition: none;
+}
+
+/* ============================================
+   CRT SCANLINE OVERLAY
+   ============================================ */
+#crt-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9998;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.03) 2px,
+    rgba(0, 0, 0, 0.03) 4px
+  );
+}
+
+/* ============================================
+   PRELOADER
+   ============================================ */
+#preloader {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+
+.preloader-text {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  color: var(--text);
+  letter-spacing: 6px;
+}
+
+.preloader-bar-container {
+  width: 360px;
+  height: 26px;
+  border: 2px solid var(--retro-green);
+  padding: 2px;
+  display: flex;
+  gap: 2px;
+}
+
+.preloader-block {
+  flex: 1;
+  background: transparent;
+  transition: background 0.1s;
+}
+
+.preloader-block.filled {
+  background: var(--retro-green);
+  box-shadow: 0 0 6px var(--retro-green);
+}
+
+.preloader-prompt {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  color: var(--pixel-gold);
+  opacity: 0;
+  animation: blink 0.8s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.crt-flash {
+  position: fixed;
+  inset: 0;
+  background: #fff;
+  z-index: 100000;
+  pointer-events: none;
+  opacity: 0;
+}
+
+/* ============================================
+   NAV BAR - RPG HUD
+   ============================================ */
+#navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  padding: 0 20px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(26, 15, 10, 0.9);
+  border-bottom: 3px solid var(--cyber-blue);
+  box-shadow: 0 4px 30px rgba(245, 158, 11, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.nav-links {
+  display: flex;
+  gap: 10px;
+  list-style: none;
+}
+
+.nav-link {
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  color: var(--lavender);
+  padding: 10px 20px;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.nav-link:hover, .nav-link.active {
+  color: var(--cyber-blue);
+  border-color: var(--cyber-blue);
+  background: rgba(245, 158, 11, 0.08);
+  text-shadow: 0 0 8px var(--cyber-blue);
+}
+
+.nav-link i {
+  font-size: 0.95rem;
+}
+
+.nav-logo {
+  position: absolute;
+  left: 24px;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--pixel-gold);
+  text-shadow: 0 0 10px var(--pixel-gold);
+}
+
+/* Hamburger */
+.hamburger {
+  display: none;
+  position: absolute;
+  right: 20px;
+  flex-direction: column;
+  gap: 4px;
+  background: none;
+  border: none;
+  padding: 8px;
+  z-index: 10001;
+}
+
+.hamburger span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--cyber-blue);
+  transition: all 0.3s;
+}
+
+.hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(4px, 4px); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(4px, -4px); }
+
+/* Mobile menu overlay */
+.mobile-menu {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(26, 15, 10, 0.97);
+  z-index: 10000;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+
+.mobile-menu.open { display: flex; }
+
+.mobile-menu .nav-link {
+  font-size: 1.2rem;
+  padding: 16px 32px;
+}
+
+/* ============================================
+   HERO - THE ROOFTOP
+   ============================================ */
+#hero {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.parallax-layer {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+
+/* L1: Sky gradient - tropical sunset */
+.sky-layer {
+  background: linear-gradient(
+    180deg,
+    #1e6091 0%,
+    #38a3d1 20%,
+    #7ec8e3 40%,
+    #bbe4f0 55%,
+    #ffebc8 70%,
+    #ffcc80 82%,
+    #ffd700 92%,
+    #ffee88 100%
+  );
+}
+
+/* Stars on sky */
+.stars-container {
+  position: absolute;
+  inset: 0;
+}
+
+.star {
+  position: absolute;
+  background: #fff;
+  border-radius: 0;
+  animation: twinkle var(--dur) ease-in-out infinite alternate;
+}
+
+@keyframes twinkle {
+  0% { opacity: 0.2; }
+  100% { opacity: 1; }
+}
+
+/* L2: Ocean */
+.city-far {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 32%;
+  z-index: 2;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 140, 66, 0.3) 0%,
+    #1a4a6e 8%,
+    #0d3454 30%,
+    #0a2a44 60%,
+    #08203a 100%
+  );
+}
+
+.city-far::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: rgba(255, 200, 100, 0.4);
+  box-shadow: 0 0 20px rgba(255, 200, 100, 0.3);
+}
+
+.city-far::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent 0px,
+      transparent 8px,
+      rgba(255, 255, 255, 0.03) 8px,
+      rgba(255, 255, 255, 0.03) 10px
+    );
+  animation: wave-shimmer 4s ease-in-out infinite alternate;
+}
+
+@keyframes wave-shimmer {
+  0% { transform: translateX(-5px); }
+  100% { transform: translateX(5px); }
+}
+
+/* L3: Beach & palm trees */
+.city-mid {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 55%;
+  z-index: 3;
+}
+
+/* Sand beach */
+.city-mid::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 18%;
+  background: linear-gradient(180deg, #c4a265 0%, #a8894e 40%, #8c6f3a 100%);
+  z-index: 1;
+}
+
+/* Pixel art palm trees (box-shadow technique) */
+.pixel-palm {
+  image-rendering: pixelated;
+  pointer-events: none;
+}
+
+/* Hero Character - Large Background */
+.hero-character {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.hero-char-img {
+  width: clamp(450px, 70vw, 800px);
+  height: clamp(450px, 70vw, 800px);
+  object-fit: cover;
+  opacity: 0.3;
+  image-rendering: pixelated;
+  filter: saturate(0.7) brightness(1.3);
+  mask-image: radial-gradient(ellipse at center, black 40%, transparent 72%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 40%, transparent 72%);
+}
+
+/* L4: Beach foreground - bottom fade into next section */
+.rooftop-layer {
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 8vh;
+  background: linear-gradient(0deg, #0d0805 0%, rgba(13, 8, 5, 0.6) 50%, transparent 100%);
+  z-index: 5;
+}
+
+/* Hero content */
+.hero-content {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  padding: 0 20px;
+  margin-top: 24vh;
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 9vw, 6.5rem);
+  color: #fff;
+  text-shadow: 0 0 80px rgba(245, 158, 11, 0.5), 0 0 150px rgba(245, 158, 11, 0.2), 0 8px 0 rgba(0, 0, 0, 0.3);
+  margin-bottom: 24px;
+  line-height: 1.2;
+}
+
+.hero-subtitle {
+  font-family: var(--font-ui);
+  font-size: clamp(1.2rem, 2.8vw, 1.8rem);
+  color: #fff;
+  letter-spacing: 5px;
+  margin-bottom: 16px;
+  text-shadow: 0 0 25px rgba(212, 165, 116, 0.7), 0 2px 6px rgba(0, 0, 0, 0.6);
+}
+
+.hero-desc {
+  font-family: var(--font-body);
+  font-size: clamp(1.1rem, 2vw, 1.4rem);
+  color: var(--text);
+  margin-bottom: 44px;
+  text-shadow: 0 0 15px rgba(0, 0, 0, 0.9), 0 2px 6px rgba(0, 0, 0, 0.7);
+}
+
+/* --- RPG Quest CTA Button --- */
+.hero-cta {
+  display: inline-block;
+  position: relative;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  color: var(--bg-deep);
+  background: linear-gradient(180deg, #ffe44d 0%, #ffd700 40%, #e6b800 100%);
+  padding: 24px 56px;
+  border: 4px solid #c4a000;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  overflow: hidden;
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,0.35),
+    inset 0 -2px 0 rgba(0,0,0,0.15),
+    0 6px 0 #8a6800,
+    0 8px 12px rgba(0,0,0,0.4),
+    0 0 35px rgba(255,215,0,0.3);
+  animation: cta-breathe 2.5s ease-in-out infinite;
+}
+
+@keyframes cta-breathe {
+  0%, 100% { box-shadow: inset 0 2px 0 rgba(255,255,255,0.35), inset 0 -2px 0 rgba(0,0,0,0.15), 0 6px 0 #8a6800, 0 8px 12px rgba(0,0,0,0.4), 0 0 30px rgba(255,215,0,0.25); }
+  50% { box-shadow: inset 0 2px 0 rgba(255,255,255,0.35), inset 0 -2px 0 rgba(0,0,0,0.15), 0 6px 0 #8a6800, 0 8px 12px rgba(0,0,0,0.4), 0 0 55px rgba(255,215,0,0.55); }
+}
+
+/* Shine sweep effect */
+.hero-cta::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -120%;
+  width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.45) 50%, transparent 100%);
+  transform: skewX(-20deg);
+  transition: none;
+  pointer-events: none;
+}
+
+.hero-cta:hover::before {
+  animation: cta-shine 0.6s ease forwards;
+}
+
+@keyframes cta-shine {
+  0% { left: -120%; }
+  100% { left: 160%; }
+}
+
+/* Pixel corner notches (decorative) */
+.hero-cta::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border: 4px solid transparent;
+  pointer-events: none;
+  /* Tiny pixel squares at corners */
+  box-shadow:
+    -4px -4px 0 0 var(--bg-deep),
+    calc(100% + 4px) -4px 0 0 var(--bg-deep),
+    -4px calc(100% + 4px) 0 0 var(--bg-deep),
+    calc(100% + 4px) calc(100% + 4px) 0 0 var(--bg-deep);
+}
+
+.hero-cta:hover {
+  color: var(--bg-deep);
+  background: linear-gradient(180deg, #fff06a 0%, #ffe033 40%, #ffd700 100%);
+  transform: translateY(-4px);
+  border-color: #e6c200;
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,0.4),
+    inset 0 -2px 0 rgba(0,0,0,0.12),
+    0 10px 0 #8a6800,
+    0 14px 20px rgba(0,0,0,0.5),
+    0 0 70px rgba(255,215,0,0.6),
+    0 0 120px rgba(255,215,0,0.2);
+  animation: none;
+}
+
+.hero-cta:active {
+  transform: translateY(3px);
+  box-shadow:
+    inset 0 2px 0 rgba(0,0,0,0.1),
+    inset 0 -2px 0 rgba(255,255,255,0.2),
+    0 2px 0 #8a6800,
+    0 0 20px rgba(255,215,0,0.3);
+  animation: none;
+}
+
+/* Blinking RPG selection arrow */
+.cta-arrow {
+  display: inline-block;
+  margin-right: 6px;
+  animation: arrow-blink 1.2s step-end infinite;
+}
+
+@keyframes arrow-blink {
+  0%, 65% { opacity: 1; }
+  66%, 100% { opacity: 0; }
+}
+
+.scroll-indicator {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 10;
+}
+
+.scroll-arrow {
+  display: block;
+  width: 24px;
+  height: 24px;
+  margin: 0 auto 10px;
+  border-right: 3px solid var(--cyber-blue);
+  border-bottom: 3px solid var(--cyber-blue);
+  filter: drop-shadow(0 0 6px var(--cyber-blue));
+  transform: rotate(45deg);
+  animation: bounce-arrow 1.5s infinite;
+}
+
+@keyframes bounce-arrow {
+  0%, 100% { transform: rotate(45deg) translateY(0); opacity: 1; }
+  50% { transform: rotate(45deg) translateY(6px); opacity: 0.5; }
+}
+
+.scroll-text {
+  font-family: var(--font-ui);
+  font-size: 0.85rem;
+  color: var(--lavender);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  text-shadow: 0 0 10px rgba(212, 165, 116, 0.4);
+}
+
+/* Floating particles */
+.firefly {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: rgba(255, 238, 136, 0.8);
+  box-shadow: 0 0 8px rgba(255, 200, 100, 0.6);
+  border-radius: 0;
+  animation: firefly-float var(--dur) ease-in-out infinite alternate;
+  opacity: 0.7;
+}
+
+@keyframes firefly-float {
+  0% { transform: translate(0, 0); opacity: 0.3; }
+  50% { opacity: 0.9; }
+  100% { transform: translate(var(--dx), var(--dy)); opacity: 0.3; }
+}
+
+/* ============================================
+   ABOUT - THE WORKSHOP
+   ============================================ */
+#about {
+  position: relative;
+  min-height: 100vh;
+  padding: 120px 20px 80px;
+  background: linear-gradient(180deg, #0d0805 0%, #2a1810 20%, #1e1510 80%, #0d0805 100%);
+  overflow: hidden;
+}
+
+.workshop-bg {
+  position: absolute;
+  inset: 0;
+  opacity: 0.06;
+  background:
+    repeating-linear-gradient(90deg, transparent, transparent 48px, var(--muted) 48px, var(--muted) 50px),
+    repeating-linear-gradient(0deg, transparent, transparent 48px, var(--muted) 48px, var(--muted) 50px);
+}
+
+.section-header {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 4vw, 2.8rem);
+  color: var(--cyber-blue);
+  text-shadow: 0 0 30px rgba(245, 158, 11, 0.4), 0 0 60px rgba(245, 158, 11, 0.15);
+  text-align: center;
+  margin-bottom: 60px;
+  letter-spacing: 4px;
+}
+
+.dialog-box {
+  max-width: 1000px;
+  margin: 0 auto 50px;
+  background: rgba(42, 24, 16, 0.92);
+  border: 4px solid var(--cyber-blue);
+  box-shadow: 0 0 40px rgba(245, 158, 11, 0.15), inset 0 0 40px rgba(0, 0, 0, 0.3);
+  padding: 0;
+  position: relative;
+}
+
+.dialog-header {
+  background: var(--cyber-blue);
+  color: var(--bg-deep);
+  padding: 10px 24px;
+  font-family: var(--font-ui);
+  font-size: 0.9rem;
+  letter-spacing: 2px;
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+}
+
+.dialog-body {
+  display: flex;
+  gap: 36px;
+  padding: 36px;
+  align-items: flex-start;
+}
+
+.dialog-portrait {
+  width: 220px;
+  height: 220px;
+  flex-shrink: 0;
+  border: 4px solid var(--lavender);
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(212, 165, 116, 0.2);
+}
+
+.dialog-portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  image-rendering: pixelated;
+}
+
+.dialog-text-area {
+  flex: 1;
+  min-height: 220px;
+  height: 220px;
+  overflow: hidden;
+}
+
+.dialog-page {
+  display: none;
+  font-size: 1.05rem;
+  line-height: 1.85;
+  color: var(--text);
+}
+
+.dialog-page.active { display: block; }
+
+.dialog-page strong { color: var(--pixel-gold); }
+.dialog-page b { color: var(--cyber-blue); }
+.dialog-page a { color: var(--hot-magenta); }
+
+.dialog-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 24px 16px;
+}
+
+.dialog-btn {
+  font-family: var(--font-ui);
+  font-size: 0.8rem;
+  color: var(--cyber-blue);
+  background: transparent;
+  border: 1px solid var(--cyber-blue);
+  padding: 8px 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-transform: uppercase;
+}
+
+.dialog-btn:hover {
+  background: var(--cyber-blue);
+  color: var(--bg-deep);
+}
+
+.dialog-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.dialog-btn:disabled:hover {
+  background: transparent;
+  color: var(--cyber-blue);
+}
+
+.dialog-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.dialog-dot {
+  width: 10px;
+  height: 10px;
+  border: 1px solid var(--lavender);
+  background: transparent;
+  transition: background 0.2s;
+}
+
+.dialog-dot.active {
+  background: var(--cyber-blue);
+  border-color: var(--cyber-blue);
+}
+
+/* Character Stats */
+.char-stats {
+  max-width: 600px;
+  margin: 50px auto 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.stat-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.stat-label {
+  font-family: var(--font-ui);
+  font-size: 0.8rem;
+  color: var(--lavender);
+  width: 160px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  flex-shrink: 0;
+}
+
+.stat-bar-container {
+  flex: 1;
+  height: 22px;
+  border: 2px solid var(--muted);
+  padding: 2px;
+  display: flex;
+  gap: 2px;
+}
+
+.stat-bar-block {
+  height: 100%;
+  background: transparent;
+  flex: 1;
+  transition: background 0.3s;
+}
+
+.stat-bar-block.filled {
+  background: var(--retro-green);
+  box-shadow: 0 0 4px var(--retro-green);
+}
+
+.stat-value {
+  font-family: var(--font-ui);
+  font-size: 0.8rem;
+  color: var(--retro-green);
+  width: 80px;
+  text-align: right;
+  text-shadow: 0 0 8px var(--retro-green);
+}
+
+/* ============================================
+   GALLERY - THE ART GALLERY
+   ============================================ */
+#gallery {
+  position: relative;
+  min-height: 100vh;
+  padding: 120px 20px 80px;
+  background: linear-gradient(180deg, #0d0805 0%, #150d08 20%, #2a1810 80%, #0d0805 100%);
+}
+
+.gallery-wall-bg {
+  position: absolute;
+  inset: 0;
+  opacity: 0.04;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0px,
+      transparent 58px,
+      #4a3a2a 58px,
+      #4a3a2a 60px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent 0px,
+      transparent 28px,
+      #4a3a2a 28px,
+      #4a3a2a 30px
+    );
+}
+
+.neon-header {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 4vw, 2.8rem);
+  color: var(--hot-magenta);
+  text-shadow: 0 0 10px var(--hot-magenta), 0 0 40px var(--hot-magenta), 0 0 80px rgba(239, 68, 68, 0.3);
+  text-align: center;
+  margin-bottom: 60px;
+  letter-spacing: 5px;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 28px;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+.artwork-frame {
+  position: relative;
+  background: #0a0605;
+  border: 4px solid #3a2a1e;
+  box-shadow:
+    inset 0 0 20px rgba(0, 0, 0, 0.5),
+    0 4px 0 #2a1810,
+    0 8px 20px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+  aspect-ratio: 1;
+  transition: transform 0.3s, box-shadow 0.3s;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.artwork-frame:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow:
+    inset 0 0 20px rgba(0, 0, 0, 0.5),
+    0 12px 30px rgba(0, 0, 0, 0.5),
+    0 0 30px rgba(245, 158, 11, 0.1);
+  border-color: var(--cyber-blue);
+  z-index: 10;
+}
+
+.artwork-frame::before {
+  content: '';
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 30px;
+  height: 20px;
+  background: radial-gradient(ellipse at center, rgba(255, 215, 0, 0.3), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: 2;
+}
+
+.artwork-frame:hover::before { opacity: 1; }
+
+.artwork-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ============================================
+   LIGHTBOX
+   ============================================ */
+#lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 99999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+}
+
+#lightbox.open { display: flex; }
+
+.lightbox-img {
+  max-width: 90vw;
+  max-height: 85vh;
+  object-fit: contain;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  color: var(--text);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  transition: color 0.2s;
+}
+
+.lightbox-close:hover { color: var(--hot-magenta); }
+
+.lightbox-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 2rem;
+  color: var(--text);
+  background: rgba(0, 0, 0, 0.5);
+  border: 2px solid var(--muted);
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: var(--font-display);
+}
+
+.lightbox-arrow:hover {
+  border-color: var(--cyber-blue);
+  color: var(--cyber-blue);
+  background: rgba(245, 158, 11, 0.1);
+}
+
+.lightbox-prev { left: 20px; }
+.lightbox-next { right: 20px; }
+
+.lightbox-counter {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-ui);
+  font-size: 0.85rem;
+  color: var(--muted);
+  letter-spacing: 2px;
+}
+
+/* ============================================
+   PROJECTS - THE ARCADE
+   ============================================ */
+#projects {
+  position: relative;
+  min-height: 100vh;
+  padding: 120px 20px 80px;
+  background: linear-gradient(180deg, #0d0805 0%, #0f0a05 20%, #2a1810 80%, #0d0805 100%);
+  overflow: hidden;
+}
+
+.arcade-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 36px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.arcade-cabinet {
+  background: linear-gradient(180deg, #2a1810, #0f0a05);
+  border: 3px solid #3a2a1e;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+  perspective: 800px;
+  opacity: 0;
+  transform: translateY(40px);
+}
+
+.arcade-cabinet:hover {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(245, 158, 11, 0.1);
+}
+
+.arcade-screen {
+  position: relative;
+  aspect-ratio: 16/10;
+  overflow: hidden;
+  border-bottom: 3px solid #3a2a1e;
+  background: #000;
+}
+
+.arcade-screen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.scanline-overlay {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.1) 2px,
+    rgba(0, 0, 0, 0.1) 4px
+  );
+  pointer-events: none;
+}
+
+.arcade-marquee {
+  padding: 16px 20px 6px;
+  font-family: var(--font-display);
+  font-size: clamp(0.7rem, 1.4vw, 0.95rem);
+  color: var(--pixel-gold);
+  text-shadow: 0 0 10px var(--pixel-gold);
+  letter-spacing: 2px;
+}
+
+.arcade-type {
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  color: var(--muted);
+  padding: 0 20px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-top: 2px;
+}
+
+.arcade-desc {
+  padding: 10px 20px;
+  font-size: 0.95rem;
+  color: var(--lavender);
+  line-height: 1.6;
+}
+
+.arcade-tags {
+  padding: 0 20px 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.arcade-tag {
+  font-family: var(--font-ui);
+  font-size: 0.65rem;
+  color: var(--cyber-blue);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  padding: 4px 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.arcade-footer {
+  padding: 12px 20px 20px;
+}
+
+.arcade-btn {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  color: var(--bg-deep);
+  background: var(--retro-green);
+  padding: 10px 24px;
+  border: none;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  box-shadow: 0 3px 0 #5a8a0a, 0 0 20px rgba(132, 204, 22, 0.2);
+  transition: all 0.15s;
+}
+
+.arcade-btn:hover {
+  color: var(--bg-deep);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 0 #5a8a0a, 0 0 30px rgba(132, 204, 22, 0.4);
+}
+
+.arcade-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #5a8a0a;
+}
+
+.arcade-more {
+  text-align: center;
+  margin-top: 60px;
+  font-family: var(--font-display);
+  font-size: clamp(0.8rem, 1.5vw, 1.1rem);
+  color: var(--hot-magenta);
+  text-shadow: 0 0 10px var(--hot-magenta);
+  animation: neon-flicker 3s infinite;
+}
+
+@keyframes neon-flicker {
+  0%, 95%, 100% { opacity: 1; }
+  96% { opacity: 0.4; }
+  97% { opacity: 1; }
+  98% { opacity: 0.6; }
+}
+
+/* ============================================
+   SKILLS - THE INVENTORY
+   ============================================ */
+#skills {
+  position: relative;
+  min-height: 100vh;
+  padding: 80px 20px 80px;
+  background: linear-gradient(180deg, #0d0805 0%, #2a1810 30%, #2a1810 70%, #0d0805 100%);
+}
+
+.inventory-panel {
+  max-width: 900px;
+  margin: 0 auto;
+  border: 3px solid var(--lavender);
+  background: rgba(42, 24, 16, 0.9);
+  box-shadow: 0 0 40px rgba(212, 165, 116, 0.1), inset 0 0 40px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+.inventory-header {
+  background: var(--lavender);
+  color: var(--bg-deep);
+  padding: 14px 24px;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  letter-spacing: 2px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.inventory-char {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 28px 32px;
+  border-bottom: 2px solid rgba(212, 165, 116, 0.2);
+}
+
+.inventory-portrait {
+  width: 110px;
+  height: 110px;
+  border: 3px solid var(--pixel-gold);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.inventory-portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.inventory-info {
+  font-family: var(--font-ui);
+}
+
+.inventory-name {
+  font-size: 1.3rem;
+  color: var(--pixel-gold);
+  text-shadow: 0 0 8px var(--pixel-gold);
+}
+
+.inventory-class {
+  font-size: 0.9rem;
+  color: var(--lavender);
+  margin-top: 6px;
+  letter-spacing: 1px;
+}
+
+.skill-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 16px;
+  padding: 28px 32px;
+}
+
+.skill-slot {
+  border: 2px solid #3a2a1e;
+  padding: 20px 16px;
+  text-align: center;
+  transition: all 0.2s;
+  background: rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  transform: scale(0.8);
+}
+
+.skill-slot:hover {
+  border-color: var(--cyber-blue);
+  background: rgba(245, 158, 11, 0.05);
+  box-shadow: 0 0 15px rgba(245, 158, 11, 0.1);
+}
+
+.skill-icon {
+  font-size: 2.6rem;
+  margin-bottom: 10px;
+}
+
+.skill-name {
+  font-family: var(--font-ui);
+  font-size: 0.85rem;
+  color: var(--text);
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.skill-xp-bar {
+  height: 10px;
+  border: 1px solid var(--muted);
+  padding: 1px;
+}
+
+.skill-xp-fill {
+  height: 100%;
+  background: var(--retro-green);
+  box-shadow: 0 0 4px var(--retro-green);
+  width: 0%;
+  transition: width 1s ease-out;
+}
+
+/* ============================================
+   CONTACT - NIGHT SKY
+   ============================================ */
+#contact {
+  position: relative;
+  min-height: 80vh;
+  padding: 30px 20px 60px;
+  background: linear-gradient(180deg, #0d0805 0%, #1a0f0a 30%, #2a1810 100%);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.contact-stars {
+  position: absolute;
+  inset: 0;
+}
+
+.contact-city {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 25%;
+  background:
+    linear-gradient(transparent 50%, #0f0a05 50%);
+  background-size: 100px 100%;
+  background-repeat: repeat-x;
+  opacity: 0.15;
+  z-index: 1;
+}
+
+.neon-sign {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 5vw, 3.2rem);
+  color: var(--cyber-blue);
+  text-shadow:
+    0 0 10px var(--cyber-blue),
+    0 0 40px var(--cyber-blue),
+    0 0 80px rgba(245, 158, 11, 0.4),
+    0 0 120px rgba(245, 158, 11, 0.2);
+  text-align: center;
+  margin-bottom: 16px;
+  position: relative;
+  z-index: 10;
+  letter-spacing: 3px;
+}
+
+.contact-subtitle {
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  color: var(--lavender);
+  text-align: center;
+  max-width: 560px;
+  line-height: 1.7;
+  margin-bottom: 50px;
+  position: relative;
+  z-index: 10;
+  letter-spacing: 0.5px;
+}
+
+.contact-quest-board {
+  position: relative;
+  z-index: 10;
+  background: rgba(42, 24, 16, 0.85);
+  border: 3px solid #3a2a1e;
+  padding: 48px 56px;
+  max-width: 720px;
+  width: 100%;
+  margin-bottom: 40px;
+  box-shadow:
+    inset 0 0 60px rgba(0, 0, 0, 0.4),
+    0 0 40px rgba(245, 158, 11, 0.08);
+}
+
+.contact-quest-board::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  right: 6px;
+  bottom: 6px;
+  border: 1px solid rgba(245, 158, 11, 0.15);
+  pointer-events: none;
+}
+
+.quest-header {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  color: var(--pixel-gold);
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  text-align: center;
+  margin-bottom: 28px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.quest-desc {
+  font-family: var(--font-ui);
+  font-size: 0.95rem;
+  color: var(--text);
+  line-height: 1.8;
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.social-grid {
+  display: flex;
+  gap: 32px;
+  justify-content: center;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 10;
+  margin-bottom: 36px;
+}
+
+.social-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  transition: transform 0.3s;
+  position: relative;
+}
+
+.social-icon:hover { transform: translateY(-6px); }
+
+.social-icon-box {
+  width: 76px;
+  height: 76px;
+  border: 2px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  transition: all 0.3s;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.social-icon:hover .social-icon-box {
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.5), 0 0 40px rgba(245, 158, 11, 0.2);
+  border-color: var(--cyber-blue);
+}
+
+.social-icon-label {
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  opacity: 0.5;
+  transition: opacity 0.3s;
+}
+
+.social-icon:hover .social-icon-label { opacity: 1; }
+
+.social-x, .social-x:hover, .social-x:visited { color: var(--text); }
+.social-x .social-icon-box { border-color: var(--text); }
+.social-steam, .social-steam:hover, .social-steam:visited { color: #a8b4c8; }
+.social-steam .social-icon-box { border-color: #a8b4c8; }
+.social-github, .social-github:hover, .social-github:visited { color: #fff; }
+.social-github .social-icon-box { border-color: #fff; }
+.social-email, .social-email:hover, .social-email:visited { color: var(--pixel-gold); }
+.social-email .social-icon-box { border-color: var(--pixel-gold); }
+
+.quest-divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(245, 158, 11, 0.3), transparent);
+  margin-bottom: 32px;
+}
+
+.contact-cta {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  color: var(--bg-deep);
+  background: linear-gradient(180deg, var(--pixel-gold), var(--cyber-blue));
+  padding: 22px 60px;
+  border: none;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  box-shadow: 0 4px 0 #b47a08, 0 0 30px rgba(245, 158, 11, 0.3);
+  transition: all 0.15s;
+  position: relative;
+  z-index: 10;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.contact-cta:hover,
+.contact-cta:visited {
+  color: var(--bg-deep);
+  transform: translateY(-3px);
+  box-shadow: 0 7px 0 #b47a08, 0 0 50px rgba(245, 158, 11, 0.5);
+}
+
+.contact-cta .cta-icon {
+  font-size: 1rem;
+  animation: cta-bounce 2s ease-in-out infinite;
+}
+
+@keyframes cta-bounce {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(4px); }
+}
+
+.contact-availability {
+  font-family: var(--font-ui);
+  font-size: 0.8rem;
+  color: var(--retro-green);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-top: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.availability-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--retro-green);
+  border-radius: 50%;
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; box-shadow: 0 0 4px var(--retro-green); }
+  50% { opacity: 0.5; box-shadow: 0 0 12px var(--retro-green); }
+}
+
+/* Shooting star */
+.shooting-star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: #fff;
+  box-shadow: 0 0 6px #fff, -20px 0 10px rgba(255, 255, 255, 0.3);
+  opacity: 0;
+  z-index: 5;
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+#footer {
+  position: relative;
+  padding: 30px 20px;
+  background: var(--bg-deep);
+  border-top: 2px solid #3a2a1e;
+  text-align: center;
+}
+
+.footer-ground {
+  position: absolute;
+  top: -4px;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: repeating-linear-gradient(
+    90deg,
+    #3a2a1e 0px,
+    #3a2a1e 8px,
+    #2a1810 8px,
+    #2a1810 16px
+  );
+}
+
+.footer-copy {
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+}
+
+.footer-links {
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  color: var(--muted);
+  margin-bottom: 18px;
+}
+
+.footer-links a { color: var(--lavender); }
+
+.back-to-top {
+  display: inline-block;
+  font-family: var(--font-ui);
+  font-size: 0.7rem;
+  color: var(--cyber-blue);
+  border: 1px solid var(--cyber-blue);
+  padding: 8px 18px;
+  transition: all 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.back-to-top:hover {
+  background: var(--cyber-blue);
+  color: var(--bg-deep);
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 1024px) {
+  .gallery-grid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  }
+  .arcade-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+
+  .hero-title { font-size: clamp(1.2rem, 5vw, 2rem); }
+
+  .city-far { height: 28%; }
+  .city-mid { height: 48%; }
+  .city-mid::after { height: 16%; }
+
+  .dialog-body {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .dialog-portrait {
+    width: 140px;
+    height: 140px;
+  }
+
+  .gallery-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .arcade-grid {
+    grid-template-columns: 1fr;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  .skill-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .stat-label { width: 100px; font-size: 0.55rem; }
+
+  .social-grid { gap: 20px; }
+  .social-icon-label { opacity: 1; }
+
+  .lightbox-arrow {
+    width: 36px;
+    height: 36px;
+    font-size: 1.2rem;
+  }
+
+  .lightbox-prev { left: 8px; }
+  .lightbox-next { right: 8px; }
+}
+
+@media (max-width: 480px) {
+  .hero-title { font-size: 1rem; }
+  .hero-subtitle { font-size: 0.6rem; }
+
+  .dialog-portrait { width: 100px; height: 100px; }
+
+  .gallery-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .artwork-frame { border-width: 2px; }
+
+  .skill-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .stat-row { flex-wrap: wrap; }
+  .stat-label { width: 100%; }
+
+  .neon-sign { font-size: 1rem; }
+
+  .contact-quest-board {
+    padding: 28px 20px;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+
+  .social-grid { gap: 16px; }
+
+  .social-icon-box {
+    width: 56px;
+    height: 56px;
+    font-size: 1.3rem;
+  }
+
+  .contact-cta {
+    padding: 16px 36px;
+    font-size: 0.8rem;
+  }
+
+  .contact-availability {
+    font-size: 0.6rem;
+    justify-content: center;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  .parallax-layer { transform: none !important; }
+  .firefly { display: none; }
+  .star { animation: none; opacity: 0.6; }
+}
+</style>
 </head>
 <body>
 
-  <!-- Navigation -->
-  <nav>
-    <ul>
-      <li><a href="#home">Home</a></li>
-      <li><a href="#about-me">About Me</a></li>
-      <li><a href="artworks.html">Artworks</a></li>
-      <li><a href="#games">Games</a></li>
-      <li><a href="#websites">Websites</a></li>
-      <li><a href="#apps">Apps</a></li>
-      <li><a href="#contact-me">Contact Me</a></li>
-    </ul>
-  </nav>
+<!-- SCROLL PROGRESS BAR -->
+<div id="scroll-progress"></div>
 
-  <!-- Home Section -->
-  <section id="home" class="section">
-    <h1>Welcome to My World</h1>
-    <p>I'm <b>TayMcQuaya</b>,<br>a grinding developer and pixel artist by heart passionate about pixel art, game developement, AI and more.</p>
-    
-    <!-- Enhanced Profile Picture -->
-    <div class="profile-pic-container">
-      <img src="Tay.png" alt="Profile Picture" class="profile-pic" onclick="openModal(this)">
-    </div>
-  </section>
+<!-- CRT SCANLINE OVERLAY -->
+<div id="crt-overlay"></div>
 
-  <!-- About Me Section -->
-  <section id="about-me" class="section">
-    <h2>About Me</h2>
-  
-  <p><strong>Hey there! I'm TayMcQuaya!</strong></p>
+<!-- PRELOADER -->
+<div id="preloader">
+  <div class="preloader-text">LOADING...</div>
+  <div class="preloader-bar-container" id="preloader-bar">
+    <div class="preloader-block"></div>
+    <div class="preloader-block"></div>
+    <div class="preloader-block"></div>
+    <div class="preloader-block"></div>
+    <div class="preloader-block"></div>
+    <div class="preloader-block"></div>
+    <div class="preloader-block"></div>
+    <div class="preloader-block"></div>
+    <div class="preloader-block"></div>
+    <div class="preloader-block"></div>
+  </div>
+  <div class="preloader-prompt" id="preloader-prompt">PRESS START</div>
+</div>
 
-  <p>I'm a Turkish guy born in Germany, now living somewhere in Bali.<br> I’ve dabbled in programming—enough (C#, Java, JS, HTML, CSS, Python) to build some cool stuff using the latest AI tech. I like to think of myself as a creator who’s <b>always learning and experimenting.</b></br></p>
+<!-- CRT FLASH -->
+<div class="crt-flash" id="crt-flash"></div>
 
-  <p><b>Pixel art is a huge passion of mine</b>. When I have free time, you’ll find me sketching away, bringing little characters and scenes to life one pixel at a time. My adventure with crypto started back in the day, but life as a busy teenager held me back. It wasn’t until 2020, during the COVID lockdowns, that I <b>finally jumped on the crypto train</b>. That’s when I got into NFTs and started investing in altcoins. Now I am currently diving into Web 3 to build and solve problems for people. In short: <b>I am still a work in progress.</b></p>
+<!-- NAVIGATION -->
+<nav id="navbar">
+  <div class="nav-logo">TMCQ</div>
+  <ul class="nav-links">
+    <li><a href="#hero" class="nav-link" data-section="hero"><i class="fas fa-mountain-sun"></i> Rooftop</a></li>
+    <li><a href="#about" class="nav-link" data-section="about"><i class="fas fa-scroll"></i> About</a></li>
+    <li><a href="#gallery" class="nav-link" data-section="gallery"><i class="fas fa-palette"></i> Art</a></li>
+    <li><a href="#projects" class="nav-link" data-section="projects"><i class="fas fa-gamepad"></i> Projects</a></li>
+    <li><a href="#skills" class="nav-link" data-section="skills"><i class="fas fa-flask"></i> Skills</a></li>
+    <li><a href="#contact" class="nav-link" data-section="contact"><i class="fas fa-envelope"></i> Contact</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
 
-  <p>I’ve been <b>inspired by</b> folks like <b>Alex Becker and Elliot Trades</b>, even taking part in their tricky yet fun riddle hunt to join Neotokyo. <b>What is <a href="neo-tokyo.html">Neo Tokyo</a>?</b> Well, that’s a story for another time! Through the crypto community, I’ve met some <b>amazing people</b> (among them <b><a href="https://x.com/UnrealApe">UnrealApe</a></b>, who im endlessly grateful for supporting me and enabling my journey) and picked up a ton about finances, how the world really works and how to constantly level up myself. I’m grinding hard every day to improve in every area of my life—<b>it’s a never-ending, exciting journey to keep learning and "git gud.</b>"</p>
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#hero" class="nav-link" data-mobile><i class="fas fa-mountain-sun"></i> Rooftop</a>
+  <a href="#about" class="nav-link" data-mobile><i class="fas fa-scroll"></i> About</a>
+  <a href="#gallery" class="nav-link" data-mobile><i class="fas fa-palette"></i> Art</a>
+  <a href="#projects" class="nav-link" data-mobile><i class="fas fa-gamepad"></i> Projects</a>
+  <a href="#skills" class="nav-link" data-mobile><i class="fas fa-flask"></i> Skills</a>
+  <a href="#contact" class="nav-link" data-mobile><i class="fas fa-envelope"></i> Contact</a>
+</div>
 
-  <p>I decided to drop out of college because I felt there was no point in sticking with boring studies when there was a <b>whole world out there to explore and learn</b> real, practical things that make life better and certainly more interesing. <b>Speaking six languages</b> is another perk—three of them I’m fluent in, one’s intermediate, and I can understand two more, even if I’ve forgotten how to speak them fully.</p>
+<!-- ========== HERO: THE ROOFTOP ========== -->
+<section id="hero">
+  <!-- L1: Sky gradient -->
+  <div class="parallax-layer sky-layer" data-speed="0.1">
+    <div class="stars-container" id="hero-stars"></div>
+  </div>
 
-  <p>These days, <b>I’m all about building projects, making money from what I create</b>, and figuring out how to get better at everything I do.<br> I’d love for you to <b>check out my website</b>, see what I’ve built so far, and <b>stay tuned for even more exciting things</b> on the way.<br> Enjoy your own journey, and let’s ride this wave together!</br></br></p>
+  <!-- Character backdrop (behind buildings) -->
+  <div class="hero-character">
+    <img src="../TayMcQuaya_Website/Tay.png" alt="TayMcQuaya" class="hero-char-img">
+  </div>
 
-  <p>P.S.: All artwork from the games i made are also made by me! There might be some websites/artworks which im not allowed to present yet. So stay tuned for when that changes!</p>
+  <!-- L2: Distant city (no parallax - scrolls with page) -->
+  <div class="parallax-layer" style="z-index:2">
+    <div class="city-far"></div>
+  </div>
+
+  <!-- L3: Mid buildings (no parallax - scrolls with page) -->
+  <div class="parallax-layer" style="z-index:3" id="city-mid-layer">
+    <div class="city-mid" id="city-mid"></div>
+  </div>
+
+  <!-- L4: Rooftop bottom fade (no parallax - stays pinned) -->
+  <div class="rooftop-layer"></div>
+
+  <!-- L5: Fireflies -->
+  <div class="parallax-layer" data-speed="0.8" id="fireflies-layer"></div>
+
+  <!-- Hero Content -->
+  <div class="hero-content">
+    <h1 class="hero-title">TAYMCQUAYA</h1>
+    <p class="hero-subtitle">Developer / Pixel Artist / Creator</p>
+    <p class="hero-desc">Games, SaaS, Websites, Pixel Art -- If I can dream it, I can build it</p>
+    <a href="#contact" class="hero-cta"><span class="cta-arrow">&#9654;</span> Get In Touch</a>
+  </div>
+
+  <!-- Scroll Indicator -->
+  <div class="scroll-indicator">
+    <span class="scroll-arrow"></span>
+    <span class="scroll-text">Scroll to explore</span>
+  </div>
 </section>
-  </section>
 
-  <!-- Portfolio Section with 3D Slider -->
-  <section id="artwork" class="section">
-    <h2>Artworks</h2>
-    <div class="slider-wrapper">
-      <!-- 3D Slider -->
-      <div class="portfolio-slider" style="--quantity: 10">
-        <div class="item" style="--position: 1"><img src="images/art1.png" alt="Artwork 1" onclick="openModal(this)"></div>
-        <div class="item" style="--position: 2"><img src="images/art2.png" alt="Artwork 2" onclick="openModal(this)"></div>
-        <div class="item" style="--position: 3"><img src="images/art3.png" alt="Artwork 3" onclick="openModal(this)"></div>
-        <div class="item" style="--position: 4"><img src="images/art4.png" alt="Artwork 4" onclick="openModal(this)"></div>
-        <div class="item" style="--position: 5"><img src="images/art5.gif" alt="Artwork 5" onclick="openModal(this)"></div>
-        <div class="item" style="--position: 6"><img src="images/art6.gif" alt="Artwork 6" onclick="openModal(this)"></div>
-        <div class="item" style="--position: 7"><img src="images/art7.gif" alt="Artwork 7" onclick="openModal(this)"></div>
-        <div class="item" style="--position: 8"><img src="images/art8.gif" alt="Artwork 8" onclick="openModal(this)"></div>
-        <div class="item" style="--position: 9"><img src="images/art09.gif" alt="Artwork 9" onclick="openModal(this)"></div>
-        <div class="item" style="--position: 10"><img src="images/art10.gif" alt="Artwork 10" onclick="openModal(this)"></div>
-        <!-- Add more artwork as needed -->
+<!-- ========== ABOUT: THE WORKSHOP ========== -->
+<section id="about">
+  <div class="workshop-bg"></div>
+  <h2 class="section-header">~ About Me ~</h2>
+
+  <div class="dialog-box">
+    <div class="dialog-header">
+      <span>LORE</span>
+      <span id="dialog-page-indicator">1 / 3</span>
+    </div>
+    <div class="dialog-body">
+      <div class="dialog-portrait">
+        <img src="../TayMcQuaya_Website/Tay.png" alt="TayMcQuaya" loading="lazy">
+      </div>
+      <div class="dialog-text-area">
+        <div class="dialog-page active" data-page="0">
+          <p><strong>I'm TayMcQuaya.</strong> I dropped out of college, moved to Bali, and started building. Not because I had a master plan, but because sitting in lectures about theory felt criminal when the <b>entire internet was there to build on.</b></p>
+          <p>I'm no expert developer. In 2024 I went all-in on vibe coding as a full-time pursuit, learning by doing every single day. Six languages spoken, six programming languages picked up along the way. <b>All self-taught, all from curiosity.</b></p>
+        </div>
+        <div class="dialog-page" data-page="1">
+          <p><b>Pixel art is where my heart is.</b> Every character, animation, and game asset on this site was drawn by hand, one pixel at a time (the profile pic being the one exception). It's meditative, precise, and deeply satisfying.</p>
+          <p>2020 changed everything. COVID lockdowns, crypto, and NFTs pulled me into <b>Web3</b>. I joined communities like <b><a href="neo-tokyo.html">Neo Tokyo</a></b>, learned from builders like <b>Alex Becker</b> and <b>Elliot Trades</b>, and met people who showed me what's possible when you <b>stop asking permission and start building.</b></p>
+        </div>
+        <div class="dialog-page" data-page="2">
+          <p>Now I build <b>whatever catches my fire.</b> Games, SaaS tools, websites, Telegram bots, NFT explorers. If I can dream it, I ship it. Every project is a level-up. <b>Every failure is XP.</b></p>
+          <p>I get better every day. This site is a snapshot, not the full picture. <b>The best stuff? It's still loading.</b></p>
+        </div>
       </div>
     </div>
-    <p><a href="artworks.html" class="see-more-link">See more</a></p>
-  </section>
-
-  <!-- Games Section -->
-<section id="games" class="section">
-  <h2>Games</h2>
-  <h3 class="app-title">FLOPY TROMP 2D</h3>
-  <div class="video-container">
-    <iframe width="700" height="394" src="https://www.youtube.com/embed/2KdoXTuNmQY" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-  </div>
-  <p><a href="https://taymcquaya.github.io/FloppyTromp/" target="_blank" class="action-link">PLAY NOW</a></p>
-</section>
-
-<!-- Websites Section -->
-<section id="websites" class="section">
-  <h2>Websites</h2>
-  <div class="websites-container">
-    <!--Website structure-->
-    <div class="website-item">
-      <h3 class="app-title">Web3Resort</h3>
-      <a href="https://web3resort.com" target="_blank">
-        <img id="pngweb1"src="images/website1.png" alt="Website 1">
-      </a>
-      <p class="app-description">A website built for Web3Resort in Portugal.</p>
-    </div>
-    <!-- Add more items as needed -->
-    <div class="website-item">
-      <h3 class="app-title">ExO Heroes Explorer</h3>
-      <a href="https://salty-lowlands-40395-d2184796b235.herokuapp.com/" target="_blank">
-        <img id="gif3"src="images/website2.gif" alt="Website 2">
-      </a>
-      <p class="app-description">A NFT Explorer for ExoHeroes.<br> Entire collection has been hand drawn by me as well!</p></p>
-    </div>
-    
-    <!-- ComicMaker Pro V2 -->
-    <div class="website-item">
-      <h3 class="app-title">ComicMaker Pro V2</h3>
-      <a href="https://comic-pro-v2.vercel.app/" target="_blank">
-        <img src="images/website3.gif" alt="ComicMaker Pro V2">
-      </a>
-      <p class="app-description">A Web3 comic creation tool with smart panels and speech bubbles.<br>Connect wallet to create and export comics as PDFs or PNGs.</p>
-    </div>
-
-    <!-- JavaScript Journey -->
-    <div class="website-item">
-      <h3 class="app-title">JavaScript Journey</h3>
-      <a href="https://taymcquaya.github.io/Javascript-Journey/" target="_blank">
-        <img src="images/javascript.png" alt="JavaScript Journey">
-      </a>
-      <p class="app-description">Learn JavaScript from zero to hero - completely free.<br>Perfect for non-tech beginners ready to start their programming adventure.</p>
+    <div class="dialog-nav">
+      <button class="dialog-btn" id="dialog-prev" disabled>&lt; PREV</button>
+      <div class="dialog-dots">
+        <div class="dialog-dot active" data-dot="0"></div>
+        <div class="dialog-dot" data-dot="1"></div>
+        <div class="dialog-dot" data-dot="2"></div>
+      </div>
+      <button class="dialog-btn" id="dialog-next">NEXT &gt;</button>
     </div>
   </div>
-</section>
 
-<!-- Apps Section -->
-<section id="apps" class="section">
-  <h2>Apps</h2>
-  <div class="apps-container">
-    <div class="app-item">
-      <h3 class="app-title">OpenOPen</h3>
-      <img id="gif1" src="images/app1.1.gif" alt="App GIF 1" onclick="openModal(this)">
-      <img id="gif2" src="images/app1.2.gif" alt="App GIF 2" style="display: none;" onclick="openModal(this)">
-      <p class="app-description">An opensource free text editor.</p>
-      <p><a href="https://github.com/TayMcQuaya/OpenOPen/tree/executable" target="_blank" class="action-link">DOWNLOAD</a></p>
+  <!-- Character Stats -->
+  <div class="char-stats">
+    <div class="stat-row">
+      <span class="stat-label">Languages</span>
+      <div class="stat-bar-container">
+        <div class="stat-bar-block"></div>
+        <div class="stat-bar-block"></div>
+        <div class="stat-bar-block"></div>
+        <div class="stat-bar-block"></div>
+        <div class="stat-bar-block"></div>
+        <div class="stat-bar-block"></div>
+        <div class="stat-bar-block"></div>
+        <div class="stat-bar-block"></div>
+        <div class="stat-bar-block"></div>
+        <div class="stat-bar-block"></div>
+      </div>
+      <span class="stat-value" data-target="6">6</span>
     </div>
-    <!-- Add more items as needed -->
-    <div class="app-item">
-      <h3 class="app-title">TG Bot Web3Resort</h3>
-      <a href="https://t.me/Web3ResortBot" target="_blank">
-      <img id="gif4" src="images/app2.gif" alt="App GIF 4"> 
-      </a>
-      <p class="app-description">A <b>TG BOT</b> with a referralsystem.</p>
+    <div class="stat-row">
+      <span class="stat-label">Countries</span>
+      <div class="stat-bar-container">
+        <div class="stat-bar-block"></div>
+        <div class="stat-bar-block"></div>
+        <div class="stat-bar-block"></div>
+        <div class="stat-bar-block"></div>
+        <div class="stat-bar-block"></div>
+        <div class="stat-bar-block"></div>
+        <div class="stat-bar-block"></div>
+        <div class="stat-bar-block"></div>
+        <div class="stat-bar-block"></div>
+        <div class="stat-bar-block"></div>
+      </div>
+      <span class="stat-value" data-target="7">7</span>
+    </div>
+    <div class="stat-row">
+      <span class="stat-label">Grind Level</span>
+      <div class="stat-bar-container">
+        <div class="stat-bar-block"></div>
+        <div class="stat-bar-block"></div>
+        <div class="stat-bar-block"></div>
+        <div class="stat-bar-block"></div>
+        <div class="stat-bar-block"></div>
+        <div class="stat-bar-block"></div>
+        <div class="stat-bar-block"></div>
+        <div class="stat-bar-block"></div>
+        <div class="stat-bar-block"></div>
+        <div class="stat-bar-block"></div>
+      </div>
+      <span class="stat-value" data-target="10">INFINITE</span>
     </div>
   </div>
 </section>
-  
-<p class="custom-text">And much much more to come...</p>
 
-  <!-- Contact Section with Social Media Icons -->
-  <section id="contact-me" class="section">
-    <h2>Get in Touch</h2>
-    <div class="social-icons">
-      <a href="https://twitter.com/taymcquaya" target="_blank"><i class="fab fa-twitter"></i></a>
-      <a href="https://steamcommunity.com/id/TMCQ/" target="_blank"><i class="fab fa-steam"></i></a>
-      <a href="https://github.com/taymcquaya" target="_blank"><i class="fab fa-github"></i></a>
-      <a href="mailto:taymcquaya@gmail.com"><i class="fas fa-envelope"></i></a>
+<!-- ========== GALLERY: THE ART GALLERY ========== -->
+<section id="gallery">
+  <div class="gallery-wall-bg"></div>
+  <h2 class="neon-header">~ Pixel Art ~</h2>
+
+  <div class="gallery-grid" id="gallery-grid">
+    <div class="artwork-frame" data-idx="0"><img src="../TayMcQuaya_Website/images/art1.png" alt="Pixel Art 1" loading="lazy"></div>
+    <div class="artwork-frame" data-idx="1"><img src="../TayMcQuaya_Website/images/art2.png" alt="Pixel Art 2" loading="lazy"></div>
+    <div class="artwork-frame" data-idx="2"><img src="../TayMcQuaya_Website/images/art3.png" alt="Pixel Art 3" loading="lazy"></div>
+    <div class="artwork-frame" data-idx="3"><img src="../TayMcQuaya_Website/images/art4.png" alt="Pixel Art 4" loading="lazy"></div>
+    <div class="artwork-frame" data-idx="4"><img data-src="../TayMcQuaya_Website/images/art5.gif" alt="Pixel Art 5" loading="lazy"></div>
+    <div class="artwork-frame" data-idx="5"><img data-src="../TayMcQuaya_Website/images/art6.gif" alt="Pixel Art 6" loading="lazy"></div>
+    <div class="artwork-frame" data-idx="6"><img data-src="../TayMcQuaya_Website/images/art7.gif" alt="Pixel Art 7" loading="lazy"></div>
+    <div class="artwork-frame" data-idx="7"><img data-src="../TayMcQuaya_Website/images/art8.gif" alt="Pixel Art 8" loading="lazy"></div>
+    <div class="artwork-frame" data-idx="8"><img data-src="../TayMcQuaya_Website/images/art09.gif" alt="Pixel Art 9" loading="lazy"></div>
+    <div class="artwork-frame" data-idx="9"><img data-src="../TayMcQuaya_Website/images/art10.gif" alt="Pixel Art 10" loading="lazy"></div>
+    <div class="artwork-frame" data-idx="10"><img data-src="../TayMcQuaya_Website/images/art11.gif" alt="Pixel Art 11" loading="lazy"></div>
+    <div class="artwork-frame" data-idx="11"><img src="../TayMcQuaya_Website/images/art12.png" alt="Pixel Art 12" loading="lazy"></div>
+    <div class="artwork-frame" data-idx="12"><img src="../TayMcQuaya_Website/images/art13.png" alt="Pixel Art 13" loading="lazy"></div>
+    <div class="artwork-frame" data-idx="13"><img data-src="../TayMcQuaya_Website/images/art14.gif" alt="Pixel Art 14" loading="lazy"></div>
+    <div class="artwork-frame" data-idx="14"><img data-src="../TayMcQuaya_Website/images/art15.gif" alt="Pixel Art 15" loading="lazy"></div>
+    <div class="artwork-frame" data-idx="15"><img data-src="../TayMcQuaya_Website/images/art16.gif" alt="Pixel Art 16" loading="lazy"></div>
+    <div class="artwork-frame" data-idx="16"><img src="../TayMcQuaya_Website/images/art17.png" alt="Pixel Art 17" loading="lazy"></div>
+    <div class="artwork-frame" data-idx="17"><img src="../TayMcQuaya_Website/images/art18.png" alt="Pixel Art 18" loading="lazy"></div>
+    <div class="artwork-frame" data-idx="18"><img src="../TayMcQuaya_Website/images/art19.png" alt="Pixel Art 19" loading="lazy"></div>
+    <div class="artwork-frame" data-idx="19"><img src="../TayMcQuaya_Website/images/art20.png" alt="Pixel Art 20" loading="lazy"></div>
+    <div class="artwork-frame" data-idx="20"><img src="../TayMcQuaya_Website/images/art21.png" alt="Pixel Art 21" loading="lazy"></div>
+    <div class="artwork-frame" data-idx="21"><img data-src="../TayMcQuaya_Website/images/art22.gif" alt="Pixel Art 22" loading="lazy"></div>
+    <div class="artwork-frame" data-idx="22"><img data-src="../TayMcQuaya_Website/images/art23.gif" alt="Pixel Art 23" loading="lazy"></div>
+    <div class="artwork-frame" data-idx="23"><img data-src="../TayMcQuaya_Website/images/art24.gif" alt="Pixel Art 24" loading="lazy"></div>
+  </div>
+</section>
+
+<!-- LIGHTBOX -->
+<div id="lightbox">
+  <button class="lightbox-close" aria-label="Close">&times;</button>
+  <button class="lightbox-arrow lightbox-prev" aria-label="Previous">&lt;</button>
+  <img class="lightbox-img" id="lightbox-img" src="" alt="Artwork">
+  <button class="lightbox-arrow lightbox-next" aria-label="Next">&gt;</button>
+  <div class="lightbox-counter" id="lightbox-counter"></div>
+</div>
+
+<!-- ========== PROJECTS: THE ARCADE ========== -->
+<section id="projects">
+  <h2 class="section-header">~ The Arcade ~</h2>
+
+  <div class="arcade-grid">
+    <!-- 1: Floppy Tromp 2D -->
+    <div class="arcade-cabinet">
+      <div class="arcade-screen">
+        <img src="https://img.youtube.com/vi/2KdoXTuNmQY/maxresdefault.jpg" alt="Floppy Tromp 2D" loading="lazy">
+        <div class="scanline-overlay"></div>
+      </div>
+      <div class="arcade-marquee">Floppy Tromp 2D</div>
+      <div class="arcade-type">Game</div>
+      <p class="arcade-desc">A pixel art flappy-bird style game with custom characters and artwork -- all hand-drawn.</p>
+      <div class="arcade-tags">
+        <span class="arcade-tag">HTML5</span>
+        <span class="arcade-tag">JavaScript</span>
+        <span class="arcade-tag">Pixel Art</span>
+        <span class="arcade-tag">Game Dev</span>
+      </div>
+      <div class="arcade-footer">
+        <a href="https://taymcquaya.github.io/FloppyTromp/" target="_blank" rel="noopener" class="arcade-btn">Play Now</a>
+      </div>
     </div>
-  </section>
 
-  <!-- Modal for Enlarged Images -->
-  <div id="imageModal" class="modal">
-    <span class="close" onclick="closeModal()">&times;</span>
-    <img class="modal-content" id="modalImage">
+    <!-- 3: ExO Heroes Explorer -->
+    <div class="arcade-cabinet">
+      <div class="arcade-screen">
+        <img data-src="../TayMcQuaya_Website/images/website2.gif" alt="ExO Heroes Explorer" loading="lazy">
+        <div class="scanline-overlay"></div>
+      </div>
+      <div class="arcade-marquee">ExO Heroes Explorer</div>
+      <div class="arcade-type">Website</div>
+      <p class="arcade-desc">An NFT Explorer for ExoHeroes. Entire collection has been hand drawn by me as well!</p>
+      <div class="arcade-tags">
+        <span class="arcade-tag">Node.js</span>
+        <span class="arcade-tag">NFT</span>
+        <span class="arcade-tag">Pixel Art</span>
+        <span class="arcade-tag">Web3</span>
+      </div>
+      <div class="arcade-footer">
+        <a href="https://salty-lowlands-40395-d2184796b235.herokuapp.com/" target="_blank" rel="noopener" class="arcade-btn">Visit</a>
+      </div>
+    </div>
+
+    <!-- 5: JavaScript Journey -->
+    <div class="arcade-cabinet">
+      <div class="arcade-screen">
+        <img src="../TayMcQuaya_Website/images/javascript.png" alt="JavaScript Journey" loading="lazy">
+        <div class="scanline-overlay"></div>
+      </div>
+      <div class="arcade-marquee">JavaScript Journey</div>
+      <div class="arcade-type">Website</div>
+      <p class="arcade-desc">Learn JavaScript from zero to hero -- completely free. Perfect for non-tech beginners.</p>
+      <div class="arcade-tags">
+        <span class="arcade-tag">JavaScript</span>
+        <span class="arcade-tag">Education</span>
+        <span class="arcade-tag">Tutorial</span>
+      </div>
+      <div class="arcade-footer">
+        <a href="https://taymcquaya.github.io/Javascript-Journey/" target="_blank" rel="noopener" class="arcade-btn">Visit</a>
+      </div>
+    </div>
+
+    <!-- 6: OpenOPen -->
+    <div class="arcade-cabinet">
+      <div class="arcade-screen">
+        <img data-src="../TayMcQuaya_Website/images/app1.1.gif" alt="OpenOPen" loading="lazy">
+        <div class="scanline-overlay"></div>
+      </div>
+      <div class="arcade-marquee">OpenOPen</div>
+      <div class="arcade-type">App</div>
+      <p class="arcade-desc">An open-source free text editor -- lightweight, fast, and built for developers.</p>
+      <div class="arcade-tags">
+        <span class="arcade-tag">Python</span>
+        <span class="arcade-tag">Open Source</span>
+        <span class="arcade-tag">Desktop</span>
+      </div>
+      <div class="arcade-footer">
+        <a href="https://github.com/TayMcQuaya/OpenOPen/tree/executable" target="_blank" rel="noopener" class="arcade-btn">Download</a>
+      </div>
+    </div>
+
   </div>
 
-  <!-- JavaScript -->
-  <script src="script.js"></script>
-</body>
+  <p class="arcade-more">And much much more to come...</p>
+</section>
 
-<!-- Footer -->
-<footer class="footer">
-  <p>© 2025 TayMcQuaya. All rights reserved.</p>
-  <p><a href="privacy-policy.html">Privacy Policy</a> | <a href="terms-of-service.html">Terms of Service</a></p>
-  <p>Disclaimer: This website is for informational purposes only. The content is not intended to be a substitute for professional advice.</p>
+<!-- ========== SKILLS: THE INVENTORY ========== -->
+<section id="skills">
+  <h2 class="section-header">~ The Inventory ~</h2>
+
+  <div class="inventory-panel" id="inventory-panel">
+    <div class="inventory-header">
+      <span>CHARACTER SHEET</span>
+      <span>LVL ??</span>
+    </div>
+    <div class="inventory-char">
+      <div class="inventory-portrait">
+        <img src="../TayMcQuaya_Website/Tay.png" alt="TayMcQuaya" loading="lazy">
+      </div>
+      <div class="inventory-info">
+        <div class="inventory-name">TayMcQuaya</div>
+        <div class="inventory-class">Developer / Pixel Artist / Creator</div>
+      </div>
+    </div>
+    <div class="skill-grid" id="skill-grid">
+      <div class="skill-slot" data-xp="85">
+        <div class="skill-icon">&#x1F4BB;</div>
+        <div class="skill-name">C#</div>
+        <div class="skill-xp-bar"><div class="skill-xp-fill"></div></div>
+      </div>
+      <div class="skill-slot" data-xp="75">
+        <div class="skill-icon">&#x2615;</div>
+        <div class="skill-name">Java</div>
+        <div class="skill-xp-bar"><div class="skill-xp-fill"></div></div>
+      </div>
+      <div class="skill-slot" data-xp="90">
+        <div class="skill-icon">&#x26A1;</div>
+        <div class="skill-name">JavaScript</div>
+        <div class="skill-xp-bar"><div class="skill-xp-fill"></div></div>
+      </div>
+      <div class="skill-slot" data-xp="70">
+        <div class="skill-icon">&#x1F40D;</div>
+        <div class="skill-name">Python</div>
+        <div class="skill-xp-bar"><div class="skill-xp-fill"></div></div>
+      </div>
+      <div class="skill-slot" data-xp="95">
+        <div class="skill-icon">&#x1F310;</div>
+        <div class="skill-name">HTML/CSS</div>
+        <div class="skill-xp-bar"><div class="skill-xp-fill"></div></div>
+      </div>
+      <div class="skill-slot" data-xp="95">
+        <div class="skill-icon">&#x1F3A8;</div>
+        <div class="skill-name">Pixel Art</div>
+        <div class="skill-xp-bar"><div class="skill-xp-fill"></div></div>
+      </div>
+      <div class="skill-slot" data-xp="80">
+        <div class="skill-icon">&#x1F517;</div>
+        <div class="skill-name">Web3</div>
+        <div class="skill-xp-bar"><div class="skill-xp-fill"></div></div>
+      </div>
+      <div class="skill-slot" data-xp="75">
+        <div class="skill-icon">&#x1F916;</div>
+        <div class="skill-name">AI</div>
+        <div class="skill-xp-bar"><div class="skill-xp-fill"></div></div>
+      </div>
+      <div class="skill-slot" data-xp="85">
+        <div class="skill-icon">&#x1F3AE;</div>
+        <div class="skill-name">Game Dev</div>
+        <div class="skill-xp-bar"><div class="skill-xp-fill"></div></div>
+      </div>
+      <div class="skill-slot" data-xp="80">
+        <div class="skill-icon">&#x1F680;</div>
+        <div class="skill-name">Hustle</div>
+        <div class="skill-xp-bar"><div class="skill-xp-fill"></div></div>
+      </div>
+      <div class="skill-slot" data-xp="85">
+        <div class="skill-icon">&#x1F91D;</div>
+        <div class="skill-name">Soft Skills</div>
+        <div class="skill-xp-bar"><div class="skill-xp-fill"></div></div>
+      </div>
+      <div class="skill-slot" data-xp="99">
+        <div class="skill-icon">&#x1F4A9;</div>
+        <div class="skill-name">Shitposting</div>
+        <div class="skill-xp-bar"><div class="skill-xp-fill"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== CONTACT: NIGHT SKY ========== -->
+<section id="contact">
+  <div class="contact-stars" id="contact-stars"></div>
+  <div class="contact-city"></div>
+
+  <h2 class="neon-sign" id="neon-sign">Get In Touch</h2>
+  <p class="contact-subtitle">Have a project in mind, want to collaborate, or just want to say hello? I'm always open to new adventures.</p>
+
+  <div class="contact-quest-board">
+    <div class="quest-header">&#9733; Quest Board &#9733;</div>
+    <p class="quest-desc">Choose your preferred way to connect &mdash; whether it's a DM, a pull request, or a good old-fashioned email.</p>
+
+    <div class="social-grid">
+      <a href="https://x.com/taymcquaya" target="_blank" rel="noopener" class="social-icon social-x">
+        <div class="social-icon-box"><i class="fab fa-x-twitter"></i></div>
+        <span class="social-icon-label">X / Twitter</span>
+      </a>
+      <a href="https://steamcommunity.com/id/TMCQ/" target="_blank" rel="noopener" class="social-icon social-steam">
+        <div class="social-icon-box"><i class="fab fa-steam"></i></div>
+        <span class="social-icon-label">Steam</span>
+      </a>
+      <a href="https://github.com/taymcquaya" target="_blank" rel="noopener" class="social-icon social-github">
+        <div class="social-icon-box"><i class="fab fa-github"></i></div>
+        <span class="social-icon-label">GitHub</span>
+      </a>
+      <a href="mailto:taymcquaya@gmail.com" class="social-icon social-email">
+        <div class="social-icon-box"><i class="fas fa-envelope"></i></div>
+        <span class="social-icon-label">Email</span>
+      </a>
+    </div>
+
+    <div class="quest-divider"></div>
+
+    <div style="text-align: center;">
+      <a href="mailto:taymcquaya@gmail.com" class="contact-cta">
+        <span>Send Mail</span>
+        <span class="cta-icon">&#9654;</span>
+      </a>
+      <div class="contact-availability">
+        <span class="availability-dot"></span>
+        Available for freelance & collabs
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer id="footer">
+  <div class="footer-ground"></div>
+  <p class="footer-copy">&copy; 2026 TayMcQuaya. All rights reserved.</p>
+  <p class="footer-links">
+    <a href="privacy-policy.html">Privacy Policy</a> | <a href="terms-of-service.html">Terms of Service</a>
+  </p>
+  <a href="#hero" class="back-to-top" id="back-to-top">&#x1F680; Back to Top</a>
 </footer>
 
+<!-- CDN Libraries -->
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js"></script>
+
+<script>
+/* ============================================
+   MAIN JAVASCRIPT
+   ============================================ */
+(function() {
+  'use strict';
+
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- PRELOADER ---------- */
+  function runPreloader() {
+    const blocks = document.querySelectorAll('#preloader-bar .preloader-block');
+    const prompt = document.getElementById('preloader-prompt');
+    const preloader = document.getElementById('preloader');
+    const flash = document.getElementById('crt-flash');
+    let i = 0;
+
+    function fillNext() {
+      if (i < blocks.length) {
+        blocks[i].classList.add('filled');
+        i++;
+        setTimeout(fillNext, 150 + Math.random() * 100);
+      } else {
+        prompt.style.opacity = '1';
+        setTimeout(finishPreloader, 600);
+      }
+    }
+
+    function finishPreloader() {
+      if (!prefersReducedMotion) {
+        flash.style.opacity = '1';
+        flash.style.transition = 'opacity 0.05s';
+        setTimeout(() => {
+          flash.style.opacity = '0';
+          flash.style.transition = 'opacity 0.3s';
+        }, 80);
+      }
+      setTimeout(() => {
+        preloader.style.transition = 'opacity 0.4s';
+        preloader.style.opacity = '0';
+        setTimeout(() => {
+          preloader.style.display = 'none';
+          document.body.style.overflow = '';
+          initSite();
+        }, 400);
+      }, prefersReducedMotion ? 0 : 150);
+    }
+
+    document.body.style.overflow = 'hidden';
+    setTimeout(fillNext, 300);
+  }
+
+  /* ---------- GENERATE STARS ---------- */
+  function generateStars(container, count) {
+    const frag = document.createDocumentFragment();
+    for (let i = 0; i < count; i++) {
+      const star = document.createElement('div');
+      star.className = 'star';
+      const size = Math.random() > 0.9 ? 3 : Math.random() > 0.6 ? 2 : 1;
+      star.style.cssText = `
+        width:${size}px;height:${size}px;
+        left:${Math.random()*100}%;
+        top:${Math.random()*70}%;
+        --dur:${1.5+Math.random()*3}s;
+        animation-delay:${Math.random()*3}s;
+      `;
+      frag.appendChild(star);
+    }
+    container.appendChild(frag);
+  }
+
+  /* ---------- GENERATE PIXEL ART PALM TREES ---------- */
+  function generateBuildings() {
+    const container = document.getElementById('city-mid');
+    const frag = document.createDocumentFragment();
+    const PX = 4; // pixel size
+
+    const C = {
+      gd:'#1a5c2a', gm:'#2d7a35', gl:'#4a9a3e', gx:'#236b2e',
+      bd:'#3a2510', bm:'#6b4c30', bl:'#8a6545',
+      co:'#4a3520', cl:'#5a4530'
+    };
+
+    function createTree(trunkH, lean, frondLen, frondCount) {
+      const px = new Map();
+
+      // --- TRUNK (y=0 base, y increases upward) ---
+      for (let i = 0; i < trunkH; i++) {
+        const t = i / trunkH;
+        const xOff = Math.round(lean * t * t);
+        const s1 = i%3===0?C.bd:i%3===1?C.bm:C.bl;
+        const s2 = i%2===0?C.bm:C.bd;
+        px.set(xOff+','+i, s1);
+        px.set((xOff+1)+','+i, s2);
+        // Widen at base
+        if (i < 3) px.set((xOff+2)+','+i, C.bd);
+        if (i < 2) px.set((xOff-1)+','+i, C.bd);
+      }
+
+      const crownX = Math.round(lean);
+      const crownY = trunkH;
+
+      // --- COCONUTS ---
+      [[-1,0],[0,0],[1,0],[0,-1],[1,-1]].forEach(function(d){
+        px.set((crownX+d[0])+','+(crownY+d[1]), d[1]===0?C.co:C.cl);
+      });
+
+      // --- FRONDS ---
+      for (let f = 0; f < frondCount; f++) {
+        const angle = 15 + (150 / (frondCount - 1)) * f;
+        const rad = angle * Math.PI / 180;
+        const len = frondLen + (f%2===0?2:0);
+        const droopBase = 0.025;
+        const droopExtra = (Math.abs(angle-90)/90)*0.055;
+        const droop = droopBase + droopExtra;
+
+        for (let t = 0; t <= len; t++) {
+          const prog = t / len;
+          const x = crownX + Math.round(Math.cos(rad) * t);
+          const yUp = Math.sin(rad) * t;
+          const yDroop = droop * t * t;
+          const y = crownY + Math.round(yUp - yDroop);
+
+          // Main frond pixel
+          const gc = t%2===0 ? C.gm : C.gl;
+          px.set(x+','+y, gc);
+
+          // Width near base
+          if (prog < 0.55) {
+            const k = x+','+(y-1);
+            if (!px.has(k)) px.set(k, C.gd);
+          }
+          if (prog < 0.3) {
+            const k = x+','+(y+1);
+            if (!px.has(k)) px.set(k, C.gx);
+          }
+
+          // Leaflets (perpendicular detail pixels)
+          if (t > 2 && t%2===0 && prog < 0.85) {
+            const pX = Math.round(-Math.sin(rad));
+            const pY = Math.round(Math.cos(rad));
+            const k1 = (x+pX)+','+(y+pY);
+            const k2 = (x-pX)+','+(y-pY);
+            if (!px.has(k1)) px.set(k1, C.gx);
+            if (!px.has(k2)) px.set(k2, C.gd);
+          }
+        }
+        // Dark tip pixel
+        const tipX = crownX + Math.round(Math.cos(rad) * len);
+        const tipDroop = droop * len * len;
+        const tipY = crownY + Math.round(Math.sin(rad) * len - tipDroop);
+        px.set(tipX+','+tipY, C.gd);
+      }
+
+      // --- CONVERT TO BOX-SHADOW ---
+      let minX = Infinity;
+      px.forEach(function(_, k){ const x=parseInt(k); if(x<minX)minX=x; });
+
+      const shadows = [];
+      px.forEach(function(color, k){
+        const parts = k.split(',');
+        const x = parseInt(parts[0]);
+        const y = parseInt(parts[1]);
+        shadows.push(((x-minX)*PX)+'px '+((-y)*PX)+'px 0 0 '+color);
+      });
+
+      const el = document.createElement('div');
+      el.className = 'pixel-palm';
+      el.style.cssText = 'width:'+PX+'px;height:'+PX+'px;position:absolute;bottom:0;left:0;box-shadow:'+shadows.join(',')+';';
+      return el;
+    }
+
+    // Tree placements: [left%, scale, trunkH, lean, frondLen, frondCount]
+    var trees = [
+      [1,  1.5, 30,  5, 14, 8],
+      [8,  0.7, 16, -3,  8, 5],
+      [16, 1.2, 26,  4, 12, 7],
+      [24, 0.6, 14, -2,  7, 5],
+      [33, 1.0, 22, -4, 10, 6],
+      [42, 0.8, 18,  3,  9, 6],
+      [52, 1.4, 32, -3, 14, 8],
+      [62, 0.65,15,  4,  7, 5],
+      [70, 1.15,26, -2, 12, 7],
+      [80, 0.85,20,  3,  9, 6],
+      [88, 1.1, 24, -4, 11, 7],
+      [96, 0.7, 16,  2,  8, 5],
+    ];
+
+    var vw = window.innerWidth;
+    var mobileScale = vw < 480 ? 0.45 : vw < 768 ? 0.6 : 1;
+
+    trees.forEach(function(t){
+      var tree = createTree(t[2], t[3], t[4], t[5]);
+      var wrap = document.createElement('div');
+      var s = t[1] * mobileScale;
+      wrap.style.cssText = 'position:absolute;bottom:15%;left:'+t[0]+'%;transform:scale('+s+');transform-origin:bottom center;z-index:2;';
+      wrap.appendChild(tree);
+      frag.appendChild(wrap);
+    });
+
+    container.appendChild(frag);
+  }
+
+  /* ---------- GENERATE FIREFLIES ---------- */
+  function generateFireflies() {
+    const container = document.getElementById('fireflies-layer');
+    const frag = document.createDocumentFragment();
+    for (let i = 0; i < 20; i++) {
+      const ff = document.createElement('div');
+      ff.className = 'firefly';
+      ff.style.cssText = `
+        left:${Math.random()*100}%;
+        top:${20+Math.random()*60}%;
+        --dur:${3+Math.random()*4}s;
+        --dx:${-30+Math.random()*60}px;
+        --dy:${-30+Math.random()*60}px;
+        animation-delay:${Math.random()*4}s;
+      `;
+      frag.appendChild(ff);
+    }
+    container.appendChild(frag);
+  }
+
+  /* ---------- WINDOW FLICKER (unused - beach mode) ---------- */
+  function startWindowFlicker() {}
+
+  /* ---------- INIT SITE ---------- */
+  function initSite() {
+    generateStars(document.getElementById('hero-stars'), 80);
+    generateStars(document.getElementById('contact-stars'), 60);
+    generateBuildings();
+    if (!prefersReducedMotion) generateFireflies();
+    startWindowFlicker();
+    initLenis();
+    initGSAP();
+    initNav();
+    initDialog();
+    initLightbox();
+    initCabinetTilt();
+    initLazyLoad();
+    initScrollProgress();
+    initShootingStars();
+    initNeonFlicker();
+    initKonamiCode();
+  }
+
+  /* ---------- LENIS SMOOTH SCROLL ---------- */
+  let lenis;
+  function initLenis() {
+    if (prefersReducedMotion) return;
+    lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      touchMultiplier: 2,
+    });
+
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add((time) => lenis.raf(time * 1000));
+    gsap.ticker.lagSmoothing(0);
+  }
+
+  /* ---------- GSAP + SCROLLTRIGGER ---------- */
+  function initGSAP() {
+    gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+
+    // Parallax layers
+    if (!prefersReducedMotion) {
+      document.querySelectorAll('.parallax-layer[data-speed]').forEach(layer => {
+        const speed = parseFloat(layer.dataset.speed);
+        gsap.to(layer, {
+          yPercent: -30 * speed,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: '#hero',
+            start: 'top top',
+            end: 'bottom top',
+            scrub: true,
+          }
+        });
+      });
+    }
+
+    // Hero content fade on scroll
+    gsap.to('.hero-content', {
+      opacity: 0,
+      y: -60,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '#hero',
+        start: '60% top',
+        end: 'bottom top',
+        scrub: true,
+      }
+    });
+
+    gsap.to('.scroll-indicator', {
+      opacity: 0,
+      scrollTrigger: {
+        trigger: '#hero',
+        start: '20% top',
+        end: '40% top',
+        scrub: true,
+      }
+    });
+
+    // About section stats animation
+    const statRows = document.querySelectorAll('.stat-row');
+    statRows.forEach(row => {
+      const target = parseInt(row.querySelector('.stat-value').dataset.target);
+      const blocks = row.querySelectorAll('.stat-bar-block');
+      const fillCount = target;
+
+      ScrollTrigger.create({
+        trigger: row,
+        start: 'top 80%',
+        once: true,
+        onEnter: () => {
+          for (let i = 0; i < fillCount && i < blocks.length; i++) {
+            setTimeout(() => blocks[i].classList.add('filled'), i * 80);
+          }
+        }
+      });
+    });
+
+    // Gallery artwork reveal
+    const artframes = document.querySelectorAll('.artwork-frame');
+    artframes.forEach((frame, i) => {
+      gsap.to(frame, {
+        opacity: 1,
+        y: 0,
+        duration: 0.5,
+        delay: (i % 5) * 0.08,
+        scrollTrigger: {
+          trigger: frame,
+          start: 'top 90%',
+          once: true,
+        }
+      });
+    });
+
+    // Arcade cabinets reveal
+    const cabinets = document.querySelectorAll('.arcade-cabinet');
+    cabinets.forEach((cab, i) => {
+      gsap.to(cab, {
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        delay: (i % 3) * 0.1,
+        scrollTrigger: {
+          trigger: cab,
+          start: 'top 85%',
+          once: true,
+        }
+      });
+    });
+
+    // Inventory panel reveal
+    ScrollTrigger.create({
+      trigger: '#inventory-panel',
+      start: 'top 80%',
+      once: true,
+      onEnter: () => {
+        gsap.to('#inventory-panel', {
+          opacity: 1,
+          scale: 1,
+          duration: 0.5,
+          ease: 'elastic.out(1, 0.6)',
+          onComplete: () => {
+            const slots = document.querySelectorAll('.skill-slot');
+            slots.forEach((slot, i) => {
+              setTimeout(() => {
+                gsap.to(slot, { opacity: 1, scale: 1, duration: 0.3 });
+                const xp = parseInt(slot.dataset.xp);
+                const fill = slot.querySelector('.skill-xp-fill');
+                setTimeout(() => { fill.style.width = xp + '%'; }, 200);
+              }, i * 80);
+            });
+          }
+        });
+      }
+    });
+
+  }
+
+  /* ---------- NAVIGATION ---------- */
+  function initNav() {
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('open');
+      mobileMenu.classList.toggle('open');
+      document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+    });
+
+    // Nav link smooth scroll
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const target = link.getAttribute('href');
+        if (hamburger.classList.contains('open')) {
+          hamburger.classList.remove('open');
+          mobileMenu.classList.remove('open');
+          document.body.style.overflow = '';
+        }
+        gsap.to(window, { duration: 1, scrollTo: { y: target, offsetY: 80 }, ease: 'power2.inOut' });
+      });
+    });
+
+    // Active nav highlighting
+    const sections = ['hero', 'about', 'gallery', 'projects', 'skills', 'contact'];
+    const navLinks = document.querySelectorAll('.nav-links .nav-link');
+
+    ScrollTrigger.create({
+      trigger: 'body',
+      start: 'top top',
+      end: 'bottom bottom',
+      onUpdate: () => {
+        const scrollY = window.scrollY + window.innerHeight / 3;
+        let active = 'hero';
+        sections.forEach(id => {
+          const el = document.getElementById(id);
+          if (el && el.offsetTop <= scrollY) active = id;
+        });
+        navLinks.forEach(link => {
+          link.classList.toggle('active', link.dataset.section === active);
+        });
+      }
+    });
+
+    // Back to top
+    document.getElementById('back-to-top').addEventListener('click', (e) => {
+      e.preventDefault();
+      gsap.to(window, { duration: 1.5, scrollTo: { y: 0 }, ease: 'power2.inOut' });
+    });
+
+    // Hero CTA scroll
+    document.querySelector('.hero-cta').addEventListener('click', (e) => {
+      e.preventDefault();
+      gsap.to(window, { duration: 1, scrollTo: { y: '#contact', offsetY: 80 }, ease: 'power2.inOut' });
+    });
+  }
+
+  /* ---------- DIALOG BOX ---------- */
+  function initDialog() {
+    const pages = document.querySelectorAll('.dialog-page');
+    const dots = document.querySelectorAll('.dialog-dot');
+    const prevBtn = document.getElementById('dialog-prev');
+    const nextBtn = document.getElementById('dialog-next');
+    const indicator = document.getElementById('dialog-page-indicator');
+    let current = 0;
+
+    function showPage(idx) {
+      pages.forEach(p => p.classList.remove('active'));
+      dots.forEach(d => d.classList.remove('active'));
+      pages[idx].classList.add('active');
+      dots[idx].classList.add('active');
+      current = idx;
+      prevBtn.disabled = idx === 0;
+      nextBtn.disabled = idx === pages.length - 1;
+      indicator.textContent = (idx + 1) + ' / ' + pages.length;
+    }
+
+    prevBtn.addEventListener('click', () => { if (current > 0) showPage(current - 1); });
+    nextBtn.addEventListener('click', () => { if (current < pages.length - 1) showPage(current + 1); });
+    dots.forEach(dot => {
+      dot.addEventListener('click', () => showPage(parseInt(dot.dataset.dot)));
+    });
+  }
+
+  /* ---------- LIGHTBOX ---------- */
+  function initLightbox() {
+    const lightbox = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lightbox-img');
+    const lbCounter = document.getElementById('lightbox-counter');
+    const artworks = document.querySelectorAll('.artwork-frame');
+    let currentIdx = 0;
+
+    const artSrcs = Array.from(artworks).map(frame => {
+      const img = frame.querySelector('img');
+      return img.dataset.src || img.src;
+    });
+
+    function openLightbox(idx) {
+      currentIdx = idx;
+      lbImg.src = artSrcs[idx];
+      lbCounter.textContent = (idx + 1) + ' / ' + artSrcs.length;
+      lightbox.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove('open');
+      document.body.style.overflow = '';
+      lbImg.src = '';
+    }
+
+    function navigate(dir) {
+      currentIdx = (currentIdx + dir + artSrcs.length) % artSrcs.length;
+      lbImg.src = artSrcs[currentIdx];
+      lbCounter.textContent = (currentIdx + 1) + ' / ' + artSrcs.length;
+    }
+
+    artworks.forEach(frame => {
+      frame.addEventListener('click', () => openLightbox(parseInt(frame.dataset.idx)));
+    });
+
+    lightbox.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
+    lightbox.querySelector('.lightbox-prev').addEventListener('click', () => navigate(-1));
+    lightbox.querySelector('.lightbox-next').addEventListener('click', () => navigate(1));
+
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) closeLightbox();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (!lightbox.classList.contains('open')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') navigate(-1);
+      if (e.key === 'ArrowRight') navigate(1);
+    });
+
+    // Touch swipe support
+    let touchStartX = 0;
+    lightbox.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].clientX; }, { passive: true });
+    lightbox.addEventListener('touchend', (e) => {
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      if (Math.abs(dx) > 50) navigate(dx > 0 ? -1 : 1);
+    }, { passive: true });
+  }
+
+  /* ---------- ARCADE CABINET TILT ---------- */
+  function initCabinetTilt() {
+    if (window.innerWidth < 768) return;
+
+    document.querySelectorAll('.arcade-cabinet').forEach(cab => {
+      cab.addEventListener('mousemove', (e) => {
+        const rect = cab.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width - 0.5;
+        const y = (e.clientY - rect.top) / rect.height - 0.5;
+        cab.style.transform = `perspective(800px) rotateY(${x * 6}deg) rotateX(${-y * 4}deg) translateY(0)`;
+      });
+
+      cab.addEventListener('mouseleave', () => {
+        cab.style.transform = '';
+      });
+    });
+  }
+
+  /* ---------- LAZY LOAD GIFs ---------- */
+  function initLazyLoad() {
+    const lazyImgs = document.querySelectorAll('img[data-src]');
+    if (!lazyImgs.length) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const img = entry.target;
+          img.src = img.dataset.src;
+          img.removeAttribute('data-src');
+          observer.unobserve(img);
+        }
+      });
+    }, { rootMargin: '200px' });
+
+    lazyImgs.forEach(img => observer.observe(img));
+  }
+
+  /* ---------- SCROLL PROGRESS ---------- */
+  function initScrollProgress() {
+    const bar = document.getElementById('scroll-progress');
+    window.addEventListener('scroll', () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = (scrollTop / docHeight) * 100;
+      bar.style.width = progress + '%';
+    }, { passive: true });
+  }
+
+  /* ---------- SHOOTING STARS ---------- */
+  function initShootingStars() {
+    if (prefersReducedMotion) return;
+    const contactSection = document.getElementById('contact');
+
+    function createShootingStar() {
+      const star = document.createElement('div');
+      star.className = 'shooting-star';
+      star.style.left = Math.random() * 80 + '%';
+      star.style.top = Math.random() * 40 + '%';
+      contactSection.appendChild(star);
+
+      gsap.fromTo(star,
+        { opacity: 1, x: 0, y: 0 },
+        {
+          x: 150 + Math.random() * 100,
+          y: 80 + Math.random() * 60,
+          opacity: 0,
+          duration: 0.6 + Math.random() * 0.4,
+          ease: 'power1.in',
+          onComplete: () => star.remove()
+        }
+      );
+    }
+
+    setInterval(() => {
+      if (Math.random() > 0.6) createShootingStar();
+    }, 3000);
+  }
+
+  /* ---------- NEON FLICKER ---------- */
+  function initNeonFlicker() {
+    if (prefersReducedMotion) return;
+    const neon = document.getElementById('neon-sign');
+    if (!neon) return;
+
+    function flicker() {
+      const tl = gsap.timeline({ onComplete: () => setTimeout(flicker, 2000 + Math.random() * 5000) });
+      tl.to(neon, { opacity: 0.6, duration: 0.05 })
+        .to(neon, { opacity: 1, duration: 0.05 })
+        .to(neon, { opacity: 0.7, duration: 0.04 })
+        .to(neon, { opacity: 1, duration: 0.06 });
+    }
+    setTimeout(flicker, 3000);
+  }
+
+  /* ---------- KONAMI CODE EASTER EGG ---------- */
+  function initKonamiCode() {
+    const code = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
+    let idx = 0;
+
+    document.addEventListener('keydown', (e) => {
+      if (e.keyCode === code[idx]) {
+        idx++;
+        if (idx === code.length) {
+          idx = 0;
+          launchFireworks();
+        }
+      } else {
+        idx = 0;
+      }
+    });
+  }
+
+  function launchFireworks() {
+    const colors = ['#f59e0b', '#ef4444', '#fbbf24', '#84cc16', '#f97316', '#d4a574'];
+
+    for (let burst = 0; burst < 5; burst++) {
+      setTimeout(() => {
+        const cx = 20 + Math.random() * 60;
+        const cy = 20 + Math.random() * 60;
+
+        for (let i = 0; i < 30; i++) {
+          const spark = document.createElement('div');
+          spark.style.cssText = `
+            position:fixed;
+            left:${cx}vw;top:${cy}vh;
+            width:4px;height:4px;
+            background:${colors[Math.floor(Math.random()*colors.length)]};
+            z-index:100000;
+            pointer-events:none;
+          `;
+          document.body.appendChild(spark);
+
+          const angle = (Math.PI * 2 / 30) * i;
+          const dist = 60 + Math.random() * 120;
+          gsap.to(spark, {
+            x: Math.cos(angle) * dist,
+            y: Math.sin(angle) * dist,
+            opacity: 0,
+            duration: 0.8 + Math.random() * 0.5,
+            ease: 'power2.out',
+            onComplete: () => spark.remove()
+          });
+        }
+      }, burst * 300);
+    }
+  }
+
+  /* ---------- BOOT ---------- */
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', runPreloader);
+  } else {
+    runPreloader();
+  }
+})();
+</script>
+</body>
 </html>

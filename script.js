@@ -1,5 +1,87 @@
-// Loading Animation
+// Simple Glow Cursor Effect
+class GlowCursor {
+    constructor() {
+        // Create canvas element if it doesn't exist
+        this.canvas = document.getElementById('trail-canvas');
+        if (!this.canvas) {
+            this.canvas = document.createElement('canvas');
+            this.canvas.id = 'trail-canvas';
+            document.body.appendChild(this.canvas);
+        }
+        
+        this.ctx = this.canvas.getContext('2d');
+        this.mouse = { x: -100, y: -100 };
+        this.currentX = -100;
+        this.currentY = -100;
+        this.targetX = -100;
+        this.targetY = -100;
+        this.opacity = 0;
+        
+        this.resize();
+        this.init();
+    }
+    
+    init() {
+        // Handle resize
+        window.addEventListener('resize', () => this.resize());
+        
+        // Track mouse movement
+        document.addEventListener('mousemove', (e) => {
+            this.targetX = e.clientX;
+            this.targetY = e.clientY;
+            this.opacity = 1;
+        });
+        
+        // Hide on mouse leave
+        document.addEventListener('mouseleave', () => {
+            this.opacity = 0;
+        });
+        
+        this.animate();
+    }
+    
+    resize() {
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+    }
+    
+    update() {
+        // Smooth follow with lerp
+        this.currentX += (this.targetX - this.currentX) * 0.1;
+        this.currentY += (this.targetY - this.currentY) * 0.1;
+    }
+    
+    draw() {
+        // Clear canvas
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        
+        if (this.opacity > 0.01) {
+            // Draw more prominent glow
+            const gradient = this.ctx.createRadialGradient(
+                this.currentX, this.currentY, 0,
+                this.currentX, this.currentY, 150
+            );
+            gradient.addColorStop(0, `rgba(100, 150, 255, ${this.opacity * 0.5})`);
+            gradient.addColorStop(0.3, `rgba(34, 91, 179, ${this.opacity * 0.3})`);
+            gradient.addColorStop(0.6, `rgba(34, 91, 179, ${this.opacity * 0.15})`);
+            gradient.addColorStop(1, `rgba(34, 91, 179, 0)`);
+            
+            this.ctx.fillStyle = gradient;
+            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        }
+    }
+    
+    animate() {
+        this.update();
+        this.draw();
+        requestAnimationFrame(() => this.animate());
+    }
+}
+
+// Loading Animation and Initialize Effects
 document.addEventListener('DOMContentLoaded', function() {
+  // Initialize simple glow cursor effect
+  new GlowCursor();
   // Create and add loader if it doesn't exist
   if (!document.querySelector('.loader-wrapper')) {
     const loaderWrapper = document.createElement('div');
