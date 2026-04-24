@@ -1027,9 +1027,9 @@ a:hover { color: var(--hot-magenta); }
 
 .arcade-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(520px, 1fr));
   gap: 40px;
-  max-width: 1440px;
+  max-width: 1720px;
   margin: 0 auto;
 }
 
@@ -1149,6 +1149,92 @@ a:hover { color: var(--hot-magenta); }
 }
 
 /* ============================================
+   UNDER CONSTRUCTION cabinet variant
+   Placeholder tile with yellow/black construction tape.
+   ============================================ */
+.construction-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  aspect-ratio: 16/10;
+  border: 4px solid #000;
+  border-radius: 32px / 18px;
+  background:
+    linear-gradient(135deg, rgba(26, 15, 10, 0.78), rgba(10, 6, 4, 0.85)),
+    repeating-linear-gradient(45deg,
+      #fbbf24 0 28px,
+      #0a0604 28px 56px);
+  box-shadow:
+    inset 0 0 0 2px rgba(251, 191, 36, 0.15),
+    inset 0 0 36px rgba(0, 0, 0, 0.9);
+}
+
+.construction-label {
+  font-family: var(--font-display);
+  font-size: clamp(0.85rem, 1.9vw, 1.3rem);
+  color: var(--pixel-gold);
+  letter-spacing: 3px;
+  text-align: center;
+  line-height: 1.5;
+  padding: 14px 22px;
+  background: rgba(10, 6, 4, 0.75);
+  border: 3px solid var(--pixel-gold);
+  text-shadow:
+    3px 3px 0 rgba(0, 0, 0, 1),
+    0 0 10px rgba(251, 191, 36, 0.5);
+  z-index: 3;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.7);
+}
+
+/* Two tape strips crossing the screen diagonally */
+.construction-display::before,
+.construction-display::after {
+  content: '';
+  position: absolute;
+  left: -20%;
+  width: 140%;
+  height: 26px;
+  background: repeating-linear-gradient(
+    -45deg,
+    #fbbf24 0 16px,
+    #0a0604 16px 32px);
+  border-top: 2px solid #000;
+  border-bottom: 2px solid #000;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+  z-index: 2;
+}
+.construction-display::before {
+  top: 22%;
+  transform: rotate(-11deg);
+}
+.construction-display::after {
+  bottom: 22%;
+  transform: rotate(10deg);
+}
+
+/* Disabled CTA for the WIP card */
+.arcade-cabinet .arcade-btn--disabled {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  color: var(--muted);
+  background: #3a2a1e;
+  padding: 14px 38px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  box-shadow: 0 3px 0 #1a0f0a;
+  cursor: not-allowed;
+  user-select: none;
+}
+.arcade-cabinet .arcade-btn--disabled:hover {
+  transform: none;
+  box-shadow: 0 3px 0 #1a0f0a;
+}
+
+/* ============================================
    ARCADE CABINET — Marquee + CRT screen chrome
    No control panel / joystick (removed per feedback).
    Flex column so CTA buttons align across cards.
@@ -1208,7 +1294,22 @@ a:hover { color: var(--hot-magenta); }
   aspect-ratio: auto;
   margin: 16px 16px 12px;
   padding: 18px;
-  background: linear-gradient(180deg, #2a1810 0%, #1a0f0a 100%);
+  /* Bottom-left + bottom-right screws via stacked radial-gradients
+     (top-left and top-right screws are on ::before/::after below) */
+  background:
+    radial-gradient(circle at 10px calc(100% - 10px),
+      #d4a574 0 1.5px,
+      #8b6332 1.5px 3px,
+      #3a2a1e 3px 4px,
+      rgba(0, 0, 0, 0.7) 4px 5px,
+      transparent 6px) no-repeat,
+    radial-gradient(circle at calc(100% - 10px) calc(100% - 10px),
+      #d4a574 0 1.5px,
+      #8b6332 1.5px 3px,
+      #3a2a1e 3px 4px,
+      rgba(0, 0, 0, 0.7) 4px 5px,
+      transparent 6px) no-repeat,
+    linear-gradient(180deg, #2a1810 0%, #1a0f0a 100%);
   border: 5px solid #0a0604;
   box-shadow:
     inset 0 2px 0 rgba(251, 191, 36, 0.08),
@@ -1219,7 +1320,8 @@ a:hover { color: var(--hot-magenta); }
 
 /* Image becomes CRT screen with rounded corners */
 .arcade-cabinet .arcade-screen img,
-.arcade-cabinet .arcade-screen iframe {
+.arcade-cabinet .arcade-screen iframe,
+.arcade-cabinet .arcade-screen video {
   display: block;
   width: 100%;
   aspect-ratio: 16/10;
@@ -1231,6 +1333,7 @@ a:hover { color: var(--hot-magenta); }
     inset 0 0 28px rgba(0, 0, 0, 0.95);
   background: #000;
 }
+
 
 .arcade-cabinet .arcade-screen .scanline-overlay {
   position: absolute;
@@ -1923,8 +2026,8 @@ a:hover { color: var(--hot-magenta); }
   <ul class="nav-links">
     <li><a href="#hero" class="nav-link" data-section="hero"><i class="fas fa-umbrella-beach"></i> Home</a></li>
     <li><a href="#about" class="nav-link" data-section="about"><i class="fas fa-scroll"></i> About</a></li>
-    <li><a href="#gallery" class="nav-link" data-section="gallery"><i class="fas fa-palette"></i> Art</a></li>
     <li><a href="#projects" class="nav-link" data-section="projects"><i class="fas fa-gamepad"></i> Projects</a></li>
+    <li><a href="#gallery" class="nav-link" data-section="gallery"><i class="fas fa-palette"></i> Art</a></li>
     <li><a href="#skills" class="nav-link" data-section="skills"><i class="fas fa-flask"></i> Skills</a></li>
     <li><a href="#contact" class="nav-link" data-section="contact"><i class="fas fa-envelope"></i> Contact</a></li>
   </ul>
@@ -1937,8 +2040,8 @@ a:hover { color: var(--hot-magenta); }
 <div class="mobile-menu" id="mobile-menu">
   <a href="#hero" class="nav-link" data-mobile><i class="fas fa-umbrella-beach"></i> Home</a>
   <a href="#about" class="nav-link" data-mobile><i class="fas fa-scroll"></i> About</a>
-  <a href="#gallery" class="nav-link" data-mobile><i class="fas fa-palette"></i> Art</a>
   <a href="#projects" class="nav-link" data-mobile><i class="fas fa-gamepad"></i> Projects</a>
+  <a href="#gallery" class="nav-link" data-mobile><i class="fas fa-palette"></i> Art</a>
   <a href="#skills" class="nav-link" data-mobile><i class="fas fa-flask"></i> Skills</a>
   <a href="#contact" class="nav-link" data-mobile><i class="fas fa-envelope"></i> Contact</a>
 </div>
@@ -2084,42 +2187,6 @@ a:hover { color: var(--hot-magenta); }
   </div>
 </section>
 
-<!-- ========== GALLERY: THE ART GALLERY ========== -->
-<section id="gallery">
-  <div class="gallery-wall-bg"></div>
-  <h2 class="neon-header">~ Pixel Art ~</h2>
-
-  <div class="gallery-grid" id="gallery-grid">
-    <div class="artwork-frame" data-idx="0"><img data-src="images/art5.gif" alt="Pixel Art 5" loading="lazy"></div>
-    <div class="artwork-frame" data-idx="1"><img data-src="images/art7.gif" alt="Pixel Art 7" loading="lazy"></div>
-    <div class="artwork-frame" data-idx="2"><img data-src="images/art8.gif" alt="Pixel Art 8" loading="lazy"></div>
-    <div class="artwork-frame" data-idx="3"><img data-src="images/art09.gif" alt="Pixel Art 9" loading="lazy"></div>
-    <div class="artwork-frame" data-idx="4"><img data-src="images/art10.gif" alt="Pixel Art 10" loading="lazy"></div>
-    <div class="artwork-frame" data-idx="5"><img data-src="images/art24.gif" alt="Pixel Art 24" loading="lazy"></div>
-    <div class="artwork-frame" data-idx="6"><img src="images/art1.png" alt="Pixel Art 1" loading="lazy"></div>
-    <div class="artwork-frame" data-idx="7"><img src="images/art4.png" alt="Pixel Art 4" loading="lazy"></div>
-    <div class="artwork-frame" data-idx="8"><img src="images/art12.png" alt="Pixel Art 12" loading="lazy"></div>
-    <div class="artwork-frame" data-idx="9"><img src="images/art21.png" alt="Pixel Art 21" loading="lazy"></div>
-    <div class="artwork-frame" data-idx="10"><img src="images/art25.png" alt="Pixel Art 25" loading="lazy"></div>
-    <div class="artwork-frame" data-idx="11"><img src="images/art26.png" alt="Pixel Art 26" loading="lazy"></div>
-  </div>
-
-  <div style="text-align:center; margin-top:40px;">
-    <a href="archive.html" class="hero-cta" style="font-size:0.7rem; padding: 12px 28px;">
-      <span class="cta-arrow">&#9654;</span> View Full Archive
-    </a>
-  </div>
-</section>
-
-<!-- LIGHTBOX -->
-<div id="lightbox">
-  <button class="lightbox-close" aria-label="Close">&times;</button>
-  <button class="lightbox-arrow lightbox-prev" aria-label="Previous">&lt;</button>
-  <img class="lightbox-img" id="lightbox-img" src="" alt="Artwork">
-  <button class="lightbox-arrow lightbox-next" aria-label="Next">&gt;</button>
-  <div class="lightbox-counter" id="lightbox-counter"></div>
-</div>
-
 <!-- ========== PROJECTS: THE ARCADE ========== -->
 <section id="projects">
   <h2 class="section-header">~ The Arcade ~</h2>
@@ -2129,7 +2196,7 @@ a:hover { color: var(--hot-magenta); }
     <div class="arcade-cabinet">
       <div class="arcade-screen">
         <a href="https://www.youtube.com/watch?v=2KdoXTuNmQY" target="_blank" rel="noopener" aria-label="Watch Floppy Tromp 2D gameplay on YouTube">
-          <img src="https://img.youtube.com/vi/2KdoXTuNmQY/maxresdefault.jpg" alt="Floppy Tromp 2D" loading="lazy">
+          <video src="images/floppytromp.mp4" autoplay loop muted playsinline preload="metadata" aria-label="Floppy Tromp 2D gameplay"></video>
         </a>
         <div class="scanline-overlay"></div>
       </div>
@@ -2151,7 +2218,7 @@ a:hover { color: var(--hot-magenta); }
     <div class="arcade-cabinet">
       <div class="arcade-screen">
         <a href="https://taymcquaya.github.io/Javascript-Journey/" target="_blank" rel="noopener" aria-label="Visit JavaScript Journey">
-          <img src="images/javascript.png" alt="JavaScript Journey" loading="lazy">
+          <video src="images/javascript.mp4" autoplay loop muted playsinline preload="metadata" aria-label="JavaScript Journey demo"></video>
         </a>
         <div class="scanline-overlay"></div>
       </div>
@@ -2189,10 +2256,110 @@ a:hover { color: var(--hot-magenta); }
       </div>
     </div>
 
+    <!-- 7: Zombieshooter3D -->
+    <div class="arcade-cabinet">
+      <div class="arcade-screen">
+        <a href="https://taymcquaya.github.io/Zombieshooter3D/" target="_blank" rel="noopener" aria-label="Play Zombieshooter3D">
+          <video src="images/zombieshooter.mp4" autoplay loop muted playsinline preload="metadata" aria-label="Zombieshooter3D gameplay"></video>
+        </a>
+        <div class="scanline-overlay"></div>
+      </div>
+      <div class="arcade-marquee">Zombieshooter 3D</div>
+      <div class="arcade-type">Game</div>
+      <p class="arcade-desc">A browser based 3D zombie shooter. Point, click, survive. Built for speed, runs right in your tab, no install needed.</p>
+      <div class="arcade-tags">
+        <span class="arcade-tag">3D</span>
+        <span class="arcade-tag">Game Dev</span>
+        <span class="arcade-tag">Browser</span>
+        <span class="arcade-tag">Shooter</span>
+      </div>
+      <div class="arcade-footer">
+        <a href="https://taymcquaya.github.io/Zombieshooter3D/" target="_blank" rel="noopener" class="arcade-btn">Play Now</a>
+      </div>
+    </div>
+
+    <!-- 8: WhatsNote -->
+    <div class="arcade-cabinet">
+      <div class="arcade-screen">
+        <a href="https://github.com/TayMcQuaya/WhatsNote/releases" target="_blank" rel="noopener" aria-label="Download WhatsNote">
+          <video src="images/whatsnote.mp4" autoplay loop muted playsinline preload="metadata" aria-label="WhatsNote demo"></video>
+        </a>
+        <div class="scanline-overlay"></div>
+      </div>
+      <div class="arcade-marquee">WhatsNote</div>
+      <div class="arcade-type">App</div>
+      <p class="arcade-desc">Got tired of abusing WhatsApp groups for to do lists, so I built my own. Each chat is a project, each message is a task. Portable .exe, no install, no account, no internet needed.</p>
+      <div class="arcade-tags">
+        <span class="arcade-tag">Electron</span>
+        <span class="arcade-tag">Desktop</span>
+        <span class="arcade-tag">Productivity</span>
+        <span class="arcade-tag">Windows</span>
+      </div>
+      <div class="arcade-footer">
+        <a href="https://github.com/TayMcQuaya/WhatsNote/releases" target="_blank" rel="noopener" class="arcade-btn">Download</a>
+      </div>
+    </div>
+
+    <!-- 9: Under Construction placeholder -->
+    <div class="arcade-cabinet arcade-cabinet--wip">
+      <div class="arcade-screen">
+        <div class="construction-display" aria-label="Under construction">
+          <span class="construction-label">UNDER<br>CONSTRUCTION</span>
+        </div>
+        <div class="scanline-overlay"></div>
+      </div>
+      <div class="arcade-marquee">???</div>
+      <div class="arcade-type">Coming Soon</div>
+      <p class="arcade-desc">Something new is being built. New cabinet dropping soon. Check back later or DM for a sneak peek.</p>
+      <div class="arcade-tags">
+        <span class="arcade-tag">WIP</span>
+        <span class="arcade-tag">Soon</span>
+      </div>
+      <div class="arcade-footer">
+        <span class="arcade-btn arcade-btn--disabled" aria-disabled="true">Soon</span>
+      </div>
+    </div>
+
   </div>
 
   <p class="arcade-more">And much much more to come...</p>
 </section>
+
+<!-- ========== GALLERY: THE ART GALLERY ========== -->
+<section id="gallery">
+  <div class="gallery-wall-bg"></div>
+  <h2 class="neon-header">~ Pixel Art ~</h2>
+
+  <div class="gallery-grid" id="gallery-grid">
+    <div class="artwork-frame" data-idx="0"><img data-src="images/art5.gif" alt="Pixel Art 5" loading="lazy"></div>
+    <div class="artwork-frame" data-idx="1"><img data-src="images/art7.gif" alt="Pixel Art 7" loading="lazy"></div>
+    <div class="artwork-frame" data-idx="2"><img data-src="images/art8.gif" alt="Pixel Art 8" loading="lazy"></div>
+    <div class="artwork-frame" data-idx="3"><img data-src="images/art09.gif" alt="Pixel Art 9" loading="lazy"></div>
+    <div class="artwork-frame" data-idx="4"><img data-src="images/art10.gif" alt="Pixel Art 10" loading="lazy"></div>
+    <div class="artwork-frame" data-idx="5"><img data-src="images/art24.gif" alt="Pixel Art 24" loading="lazy"></div>
+    <div class="artwork-frame" data-idx="6"><img src="images/art1.png" alt="Pixel Art 1" loading="lazy"></div>
+    <div class="artwork-frame" data-idx="7"><img src="images/art4.png" alt="Pixel Art 4" loading="lazy"></div>
+    <div class="artwork-frame" data-idx="8"><img src="images/art12.png" alt="Pixel Art 12" loading="lazy"></div>
+    <div class="artwork-frame" data-idx="9"><img src="images/art21.png" alt="Pixel Art 21" loading="lazy"></div>
+    <div class="artwork-frame" data-idx="10"><img src="images/art25.png" alt="Pixel Art 25" loading="lazy"></div>
+    <div class="artwork-frame" data-idx="11"><img src="images/art26.png" alt="Pixel Art 26" loading="lazy"></div>
+  </div>
+
+  <div style="text-align:center; margin-top:40px;">
+    <a href="archive.html" class="hero-cta" style="font-size:0.7rem; padding: 12px 28px;">
+      <span class="cta-arrow">&#9654;</span> View Full Archive
+    </a>
+  </div>
+</section>
+
+<!-- LIGHTBOX -->
+<div id="lightbox">
+  <button class="lightbox-close" aria-label="Close">&times;</button>
+  <button class="lightbox-arrow lightbox-prev" aria-label="Previous">&lt;</button>
+  <img class="lightbox-img" id="lightbox-img" src="" alt="Artwork">
+  <button class="lightbox-arrow lightbox-next" aria-label="Next">&gt;</button>
+  <div class="lightbox-counter" id="lightbox-counter"></div>
+</div>
 
 <!-- ========== SKILLS: THE INVENTORY ========== -->
 <section id="skills">
