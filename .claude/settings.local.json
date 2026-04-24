@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:reactbits.dev)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

@@ -719,8 +719,6 @@ a:hover { color: var(--hot-magenta); }
 .dialog-text-area {
   flex: 1;
   min-height: 220px;
-  height: 220px;
-  overflow: hidden;
 }
 
 .dialog-page {
@@ -1029,9 +1027,9 @@ a:hover { color: var(--hot-magenta); }
 
 .arcade-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-  gap: 36px;
-  max-width: 1200px;
+  grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+  gap: 40px;
+  max-width: 1440px;
   margin: 0 auto;
 }
 
@@ -1148,6 +1146,173 @@ a:hover { color: var(--hot-magenta); }
 .arcade-btn:active {
   transform: translateY(2px);
   box-shadow: 0 1px 0 #5a8a0a;
+}
+
+/* ============================================
+   ARCADE CABINET — Marquee + CRT screen chrome
+   No control panel / joystick (removed per feedback).
+   Flex column so CTA buttons align across cards.
+   ============================================ */
+
+.arcade-cabinet {
+  display: flex;
+  flex-direction: column;
+  min-height: 640px;
+}
+
+/* Marquee: gold signboard with 4 corner bolts (top + bottom) */
+.arcade-cabinet .arcade-marquee {
+  order: -2;
+  position: relative;
+  padding: 20px 40px 18px;
+  text-align: center;
+  color: #1a0f0a;
+  background:
+    /* Four corner bolts drawn as radial gradients (dark ring + highlight pip) */
+    radial-gradient(circle at 22px 14px,
+      rgba(255,255,255,0.35) 0 1px,
+      #0a0604 1.5px 5px,
+      rgba(0,0,0,0.5) 5px 6px,
+      transparent 7px),
+    radial-gradient(circle at calc(100% - 22px) 14px,
+      rgba(255,255,255,0.35) 0 1px,
+      #0a0604 1.5px 5px,
+      rgba(0,0,0,0.5) 5px 6px,
+      transparent 7px),
+    radial-gradient(circle at 22px calc(100% - 14px),
+      rgba(255,255,255,0.35) 0 1px,
+      #0a0604 1.5px 5px,
+      rgba(0,0,0,0.5) 5px 6px,
+      transparent 7px),
+    radial-gradient(circle at calc(100% - 22px) calc(100% - 14px),
+      rgba(255,255,255,0.35) 0 1px,
+      #0a0604 1.5px 5px,
+      rgba(0,0,0,0.5) 5px 6px,
+      transparent 7px),
+    /* Gold signboard gradient underneath */
+    linear-gradient(180deg, #fde68a 0%, #fbbf24 40%, #f59e0b 70%, #d97706 100%);
+  text-shadow: 0 1px 0 #fde68a, 0 0 4px rgba(251, 191, 36, 0.6);
+  border-bottom: 4px solid #0a0604;
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.4),
+    inset 0 -3px 0 rgba(120, 53, 15, 0.5),
+    0 6px 18px rgba(251, 191, 36, 0.25);
+  font-size: clamp(0.9rem, 1.6vw, 1.15rem);
+  letter-spacing: 2px;
+}
+
+/* Screen bezel: padded dark frame housing the CRT */
+.arcade-cabinet .arcade-screen {
+  order: -1;
+  position: relative;
+  aspect-ratio: auto;
+  margin: 16px 16px 12px;
+  padding: 18px;
+  background: linear-gradient(180deg, #2a1810 0%, #1a0f0a 100%);
+  border: 5px solid #0a0604;
+  box-shadow:
+    inset 0 2px 0 rgba(251, 191, 36, 0.08),
+    inset 0 0 30px rgba(0, 0, 0, 0.8),
+    0 4px 0 rgba(0, 0, 0, 0.3);
+  overflow: visible;
+}
+
+/* Image becomes CRT screen with rounded corners */
+.arcade-cabinet .arcade-screen img,
+.arcade-cabinet .arcade-screen iframe {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16/10;
+  object-fit: cover;
+  border: 4px solid #000;
+  border-radius: 32px / 18px;
+  box-shadow:
+    inset 0 0 0 2px rgba(251, 191, 36, 0.1),
+    inset 0 0 28px rgba(0, 0, 0, 0.95);
+  background: #000;
+}
+
+.arcade-cabinet .arcade-screen .scanline-overlay {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  right: 18px;
+  bottom: 18px;
+  border-radius: 32px / 18px;
+  pointer-events: none;
+}
+
+/* Corner "screws" on bezel */
+.arcade-cabinet .arcade-screen::before,
+.arcade-cabinet .arcade-screen::after {
+  content: '';
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  background: radial-gradient(circle at 30% 30%, #d4a574 0%, #8b6332 55%, #3a2a1e 100%);
+  border: 1px solid #0a0604;
+  border-radius: 50%;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3), 0 1px 2px rgba(0, 0, 0, 0.8);
+  z-index: 2;
+}
+.arcade-cabinet .arcade-screen::before { top: 6px; left: 6px; }
+.arcade-cabinet .arcade-screen::after { top: 6px; right: 6px; }
+
+/* Type badge (Game / Website / App): centered + larger */
+.arcade-cabinet .arcade-type {
+  order: 0;
+  text-align: center;
+  font-size: 0.95rem;
+  color: var(--pixel-gold);
+  padding: 14px 20px 2px;
+  margin-top: 4px;
+  letter-spacing: 3px;
+  text-shadow: 0 0 6px rgba(251, 191, 36, 0.4);
+}
+
+/* Description stays centered & readable */
+.arcade-cabinet .arcade-desc {
+  order: 1;
+  text-align: center;
+  font-size: 1rem;
+}
+
+.arcade-cabinet .arcade-tags {
+  order: 2;
+  justify-content: center;
+}
+
+/* Footer: push to bottom + center the CTA so all cards align horizontally */
+.arcade-cabinet .arcade-footer {
+  order: 4;
+  margin-top: auto;
+  text-align: center;
+  padding: 18px 20px 26px;
+}
+
+/* CTA button: more prominent — bigger font, chunkier padding */
+.arcade-cabinet .arcade-btn {
+  font-size: 0.95rem;
+  padding: 14px 38px;
+  letter-spacing: 3px;
+  box-shadow: 0 4px 0 #5a8a0a, 0 0 28px rgba(132, 204, 22, 0.3);
+}
+.arcade-cabinet .arcade-btn:hover {
+  box-shadow: 0 5px 0 #5a8a0a, 0 0 40px rgba(132, 204, 22, 0.5);
+}
+.arcade-cabinet .arcade-btn:active {
+  box-shadow: 0 1px 0 #5a8a0a;
+}
+
+/* Mobile: tighter margins on bezel */
+@media (max-width: 767px) {
+  .arcade-cabinet .arcade-screen {
+    margin: 12px 12px 10px;
+    padding: 14px;
+  }
+  .arcade-cabinet .arcade-screen .scanline-overlay {
+    top: 14px; left: 14px; right: 14px; bottom: 14px;
+  }
 }
 
 .arcade-more {
@@ -1438,19 +1603,23 @@ a:hover { color: var(--hot-magenta); }
 
 .social-icon-label {
   font-family: var(--font-ui);
-  font-size: 0.75rem;
-  letter-spacing: 1px;
+  font-size: 0.85rem;
+  letter-spacing: 1.5px;
   text-transform: uppercase;
-  opacity: 0.5;
-  transition: opacity 0.3s;
+  font-weight: 700;
+  opacity: 1;
+  text-shadow:
+    0 0 1px rgba(0, 0, 0, 0.9),
+    0 0 6px rgba(0, 0, 0, 0.7);
+  transition: transform 0.3s;
 }
 
-.social-icon:hover .social-icon-label { opacity: 1; }
+.social-icon:hover .social-icon-label { transform: translateY(-2px); }
 
 .social-x, .social-x:hover, .social-x:visited { color: var(--text); }
 .social-x .social-icon-box { border-color: var(--text); }
-.social-steam, .social-steam:hover, .social-steam:visited { color: #a8b4c8; }
-.social-steam .social-icon-box { border-color: #a8b4c8; }
+.social-linkedin, .social-linkedin:hover, .social-linkedin:visited { color: #4a9eff; }
+.social-linkedin .social-icon-box { border-color: #4a9eff; box-shadow: 0 0 12px rgba(74, 158, 255, 0.4); }
 .social-github, .social-github:hover, .social-github:visited { color: #fff; }
 .social-github .social-icon-box { border-color: #fff; }
 .social-email, .social-email:hover, .social-email:visited { color: var(--pixel-gold); }
@@ -1752,7 +1921,7 @@ a:hover { color: var(--hot-magenta); }
 <nav id="navbar">
   <div class="nav-logo">TMCQ</div>
   <ul class="nav-links">
-    <li><a href="#hero" class="nav-link" data-section="hero"><i class="fas fa-mountain-sun"></i> Rooftop</a></li>
+    <li><a href="#hero" class="nav-link" data-section="hero"><i class="fas fa-umbrella-beach"></i> Home</a></li>
     <li><a href="#about" class="nav-link" data-section="about"><i class="fas fa-scroll"></i> About</a></li>
     <li><a href="#gallery" class="nav-link" data-section="gallery"><i class="fas fa-palette"></i> Art</a></li>
     <li><a href="#projects" class="nav-link" data-section="projects"><i class="fas fa-gamepad"></i> Projects</a></li>
@@ -1766,7 +1935,7 @@ a:hover { color: var(--hot-magenta); }
 
 <!-- MOBILE MENU -->
 <div class="mobile-menu" id="mobile-menu">
-  <a href="#hero" class="nav-link" data-mobile><i class="fas fa-mountain-sun"></i> Rooftop</a>
+  <a href="#hero" class="nav-link" data-mobile><i class="fas fa-umbrella-beach"></i> Home</a>
   <a href="#about" class="nav-link" data-mobile><i class="fas fa-scroll"></i> About</a>
   <a href="#gallery" class="nav-link" data-mobile><i class="fas fa-palette"></i> Art</a>
   <a href="#projects" class="nav-link" data-mobile><i class="fas fa-gamepad"></i> Projects</a>
@@ -1806,7 +1975,7 @@ a:hover { color: var(--hot-magenta); }
   <div class="hero-content">
     <h1 class="hero-title">TAYMCQUAYA</h1>
     <p class="hero-subtitle">Developer / Pixel Artist / Creator</p>
-    <p class="hero-desc">Games, SaaS, Websites, Pixel Art -- If I can dream it, I can build it</p>
+    <p class="hero-desc">Games, SaaS, Websites, Pixel Art. If I can dream it, I can build it</p>
     <a href="#contact" class="hero-cta"><span class="cta-arrow">&#9654;</span> Get In Touch</a>
   </div>
 
@@ -1833,16 +2002,21 @@ a:hover { color: var(--hot-magenta); }
       </div>
       <div class="dialog-text-area">
         <div class="dialog-page active" data-page="0">
-          <p><strong>I'm TayMcQuaya.</strong> I dropped out of college, moved to Bali, and started building. Not because I had a master plan, but because sitting in lectures about theory felt criminal when the <b>entire internet was there to build on.</b></p>
-          <p>I'm no expert developer. In 2024 I went all-in on vibe coding as a full-time pursuit, learning by doing every single day. Six languages spoken, six programming languages picked up along the way. <b>All self-taught, all from curiosity.</b></p>
+          <p><strong>I'm Tayfun.</strong> I dropped out of college, moved to Bali, and started building. Nothing against theory. I just couldn't ignore what the <b>entire internet was making possible</b> outside the lecture hall.</p>
+          <p>In 2024 I went all in on vibe coding as a full time pursuit, learning by doing every single day. Six spoken languages. <b>All self taught, all from curiosity.</b></p>
         </div>
         <div class="dialog-page" data-page="1">
-          <p><b>Pixel art is where my heart is.</b> Every character, animation, and game asset on this site was drawn by hand, one pixel at a time (the profile pic being the one exception). It's meditative, precise, and deeply satisfying.</p>
-          <p>2020 changed everything. COVID lockdowns, crypto, and NFTs pulled me into <b>Web3</b>. I joined communities like <b><a href="neo-tokyo.html">Neo Tokyo</a></b>, learned from builders like <b>Alex Becker</b> and <b>Elliot Trades</b>, and met people who showed me what's possible when you <b>stop asking permission and start building.</b></p>
+          <p><b>Pixel art and game dev is where I started.</b> Every character, animation, and game asset on this site was drawn by hand, one pixel at a time (the profile pic being the one exception).</p>
+          <p>It was meditative, precise, and deeply satisfying. The foundation everything else got built on.</p>
+          <p>2020 changed everything. Crypto and NFTs pulled me into <b>Web3</b>.</p>
+          <p>I found communities and builders who showed me what's possible when you <b>follow your curiosity and keep building.</b></p>
         </div>
         <div class="dialog-page" data-page="2">
-          <p>Now I build <b>whatever catches my fire.</b> Games, SaaS tools, websites, Telegram bots, NFT explorers. If I can dream it, I ship it. Every project is a level-up. <b>Every failure is XP.</b></p>
-          <p>I get better every day. This site is a snapshot, not the full picture. <b>The best stuff? It's still loading.</b></p>
+          <p>Now I build <b>whatever catches my fire.</b></p>
+          <p>Games, SaaS tools, websites, Telegram bots, whatever the idea demands.</p>
+          <p><b>If I can dream it, I ship it.</b></p>
+          <p>I get better every day. This site is a snapshot, not the full picture.</p>
+          <p><b>The best stuff? It's still loading.</b></p>
         </div>
       </div>
     </div>
@@ -1916,30 +2090,24 @@ a:hover { color: var(--hot-magenta); }
   <h2 class="neon-header">~ Pixel Art ~</h2>
 
   <div class="gallery-grid" id="gallery-grid">
-    <div class="artwork-frame" data-idx="0"><img src="images/art1.png" alt="Pixel Art 1" loading="lazy"></div>
-    <div class="artwork-frame" data-idx="1"><img src="images/art2.png" alt="Pixel Art 2" loading="lazy"></div>
-    <div class="artwork-frame" data-idx="2"><img src="images/art3.png" alt="Pixel Art 3" loading="lazy"></div>
-    <div class="artwork-frame" data-idx="3"><img src="images/art4.png" alt="Pixel Art 4" loading="lazy"></div>
-    <div class="artwork-frame" data-idx="4"><img data-src="images/art5.gif" alt="Pixel Art 5" loading="lazy"></div>
-    <div class="artwork-frame" data-idx="5"><img data-src="images/art6.gif" alt="Pixel Art 6" loading="lazy"></div>
-    <div class="artwork-frame" data-idx="6"><img data-src="images/art7.gif" alt="Pixel Art 7" loading="lazy"></div>
-    <div class="artwork-frame" data-idx="7"><img data-src="images/art8.gif" alt="Pixel Art 8" loading="lazy"></div>
-    <div class="artwork-frame" data-idx="8"><img data-src="images/art09.gif" alt="Pixel Art 9" loading="lazy"></div>
-    <div class="artwork-frame" data-idx="9"><img data-src="images/art10.gif" alt="Pixel Art 10" loading="lazy"></div>
-    <div class="artwork-frame" data-idx="10"><img data-src="images/art11.gif" alt="Pixel Art 11" loading="lazy"></div>
-    <div class="artwork-frame" data-idx="11"><img src="images/art12.png" alt="Pixel Art 12" loading="lazy"></div>
-    <div class="artwork-frame" data-idx="12"><img src="images/art13.png" alt="Pixel Art 13" loading="lazy"></div>
-    <div class="artwork-frame" data-idx="13"><img data-src="images/art14.gif" alt="Pixel Art 14" loading="lazy"></div>
-    <div class="artwork-frame" data-idx="14"><img data-src="images/art15.gif" alt="Pixel Art 15" loading="lazy"></div>
-    <div class="artwork-frame" data-idx="15"><img data-src="images/art16.gif" alt="Pixel Art 16" loading="lazy"></div>
-    <div class="artwork-frame" data-idx="16"><img src="images/art17.png" alt="Pixel Art 17" loading="lazy"></div>
-    <div class="artwork-frame" data-idx="17"><img src="images/art18.png" alt="Pixel Art 18" loading="lazy"></div>
-    <div class="artwork-frame" data-idx="18"><img src="images/art19.png" alt="Pixel Art 19" loading="lazy"></div>
-    <div class="artwork-frame" data-idx="19"><img src="images/art20.png" alt="Pixel Art 20" loading="lazy"></div>
-    <div class="artwork-frame" data-idx="20"><img src="images/art21.png" alt="Pixel Art 21" loading="lazy"></div>
-    <div class="artwork-frame" data-idx="21"><img data-src="images/art22.gif" alt="Pixel Art 22" loading="lazy"></div>
-    <div class="artwork-frame" data-idx="22"><img data-src="images/art23.gif" alt="Pixel Art 23" loading="lazy"></div>
-    <div class="artwork-frame" data-idx="23"><img data-src="images/art24.gif" alt="Pixel Art 24" loading="lazy"></div>
+    <div class="artwork-frame" data-idx="0"><img data-src="images/art5.gif" alt="Pixel Art 5" loading="lazy"></div>
+    <div class="artwork-frame" data-idx="1"><img data-src="images/art7.gif" alt="Pixel Art 7" loading="lazy"></div>
+    <div class="artwork-frame" data-idx="2"><img data-src="images/art8.gif" alt="Pixel Art 8" loading="lazy"></div>
+    <div class="artwork-frame" data-idx="3"><img data-src="images/art09.gif" alt="Pixel Art 9" loading="lazy"></div>
+    <div class="artwork-frame" data-idx="4"><img data-src="images/art10.gif" alt="Pixel Art 10" loading="lazy"></div>
+    <div class="artwork-frame" data-idx="5"><img data-src="images/art24.gif" alt="Pixel Art 24" loading="lazy"></div>
+    <div class="artwork-frame" data-idx="6"><img src="images/art1.png" alt="Pixel Art 1" loading="lazy"></div>
+    <div class="artwork-frame" data-idx="7"><img src="images/art4.png" alt="Pixel Art 4" loading="lazy"></div>
+    <div class="artwork-frame" data-idx="8"><img src="images/art12.png" alt="Pixel Art 12" loading="lazy"></div>
+    <div class="artwork-frame" data-idx="9"><img src="images/art21.png" alt="Pixel Art 21" loading="lazy"></div>
+    <div class="artwork-frame" data-idx="10"><img src="images/art25.png" alt="Pixel Art 25" loading="lazy"></div>
+    <div class="artwork-frame" data-idx="11"><img src="images/art26.png" alt="Pixel Art 26" loading="lazy"></div>
+  </div>
+
+  <div style="text-align:center; margin-top:40px;">
+    <a href="archive.html" class="hero-cta" style="font-size:0.7rem; padding: 12px 28px;">
+      <span class="cta-arrow">&#9654;</span> View Full Archive
+    </a>
   </div>
 </section>
 
@@ -1960,16 +2128,18 @@ a:hover { color: var(--hot-magenta); }
     <!-- 1: Floppy Tromp 2D -->
     <div class="arcade-cabinet">
       <div class="arcade-screen">
-        <img src="https://img.youtube.com/vi/2KdoXTuNmQY/maxresdefault.jpg" alt="Floppy Tromp 2D" loading="lazy">
+        <a href="https://www.youtube.com/watch?v=2KdoXTuNmQY" target="_blank" rel="noopener" aria-label="Watch Floppy Tromp 2D gameplay on YouTube">
+          <img src="https://img.youtube.com/vi/2KdoXTuNmQY/maxresdefault.jpg" alt="Floppy Tromp 2D" loading="lazy">
+        </a>
         <div class="scanline-overlay"></div>
       </div>
       <div class="arcade-marquee">Floppy Tromp 2D</div>
       <div class="arcade-type">Game</div>
-      <p class="arcade-desc">A pixel art flappy-bird style game with custom characters and artwork -- all hand-drawn.</p>
+      <p class="arcade-desc">Election season satire built in Unity. Hand drew every character, shipped in a week with Web3 wallet gating baked in. Gates are open now, free for everyone to play.</p>
       <div class="arcade-tags">
-        <span class="arcade-tag">HTML5</span>
-        <span class="arcade-tag">JavaScript</span>
+        <span class="arcade-tag">Unity</span>
         <span class="arcade-tag">Pixel Art</span>
+        <span class="arcade-tag">Web3</span>
         <span class="arcade-tag">Game Dev</span>
       </div>
       <div class="arcade-footer">
@@ -1977,35 +2147,17 @@ a:hover { color: var(--hot-magenta); }
       </div>
     </div>
 
-    <!-- 3: ExO Heroes Explorer -->
-    <div class="arcade-cabinet">
-      <div class="arcade-screen">
-        <img data-src="images/website2.gif" alt="ExO Heroes Explorer" loading="lazy">
-        <div class="scanline-overlay"></div>
-      </div>
-      <div class="arcade-marquee">ExO Heroes Explorer</div>
-      <div class="arcade-type">Website</div>
-      <p class="arcade-desc">An NFT Explorer for ExoHeroes. Entire collection has been hand drawn by me as well!</p>
-      <div class="arcade-tags">
-        <span class="arcade-tag">Node.js</span>
-        <span class="arcade-tag">NFT</span>
-        <span class="arcade-tag">Pixel Art</span>
-        <span class="arcade-tag">Web3</span>
-      </div>
-      <div class="arcade-footer">
-        <a href="https://salty-lowlands-40395-d2184796b235.herokuapp.com/" target="_blank" rel="noopener" class="arcade-btn">Visit</a>
-      </div>
-    </div>
-
     <!-- 5: JavaScript Journey -->
     <div class="arcade-cabinet">
       <div class="arcade-screen">
-        <img src="images/javascript.png" alt="JavaScript Journey" loading="lazy">
+        <a href="https://taymcquaya.github.io/Javascript-Journey/" target="_blank" rel="noopener" aria-label="Visit JavaScript Journey">
+          <img src="images/javascript.png" alt="JavaScript Journey" loading="lazy">
+        </a>
         <div class="scanline-overlay"></div>
       </div>
       <div class="arcade-marquee">JavaScript Journey</div>
       <div class="arcade-type">Website</div>
-      <p class="arcade-desc">Learn JavaScript from zero to hero -- completely free. Perfect for non-tech beginners.</p>
+      <p class="arcade-desc">Built for beginners who want to learn JavaScript without paying for another course. Zero to hero, completely free, made with non tech folks in mind.</p>
       <div class="arcade-tags">
         <span class="arcade-tag">JavaScript</span>
         <span class="arcade-tag">Education</span>
@@ -2019,12 +2171,14 @@ a:hover { color: var(--hot-magenta); }
     <!-- 6: OpenOPen -->
     <div class="arcade-cabinet">
       <div class="arcade-screen">
-        <img data-src="images/app1.1.gif" alt="OpenOPen" loading="lazy">
+        <a href="https://github.com/TayMcQuaya/OpenOPen/tree/executable" target="_blank" rel="noopener" aria-label="Download OpenOPen">
+          <img data-src="images/app1.1.gif" alt="OpenOPen" loading="lazy">
+        </a>
         <div class="scanline-overlay"></div>
       </div>
       <div class="arcade-marquee">OpenOPen</div>
       <div class="arcade-type">App</div>
-      <p class="arcade-desc">An open-source free text editor -- lightweight, fast, and built for developers.</p>
+      <p class="arcade-desc">A fully functional text editor built from scratch in my early vibe coding days, a personal stress test to see how far I could push the limits. Works just fine.</p>
       <div class="arcade-tags">
         <span class="arcade-tag">Python</span>
         <span class="arcade-tag">Open Source</span>
@@ -2074,6 +2228,26 @@ a:hover { color: var(--hot-magenta); }
         <div class="skill-name">JavaScript</div>
         <div class="skill-xp-bar"><div class="skill-xp-fill"></div></div>
       </div>
+      <div class="skill-slot" data-xp="85">
+        <div class="skill-icon">&#x1F537;</div>
+        <div class="skill-name">TypeScript</div>
+        <div class="skill-xp-bar"><div class="skill-xp-fill"></div></div>
+      </div>
+      <div class="skill-slot" data-xp="90">
+        <div class="skill-icon">&#x269B;</div>
+        <div class="skill-name">React</div>
+        <div class="skill-xp-bar"><div class="skill-xp-fill"></div></div>
+      </div>
+      <div class="skill-slot" data-xp="85">
+        <div class="skill-icon">&#x25B2;</div>
+        <div class="skill-name">Next.js</div>
+        <div class="skill-xp-bar"><div class="skill-xp-fill"></div></div>
+      </div>
+      <div class="skill-slot" data-xp="85">
+        <div class="skill-icon">&#x1F7E2;</div>
+        <div class="skill-name">Node.js</div>
+        <div class="skill-xp-bar"><div class="skill-xp-fill"></div></div>
+      </div>
       <div class="skill-slot" data-xp="70">
         <div class="skill-icon">&#x1F40D;</div>
         <div class="skill-name">Python</div>
@@ -2104,7 +2278,7 @@ a:hover { color: var(--hot-magenta); }
         <div class="skill-name">Game Dev</div>
         <div class="skill-xp-bar"><div class="skill-xp-fill"></div></div>
       </div>
-      <div class="skill-slot" data-xp="80">
+      <div class="skill-slot" data-xp="100">
         <div class="skill-icon">&#x1F680;</div>
         <div class="skill-name">Hustle</div>
         <div class="skill-xp-bar"><div class="skill-xp-fill"></div></div>
@@ -2140,9 +2314,9 @@ a:hover { color: var(--hot-magenta); }
         <div class="social-icon-box"><i class="fab fa-x-twitter"></i></div>
         <span class="social-icon-label">X / Twitter</span>
       </a>
-      <a href="https://steamcommunity.com/id/TMCQ/" target="_blank" rel="noopener" class="social-icon social-steam">
-        <div class="social-icon-box"><i class="fab fa-steam"></i></div>
-        <span class="social-icon-label">Steam</span>
+      <a href="https://www.linkedin.com/in/tayfun-ergun-taymcquaya/" target="_blank" rel="noopener" class="social-icon social-linkedin">
+        <div class="social-icon-box"><i class="fab fa-linkedin-in"></i></div>
+        <span class="social-icon-label">LinkedIn</span>
       </a>
       <a href="https://github.com/taymcquaya" target="_blank" rel="noopener" class="social-icon social-github">
         <div class="social-icon-box"><i class="fab fa-github"></i></div>
@@ -2716,22 +2890,10 @@ a:hover { color: var(--hot-magenta); }
     }, { passive: true });
   }
 
-  /* ---------- ARCADE CABINET TILT ---------- */
+  /* ---------- ARCADE CABINET TILT (3D with GSAP) ---------- */
   function initCabinetTilt() {
-    if (window.innerWidth < 768) return;
-
-    document.querySelectorAll('.arcade-cabinet').forEach(cab => {
-      cab.addEventListener('mousemove', (e) => {
-        const rect = cab.getBoundingClientRect();
-        const x = (e.clientX - rect.left) / rect.width - 0.5;
-        const y = (e.clientY - rect.top) / rect.height - 0.5;
-        cab.style.transform = `perspective(800px) rotateY(${x * 6}deg) rotateX(${-y * 4}deg) translateY(0)`;
-      });
-
-      cab.addEventListener('mouseleave', () => {
-        cab.style.transform = '';
-      });
-    });
+    /* Tilt disabled per user preference. Kept as no-op so call site works. */
+    return;
   }
 
   /* ---------- LAZY LOAD GIFs ---------- */
@@ -2864,10 +3026,25 @@ a:hover { color: var(--hot-magenta); }
   }
 
   /* ---------- BOOT ---------- */
+  // Only show preloader on first visit per browser session.
+  // Navigating back from terms/privacy should go straight to the site.
+  function boot() {
+    const seen = sessionStorage.getItem('ph_preloader_seen');
+    if (seen) {
+      const preloader = document.getElementById('preloader');
+      if (preloader) preloader.style.display = 'none';
+      document.body.style.overflow = '';
+      initSite();
+    } else {
+      sessionStorage.setItem('ph_preloader_seen', '1');
+      runPreloader();
+    }
+  }
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', runPreloader);
+    document.addEventListener('DOMContentLoaded', boot);
   } else {
-    runPreloader();
+    boot();
   }
 })();
 </script>

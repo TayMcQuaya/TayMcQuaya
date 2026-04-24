@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pixel Art Archive | TayMcQuaya</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Full archive of TayMcQuaya's pixel art — hand drawn characters, animations, scenes.">
+  <meta name="author" content="TayMcQuaya">
+
+  <meta property="og:title" content="Pixel Art Archive | TayMcQuaya">
+  <meta property="og:description" content="25 pieces of hand drawn pixel art. One pixel at a time.">
+  <meta property="og:image" content="https://www.taymcquaya.com/images/outer.png">
+  <meta property="og:url" content="https://www.taymcquaya.com/archive.html">
+
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Mono:wght@400;700&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+/* ============================================
+   RESET + TOKENS (mirror main site)
+   ============================================ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg-deep: #1a0f0a;
+  --bg-dusk: #2a1810;
+  --cyber-blue: #f59e0b;
+  --hot-magenta: #ef4444;
+  --pixel-gold: #fbbf24;
+  --sunset-orange: #f97316;
+  --lavender: #d4a574;
+  --retro-green: #84cc16;
+  --text: #fde8c8;
+  --muted: #8b7355;
+  --font-display: 'Press Start 2P', monospace;
+  --font-body: 'Space Mono', monospace;
+  --font-ui: 'Silkscreen', monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--cyber-blue) var(--bg-deep);
+}
+body {
+  font-family: var(--font-body);
+  background: var(--bg-deep);
+  color: var(--text);
+  overflow-x: hidden;
+  line-height: 1.6;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-deep); }
+::-webkit-scrollbar-thumb { background: var(--cyber-blue); }
+img { image-rendering: pixelated; }
+a { color: var(--cyber-blue); text-decoration: none; transition: color 0.2s; }
+a:hover { color: var(--hot-magenta); }
+@media (pointer: fine) {
+  body { cursor: crosshair; }
+  a, button, .clickable, .archive-tile, .filter-chip { cursor: pointer; }
+}
+
+/* Subtle scanline body overlay (matches main site CRT vibe) */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    0deg, transparent, transparent 3px,
+    rgba(245, 158, 11, 0.02) 3px, rgba(245, 158, 11, 0.02) 4px
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ============================================
+   NAVBAR (identical structure to main site)
+   ============================================ */
+#navbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 9999;
+  padding: 0 20px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(26, 15, 10, 0.9);
+  border-bottom: 3px solid var(--cyber-blue);
+  box-shadow: 0 4px 30px rgba(245, 158, 11, 0.2);
+  backdrop-filter: blur(10px);
+}
+.nav-logo {
+  position: absolute;
+  left: 24px;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--pixel-gold);
+  text-shadow: 0 0 10px var(--pixel-gold);
+}
+.nav-links {
+  display: flex;
+  gap: 10px;
+  list-style: none;
+}
+.nav-link {
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  color: var(--lavender);
+  padding: 10px 20px;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.nav-link:hover, .nav-link.active {
+  color: var(--cyber-blue);
+  border-color: var(--cyber-blue);
+  background: rgba(245, 158, 11, 0.08);
+  text-shadow: 0 0 8px var(--cyber-blue);
+}
+.nav-link i { font-size: 0.95rem; }
+
+.hamburger {
+  display: none;
+  position: absolute;
+  right: 20px;
+  flex-direction: column;
+  gap: 4px;
+  background: none;
+  border: none;
+  padding: 8px;
+  z-index: 10001;
+}
+.hamburger span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--cyber-blue);
+  transition: all 0.3s;
+}
+.hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(4px, 4px); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(4px, -4px); }
+
+.mobile-menu {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(26, 15, 10, 0.97);
+  z-index: 10000;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu .nav-link {
+  font-size: 1.2rem;
+  padding: 16px 32px;
+}
+
+@media (max-width: 900px) {
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+}
+
+/* ============================================
+   HERO
+   ============================================ */
+.archive-hero {
+  padding: 140px 24px 50px;
+  text-align: center;
+  background:
+    radial-gradient(ellipse at top, rgba(245, 158, 11, 0.12), transparent 60%),
+    linear-gradient(180deg, var(--bg-dusk) 0%, var(--bg-deep) 100%);
+  border-bottom: 3px solid var(--cyber-blue);
+  position: relative;
+  overflow: hidden;
+  z-index: 2;
+}
+.archive-hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 4vw, 2.6rem);
+  color: var(--pixel-gold);
+  text-shadow:
+    0 0 20px var(--pixel-gold),
+    3px 3px 0 var(--hot-magenta),
+    6px 6px 0 rgba(0, 0, 0, 0.5);
+  letter-spacing: 4px;
+  margin-bottom: 20px;
+}
+.archive-hero-subtitle {
+  font-family: var(--font-ui);
+  font-size: clamp(0.8rem, 1.4vw, 1rem);
+  color: var(--lavender);
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+.archive-hero-count {
+  font-family: var(--font-display);
+  font-size: clamp(0.65rem, 1vw, 0.85rem);
+  color: var(--cyber-blue);
+  letter-spacing: 3px;
+  text-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+}
+
+/* ============================================
+   FILTER CHIPS
+   ============================================ */
+.filter-bar {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  padding: 30px 20px 0;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 2;
+}
+.filter-chip {
+  font-family: var(--font-ui);
+  font-size: 0.8rem;
+  color: var(--lavender);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 10px 22px;
+  background: transparent;
+  border: 2px solid var(--muted);
+  transition: all 0.2s;
+}
+.filter-chip:hover {
+  color: var(--pixel-gold);
+  border-color: var(--pixel-gold);
+}
+.filter-chip.active {
+  color: var(--bg-deep);
+  background: var(--pixel-gold);
+  border-color: var(--pixel-gold);
+  box-shadow: 0 0 14px rgba(251, 191, 36, 0.5);
+}
+
+/* ============================================
+   UNIFORM SQUARE GRID (Instagram-style)
+   ============================================ */
+.archive-section {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+  position: relative;
+  z-index: 2;
+}
+
+/* 25 = 5 × 5 perfect square. Zero orphan slots, big legible tiles. */
+.archive-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 14px;
+}
+
+/* Below 1100px the 5-col grid gets cramped — fall back to responsive. */
+@media (max-width: 1100px) {
+  .archive-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+  }
+}
+
+@media (max-width: 640px) {
+  .archive-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+}
+
+.archive-tile {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: var(--bg-dusk);
+  border: 3px solid #3a2a1e;
+  box-shadow:
+    inset 0 0 0 2px #0a0604,
+    0 4px 16px rgba(0, 0, 0, 0.5);
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, opacity 0.3s ease;
+}
+.archive-tile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+.archive-tile::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    0deg, transparent, transparent 2px,
+    rgba(0, 0, 0, 0.12) 2px, rgba(0, 0, 0, 0.12) 4px
+  );
+  pointer-events: none;
+}
+.archive-tile:hover {
+  border-color: var(--pixel-gold);
+  transform: translateY(-4px);
+  box-shadow:
+    inset 0 0 0 2px #0a0604,
+    0 0 30px rgba(251, 191, 36, 0.4),
+    0 12px 30px rgba(0, 0, 0, 0.7);
+  z-index: 2;
+}
+.archive-tile:hover img { transform: scale(1.06); }
+
+/* Fade hidden tiles when filter active */
+.archive-tile.hidden {
+  display: none;
+}
+
+.archive-tile-label {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  padding: 10px 14px;
+  background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.92));
+  color: var(--pixel-gold);
+  font-family: var(--font-ui);
+  font-size: 0.85rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  opacity: 0;
+  transition: opacity 0.25s;
+  z-index: 4;
+  pointer-events: none;
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.9);
+}
+.archive-tile:hover .archive-tile-label { opacity: 1; }
+
+/* Small "GIF" badge to distinguish animated */
+.archive-tile-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 3px 7px;
+  background: var(--hot-magenta);
+  color: #fff;
+  font-family: var(--font-ui);
+  font-size: 0.65rem;
+  letter-spacing: 1px;
+  font-weight: 700;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+  z-index: 3;
+}
+
+/* ============================================
+   BACK HOME CTA
+   ============================================ */
+.back-home-wrap {
+  text-align: center;
+  margin: 50px 0 80px;
+  position: relative;
+  z-index: 2;
+}
+.back-home-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  color: var(--bg-deep);
+  background: var(--retro-green);
+  padding: 14px 36px;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  box-shadow: 0 4px 0 #5a8a0a, 0 0 24px rgba(132, 204, 22, 0.25);
+  transition: all 0.2s;
+}
+.back-home-btn:hover {
+  color: var(--bg-deep);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 0 #5a8a0a, 0 0 32px rgba(132, 204, 22, 0.5);
+}
+
+/* ============================================
+   LIGHTBOX
+   ============================================ */
+#lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.95);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 500;
+  padding: 40px;
+}
+#lightbox.open { display: flex; }
+.lightbox-img {
+  max-width: 90%;
+  max-height: 85vh;
+  object-fit: contain;
+  border: 3px solid var(--pixel-gold);
+  box-shadow: 0 0 60px rgba(251, 191, 36, 0.5);
+  image-rendering: pixelated;
+}
+.lightbox-close, .lightbox-arrow {
+  position: absolute;
+  background: var(--bg-deep);
+  border: 2px solid var(--cyber-blue);
+  color: var(--pixel-gold);
+  font-family: var(--font-display);
+  font-size: 1rem;
+  padding: 10px 16px;
+  cursor: pointer;
+  z-index: 501;
+  transition: all 0.2s;
+}
+.lightbox-close:hover, .lightbox-arrow:hover {
+  background: var(--cyber-blue);
+  color: var(--bg-deep);
+}
+.lightbox-close { top: 24px; right: 24px; }
+.lightbox-prev  { left: 24px; top: 50%; transform: translateY(-50%); }
+.lightbox-next  { right: 24px; top: 50%; transform: translateY(-50%); }
+.lightbox-counter {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  color: var(--pixel-gold);
+  letter-spacing: 3px;
+  text-shadow: 0 0 8px rgba(251, 191, 36, 0.6);
+}
+
+footer.archive-footer {
+  padding: 24px;
+  border-top: 2px solid var(--cyber-blue);
+  text-align: center;
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  color: var(--muted);
+  letter-spacing: 1px;
+  position: relative;
+  z-index: 2;
+}
+footer.archive-footer a { color: var(--muted); }
+footer.archive-footer a:hover { color: var(--pixel-gold); }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR (matches main site) -->
+<nav id="navbar">
+  <div class="nav-logo">TMCQ</div>
+  <ul class="nav-links">
+    <li><a href="index.html" class="nav-link"><i class="fas fa-umbrella-beach"></i> Home</a></li>
+    <li><a href="index.html#about" class="nav-link"><i class="fas fa-scroll"></i> About</a></li>
+    <li><a href="archive.html" class="nav-link active"><i class="fas fa-palette"></i> Art</a></li>
+    <li><a href="index.html#projects" class="nav-link"><i class="fas fa-gamepad"></i> Projects</a></li>
+    <li><a href="index.html#skills" class="nav-link"><i class="fas fa-flask"></i> Skills</a></li>
+    <li><a href="index.html#contact" class="nav-link"><i class="fas fa-envelope"></i> Contact</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="mobile-menu" id="mobile-menu">
+  <a href="index.html" class="nav-link"><i class="fas fa-umbrella-beach"></i> Home</a>
+  <a href="index.html#about" class="nav-link"><i class="fas fa-scroll"></i> About</a>
+  <a href="archive.html" class="nav-link active"><i class="fas fa-palette"></i> Art</a>
+  <a href="index.html#projects" class="nav-link"><i class="fas fa-gamepad"></i> Projects</a>
+  <a href="index.html#skills" class="nav-link"><i class="fas fa-flask"></i> Skills</a>
+  <a href="index.html#contact" class="nav-link"><i class="fas fa-envelope"></i> Contact</a>
+</div>
+
+<!-- HERO -->
+<header class="archive-hero">
+  <h1 class="archive-hero-title">Pixel Art Archive</h1>
+  <p class="archive-hero-subtitle">Hand drawn. One pixel at a time.</p>
+  <p class="archive-hero-count">25 pieces</p>
+</header>
+
+<!-- FILTER CHIPS -->
+<div class="filter-bar">
+  <button class="filter-chip active" data-filter="all">All <span id="count-all"></span></button>
+  <button class="filter-chip" data-filter="gif">Animated <span id="count-gif"></span></button>
+  <button class="filter-chip" data-filter="png">Static <span id="count-png"></span></button>
+</div>
+
+<!-- UNIFORM SQUARE GRID -->
+<section class="archive-section">
+  <div class="archive-grid" id="archive-grid">
+    <!-- Animated GIFs first (13) -->
+    <div class="archive-tile" data-idx="0" data-type="gif"><img src="images/art09.gif" alt="Pixel Art 9" loading="lazy"><span class="archive-tile-badge">GIF</span><div class="archive-tile-label">#09</div></div>
+    <div class="archive-tile" data-idx="1" data-type="gif"><img src="images/art5.gif" alt="Pixel Art 5" loading="lazy"><span class="archive-tile-badge">GIF</span><div class="archive-tile-label">#05</div></div>
+    <div class="archive-tile" data-idx="2" data-type="gif"><img src="images/art6.gif" alt="Pixel Art 6" loading="lazy"><span class="archive-tile-badge">GIF</span><div class="archive-tile-label">#06</div></div>
+    <div class="archive-tile" data-idx="3" data-type="gif"><img src="images/art7.gif" alt="Pixel Art 7" loading="lazy"><span class="archive-tile-badge">GIF</span><div class="archive-tile-label">#07</div></div>
+    <div class="archive-tile" data-idx="4" data-type="gif"><img src="images/art24.gif" alt="Pixel Art 24" loading="lazy"><span class="archive-tile-badge">GIF</span><div class="archive-tile-label">#24</div></div>
+    <div class="archive-tile" data-idx="5" data-type="gif"><img src="images/art8.gif" alt="Pixel Art 8" loading="lazy"><span class="archive-tile-badge">GIF</span><div class="archive-tile-label">#08</div></div>
+    <div class="archive-tile" data-idx="6" data-type="gif"><img src="images/art10.gif" alt="Pixel Art 10" loading="lazy"><span class="archive-tile-badge">GIF</span><div class="archive-tile-label">#10</div></div>
+    <div class="archive-tile" data-idx="7" data-type="gif"><img src="images/art11.gif" alt="Pixel Art 11" loading="lazy"><span class="archive-tile-badge">GIF</span><div class="archive-tile-label">#11</div></div>
+    <div class="archive-tile" data-idx="8" data-type="gif"><img src="images/art22.gif" alt="Pixel Art 22" loading="lazy"><span class="archive-tile-badge">GIF</span><div class="archive-tile-label">#22</div></div>
+    <div class="archive-tile" data-idx="9" data-type="gif"><img src="images/art14.gif" alt="Pixel Art 14" loading="lazy"><span class="archive-tile-badge">GIF</span><div class="archive-tile-label">#14</div></div>
+    <div class="archive-tile" data-idx="10" data-type="gif"><img src="images/art15.gif" alt="Pixel Art 15" loading="lazy"><span class="archive-tile-badge">GIF</span><div class="archive-tile-label">#15</div></div>
+    <div class="archive-tile" data-idx="11" data-type="gif"><img src="images/art16.gif" alt="Pixel Art 16" loading="lazy"><span class="archive-tile-badge">GIF</span><div class="archive-tile-label">#16</div></div>
+    <div class="archive-tile" data-idx="12" data-type="gif"><img src="images/art23.gif" alt="Pixel Art 23" loading="lazy"><span class="archive-tile-badge">GIF</span><div class="archive-tile-label">#23</div></div>
+
+    <!-- Static PNGs (13) -->
+    <div class="archive-tile" data-idx="13" data-type="png"><img src="images/art25.png" alt="Pixel Art 25" loading="lazy"><div class="archive-tile-label">#25 TayTree</div></div>
+    <div class="archive-tile" data-idx="14" data-type="png"><img src="images/art1.png" alt="Pixel Art 1" loading="lazy"><div class="archive-tile-label">#01</div></div>
+    <div class="archive-tile" data-idx="15" data-type="png"><img src="images/art2.png" alt="Pixel Art 2" loading="lazy"><div class="archive-tile-label">#02</div></div>
+    <div class="archive-tile" data-idx="16" data-type="png"><img src="images/art26.png" alt="Pixel Art 26" loading="lazy"><div class="archive-tile-label">#26 Dash</div></div>
+    <div class="archive-tile" data-idx="17" data-type="png"><img src="images/art3.png" alt="Pixel Art 3" loading="lazy"><div class="archive-tile-label">#03</div></div>
+    <div class="archive-tile" data-idx="18" data-type="png"><img src="images/art4.png" alt="Pixel Art 4" loading="lazy"><div class="archive-tile-label">#04</div></div>
+    <div class="archive-tile" data-idx="19" data-type="png"><img src="images/art12.png" alt="Pixel Art 12" loading="lazy"><div class="archive-tile-label">#12</div></div>
+    <div class="archive-tile" data-idx="20" data-type="png"><img src="images/art13.png" alt="Pixel Art 13" loading="lazy"><div class="archive-tile-label">#13</div></div>
+    <div class="archive-tile" data-idx="21" data-type="png"><img src="images/art20.png" alt="Pixel Art 20" loading="lazy"><div class="archive-tile-label">#20</div></div>
+    <div class="archive-tile" data-idx="22" data-type="png"><img src="images/art18.png" alt="Pixel Art 18" loading="lazy"><div class="archive-tile-label">#18</div></div>
+    <div class="archive-tile" data-idx="23" data-type="png"><img src="images/art19.png" alt="Pixel Art 19" loading="lazy"><div class="archive-tile-label">#19</div></div>
+    <div class="archive-tile" data-idx="24" data-type="png"><img src="images/art21.png" alt="Pixel Art 21" loading="lazy"><div class="archive-tile-label">#21</div></div>
+  </div>
+</section>
+
+<div class="back-home-wrap">
+  <a href="index.html" class="back-home-btn">
+    <i class="fas fa-umbrella-beach"></i> Back Home
+  </a>
+</div>
+
+<!-- LIGHTBOX -->
+<div id="lightbox">
+  <button class="lightbox-close" aria-label="Close">&times;</button>
+  <button class="lightbox-arrow lightbox-prev" aria-label="Previous">&lt;</button>
+  <img class="lightbox-img" id="lightbox-img" src="" alt="Artwork">
+  <button class="lightbox-arrow lightbox-next" aria-label="Next">&gt;</button>
+  <div class="lightbox-counter" id="lightbox-counter"></div>
+</div>
+
+<footer class="archive-footer">
+  <p>&copy; TayMcQuaya &mdash; <a href="privacy-policy.html">Privacy</a> &middot; <a href="terms-of-service.html">Terms</a></p>
+</footer>
+
+<script>
+(function() {
+  'use strict';
+
+  /* ---------- HAMBURGER / MOBILE MENU (matches main site) ---------- */
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobile-menu');
+  if (hamburger && mobileMenu) {
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('open');
+      mobileMenu.classList.toggle('open');
+    });
+    mobileMenu.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        hamburger.classList.remove('open');
+        mobileMenu.classList.remove('open');
+      });
+    });
+  }
+
+  /* ---------- FILTER CHIPS ---------- */
+  const chips = document.querySelectorAll('.filter-chip');
+  const tiles = Array.from(document.querySelectorAll('.archive-tile'));
+  const counts = { all: tiles.length, gif: 0, png: 0 };
+  tiles.forEach(t => { counts[t.dataset.type]++; });
+  document.getElementById('count-all').textContent = '(' + counts.all + ')';
+  document.getElementById('count-gif').textContent = '(' + counts.gif + ')';
+  document.getElementById('count-png').textContent = '(' + counts.png + ')';
+
+  chips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      chips.forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      const filter = chip.dataset.filter;
+      tiles.forEach(t => {
+        t.classList.toggle('hidden', filter !== 'all' && t.dataset.type !== filter);
+      });
+    });
+  });
+
+  /* ---------- LIGHTBOX (keyboard + swipe) ---------- */
+  const lightbox = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lightbox-img');
+  const lbCounter = document.getElementById('lightbox-counter');
+  const artSrcs = tiles.map(t => t.querySelector('img').src);
+  let currentIdx = 0;
+
+  function visibleIndices() {
+    return tiles.map((t, i) => t.classList.contains('hidden') ? -1 : i).filter(i => i !== -1);
+  }
+  function openLightbox(idx) {
+    currentIdx = idx;
+    lbImg.src = artSrcs[idx];
+    const vis = visibleIndices();
+    const pos = vis.indexOf(idx);
+    lbCounter.textContent = (pos + 1) + ' / ' + vis.length;
+    lightbox.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox() {
+    lightbox.classList.remove('open');
+    document.body.style.overflow = '';
+    lbImg.src = '';
+  }
+  function navigate(dir) {
+    const vis = visibleIndices();
+    if (!vis.length) return;
+    let pos = vis.indexOf(currentIdx);
+    pos = (pos + dir + vis.length) % vis.length;
+    currentIdx = vis[pos];
+    lbImg.src = artSrcs[currentIdx];
+    lbCounter.textContent = (pos + 1) + ' / ' + vis.length;
+  }
+
+  tiles.forEach(t => {
+    t.addEventListener('click', () => openLightbox(parseInt(t.dataset.idx)));
+  });
+  lightbox.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
+  lightbox.querySelector('.lightbox-prev').addEventListener('click', (e) => { e.stopPropagation(); navigate(-1); });
+  lightbox.querySelector('.lightbox-next').addEventListener('click', (e) => { e.stopPropagation(); navigate(1); });
+  lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+
+  document.addEventListener('keydown', (e) => {
+    if (!lightbox.classList.contains('open')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft') navigate(-1);
+    if (e.key === 'ArrowRight') navigate(1);
+  });
+
+  let touchStartX = 0;
+  lightbox.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].clientX; }, { passive: true });
+  lightbox.addEventListener('touchend', (e) => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 50) navigate(dx > 0 ? -1 : 1);
+  }, { passive: true });
+})();
+</script>
+
+</body>
+</html>
