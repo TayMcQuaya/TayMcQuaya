@@ -1033,6 +1033,10 @@ a:hover { color: var(--hot-magenta); }
   margin: 0 auto;
 }
 
+@media (min-width: 1640px) {
+  .arcade-cabinet--wip { grid-column-start: 2; }
+}
+
 .arcade-cabinet {
   background: linear-gradient(180deg, #2a1810, #0f0a05);
   border: 3px solid #3a2a1e;
@@ -2278,7 +2282,29 @@ a:hover { color: var(--hot-magenta); }
       </div>
     </div>
 
-    <!-- 8: WhatsNote -->
+    <!-- 8: Descent (Hellnight Website) -->
+    <div class="arcade-cabinet">
+      <div class="arcade-screen">
+        <a href="#" target="_blank" rel="noopener" aria-label="Visit Descent">
+          <video src="images/decent.mp4" autoplay loop muted playsinline preload="metadata" aria-label="Descent demo"></video>
+        </a>
+        <div class="scanline-overlay"></div>
+      </div>
+      <div class="arcade-marquee">Descent</div>
+      <div class="arcade-type">Website</div>
+      <p class="arcade-desc">A 3D horror website built with Three.js. Pure showcase, just for fun. Step into the dark, find what's hidden, and try not to lose your nerve.</p>
+      <div class="arcade-tags">
+        <span class="arcade-tag">3D</span>
+        <span class="arcade-tag">Three.js</span>
+        <span class="arcade-tag">Horror</span>
+        <span class="arcade-tag">Web</span>
+      </div>
+      <div class="arcade-footer">
+        <a href="#" target="_blank" rel="noopener" class="arcade-btn">Visit</a>
+      </div>
+    </div>
+
+    <!-- 9: WhatsNote -->
     <div class="arcade-cabinet">
       <div class="arcade-screen">
         <a href="https://github.com/TayMcQuaya/WhatsNote/releases" target="_blank" rel="noopener" aria-label="Download WhatsNote">
@@ -2300,7 +2326,7 @@ a:hover { color: var(--hot-magenta); }
       </div>
     </div>
 
-    <!-- 9: Under Construction placeholder -->
+    <!-- 10: Under Construction placeholder -->
     <div class="arcade-cabinet arcade-cabinet--wip">
       <div class="arcade-screen">
         <div class="construction-display" aria-label="Under construction">
