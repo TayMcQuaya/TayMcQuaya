@@ -1,79 +1,48 @@
-# 👋 Hey there! I'm TayMcQuaya  
+# 👋 Hey, I'm TayMcQuaya
 
-Welcome to my GitHub profile! I’m a **developer**, **pixel artist**, and **Web3 enthusiast** with a passion for creating interactive, engaging, and downright cool stuff. Whether it’s building websites, crafting bots, or designing pixel-perfect art, I’m all about bringing ideas to life—**with a little help from cutting-edge AI tools** to supercharge my workflow.  
+Welcome to my GitHub. I'm a developer, pixel artist, and Web3 builder based in Bali. I direct AI tools to ship products daily, games, bots, desktop apps, websites, whatever the idea demands.
 
----
+## 🛠️ How I Actually Build
 
-## 🚀 **What I Do**  
+The skill isn't using Claude. The skill is knowing when Claude is wrong.
 
-I’m a **grinding developer** who loves to dive into new challenges and learn along the way. Here’s a taste of what I’ve been up to:  
+Two years of daily practice since 2024. I don't write code by hand. I architect what I want, brief Claude, then review like a paranoid senior dev catching a junior's mistakes. Most of the first-pass output gets rejected. The shipped work is what survives the iteration.
 
-- **Web Development**: I’ve been building sleek, interactive websites, including my current main project **[PanelHause.app](https://www.panelhaus.app/)**, and taking on commissions for custom sites.  
-- **Bots & Automation**: Currently working on a **trading bot** and social media automation tools to make life easier (and more efficient).  
-- **Pixel Art**: When I’m not coding, you’ll find me crafting pixel art that brings games and projects to life.  
-- **Web3 & NFTs**: I’m deep into the Web3 space, exploring decentralized tech and building tools for the future.  
+- **Foundations** from college computer science and digital media (game programming focus). Didn't finish the degree.
+- **Pre-tech years** in B2B sales, hospitality, financial services, and customer service across Germany. Operator instincts I carry into every product decision.
+- **Self-taught** through curiosity and the discipline of debugging AI output every single day, no days off.
 
----
+## 🚀 Currently
 
-## 🌟 **Why Work With Me?**  
+Co-founder and lead engineer at **[Panel Haus](https://www.panelhaus.app)**. Building an AI-powered comic creation platform end to end: canvas editor, AI image pipeline, payments, print-ready export, mobile apps.
 
-- **Leveraging AI Tools**: I use **LLMs (Large Language Models)** and other AI tools to enhance my development process, allowing me to work smarter and faster.  
-- **Versatile Knowledge**: While I’m not fluent (yet!) in languages like **C#**, **Java**, **JavaScript**, **Python**, **HTML**, and **CSS**, I have a solid foundation and am constantly learning more.  
-- **Creative Problem Solver**: I thrive on finding innovative solutions to complex challenges.  
-- **Passionate Learner**: The tech world evolves fast, and I’m always staying ahead of the curve.  
-- **Pixel Art Wizardry**: If your project needs a touch of retro charm, I’ve got the skills to make it happen.  
+Also freelancing as a full-stack developer for OpenExO since early 2024.
 
----
+## 📂 What's Public
 
-## 🛠️ **Recent Projects**  
+These are public repos and earlier experiments. Most of my recent work lives in private repos or under NDA.
 
-Here’s a sneak peek at some of my latest work:  
+- **[Floppy Tromp 2D](https://taymcquaya.github.io/FloppyTromp/)** — Election season satire shipped in Unity in 7 days, with Web3 wallet gating (gates are open now, free to play).
+- **[Zombieshooter 3D](https://taymcquaya.github.io/Zombieshooter3D/)** — Browser-based 3D zombie shooter. Point, click, survive.
+- **Descent** *(in development)* — A 3D horror experience built with Three.js. Pure showcase, just for fun. Step into the dark, find what's hidden, and try not to lose your nerve.
+- **[WhatsNote](https://github.com/TayMcQuaya/WhatsNote)** — WhatsApp-style desktop to-do app. Each chat is a project, each message is a task. Built because I was abusing real WhatsApp groups for to-do lists.
+- **[OpenOPen](https://github.com/TayMcQuaya/OpenOPen)** — A working text editor I built from scratch in my early vibe-coding days as a personal stress test. Works just fine.
+- **[JavaScript Journey](https://taymcquaya.github.io/Javascript-Journey/)** — Free interactive JavaScript course for non-tech beginners who don't want to pay for another bootcamp.
 
-- **[TeamMurica.xyz](https://www.teammurica.xyz/)**: My own project where I’m combining my love for gaming, pixel art, and Web3.  
-- **Trading Bot**: Currently in development—a bot designed to streamline crypto trading.  
-- **Social Media Automation Tools**: Building tools to automate and optimize social media workflows.  
-- **Commissioned Websites**: Working on multiple websites for clients, tailored to their unique needs.  
+## 🎨 Pixel Art
 
-And trust me, there’s **much more in the pipeline**!  
+Pixel art and game dev is where I started. Every character, animation, and asset on my projects is hand drawn. The arcade aesthetic isn't decoration. It's the foundation everything else got built on.
 
----
+## 🌍 A Little About Me
 
-## 🎨 **Pixel Art & Creativity**  
+Turkish-German, raised in Germany, currently building from Bali. Six spoken languages (three fluent: German, Turkish, English; three working: Japanese, Spanish, French). Crypto since 2020. Self-improvement obsessive. This profile is a snapshot, not the full picture.
 
-Pixel art isn’t just a hobby—it’s a passion. I’ve created all the artwork for my games, and I love bringing characters and worlds to life, one pixel at a time. Check out my portfolio to see some of my favorite pieces!  
+## 📫 Get in Touch
 
----
+- **Email:** taymcquaya@gmail.com
+- **Portfolio:** [taymcquaya.com](https://taymcquaya.com)
+- **Twitter / X:** [@taymcquaya](https://x.com/taymcquaya)
 
-## 🌍 **A Little About Me**  
+Got a build, a collaboration, or just want to swap notes on AI-augmented engineering? Hit me up.
 
-I’m a Turkish-German guy currently living in Bali, and I’ve been on a wild journey of self-improvement and exploration. I speak **six languages**, dropped out of college to chase my dreams, and have been grinding ever since.  
-
-I’m inspired by the crypto community, creators like **Alex Becker** and **Elliot Trades**, and the endless possibilities of Web3. My goal? To keep learning, building, and creating things that matter.  
-
----
-
-## 🤝 **Let’s Build Something Amazing**  
-
-Whether you need a website, a bot, a game, or just some pixel art magic, I’d love to collaborate. I’m all about **quality**, **creativity**, and **delivering results** that exceed expectations.  
-
-Feel free to reach out—let’s turn your ideas into reality!  
-
----
-
-### 📫 **Get in Touch**  
-
-- **Email**: [taymcquaya@gmail.com](mailto:taymcquaya@gmail.com)  
-- **Twitter**: [@taymcquaya](https://twitter.com/taymcquaya)  
-- **GitHub**: [taymcquaya](https://github.com/taymcquaya)  
-- **Portfolio**: [taymcquaya.com](https://www.taymcquaya.com)  
-
----
-
-Thanks for stopping by! Let’s create something unforgettable together. 🚀  
-
-**TayMcQuaya**  
-*Developer | Artist | Web3 Enthusiast*  
-
----
-
-P.S. If you’re curious about my journey into **Neo Tokyo** or want to see more of my work, check out my website or drop me a message. Let’s ride this wave together! 🌊  
+— TayMcQuaya
