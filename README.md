@@ -24,7 +24,7 @@ These are public repos and earlier experiments. Most of my recent work lives in 
 
 - **[Floppy Tromp 2D](https://taymcquaya.github.io/FloppyTromp/)** — Election season satire shipped in Unity in 7 days, with Web3 wallet gating (gates are open now, free to play).
 - **[Zombieshooter 3D](https://taymcquaya.github.io/Zombieshooter3D/)** — Browser-based 3D zombie shooter. Point, click, survive.
-- **Descent** *(in development)* — A 3D horror experience built with Three.js. Pure showcase, just for fun. Step into the dark, find what's hidden, and try not to lose your nerve.
+- **[Descent](https://taymcquaya.github.io/Hellnight-Website/)** — A 3D horror experience built with Three.js. Pure showcase, just for fun. Step into the dark, find what's hidden, and try not to lose your nerve.
 - **[WhatsNote](https://github.com/TayMcQuaya/WhatsNote)** — WhatsApp-style desktop to-do app. Each chat is a project, each message is a task. Built because I was abusing real WhatsApp groups for to-do lists.
 - **[OpenOPen](https://github.com/TayMcQuaya/OpenOPen)** — A working text editor I built from scratch in my early vibe-coding days as a personal stress test. Works just fine.
 - **[JavaScript Journey](https://taymcquaya.github.io/Javascript-Journey/)** — Free interactive JavaScript course for non-tech beginners who don't want to pay for another bootcamp.
