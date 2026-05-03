@@ -1,4 +1,4 @@
-# 👋 Hey, I'm TayMcQuaya
+# 👋 Hey, I'm Tayfun
 
 Welcome to my GitHub. I'm a developer, pixel artist, and Web3 builder based in Bali. I direct AI tools to ship products daily, games, bots, desktop apps, websites, whatever the idea demands.
 
@@ -14,7 +14,7 @@ Two years of daily practice since 2024. I don't write code by hand. I architect 
 
 ## 🚀 Currently
 
-Co-founder and lead engineer at **[Panel Haus](https://www.panelhaus.app)**. Building an AI-powered comic creation platform end to end: canvas editor, AI image pipeline, payments, print-ready export, mobile apps.
+Co-founder and lead CTO at **[Panel Haus](https://www.panelhaus.app)**. Building an AI-powered comic creation platform end to end: canvas editor, AI image pipeline, payments, print-ready export, mobile apps.
 
 Also freelancing as a full-stack developer for OpenExO since early 2024.
 
@@ -45,4 +45,4 @@ Turkish-German, raised in Germany, currently building from Bali. Six spoken lang
 
 Got a build, a collaboration, or just want to swap notes on AI-augmented engineering? Hit me up.
 
-— TayMcQuaya
+— Tayfun
