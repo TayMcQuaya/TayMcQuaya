@@ -14,7 +14,7 @@ Two years of daily practice since 2024. I don't write code by hand. I architect 
 
 ## 🚀 Currently
 
-Co-founder and lead CTO at **[Panel Haus](https://www.panelhaus.app)**. Building an AI-powered comic creation platform end to end: canvas editor, AI image pipeline, payments, print-ready export, mobile apps.
+Co-founder and CTO at **[Panel Haus](https://www.panelhaus.app)**. Building an AI-powered comic creation platform end to end: canvas editor, AI image pipeline, payments, print-ready export, mobile apps.
 
 Also freelancing as a full-stack developer for OpenExO since early 2024.
 
