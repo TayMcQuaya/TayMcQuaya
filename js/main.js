@@ -185,7 +185,15 @@ async function start3D() {
     Promise.all(['16px "Press Start 2P"', '16px Silkscreen', '16px "Space Mono"'].map((f) => document.fonts.load(f))),
     new Promise((r) => setTimeout(r, 2500)),
   ]);
-  const gltf = await new GLTFLoader(manager).loadAsync('assets/arcade.glb');
+  let gltf;
+  try {
+    gltf = await new GLTFLoader(manager).loadAsync('assets/arcade.glb');
+  } catch (e) {
+    // some hosts refuse .glb files; the preview ships the same model as a JS module
+    const mod = await import('../assets/arcade.glb.js');
+    const bin = Uint8Array.from(atob(mod.default), (c) => c.charCodeAt(0));
+    gltf = await new GLTFLoader().parseAsync(bin.buffer, 'assets/');
+  }
   scene.add(gltf.scene);
 
   let screenMesh = null;
