@@ -1,32 +1,51 @@
-// The Arcade Room: scroll-driven 3D portfolio.
+// The Cabinet: the site runs on a 3D arcade cabinet's CRT.
 // Without WebGL (or if a CDN fails) the page stays in Quick view, which is plain HTML.
 import * as THREE from 'three';
 import Lenis from 'lenis';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
-import { buildWorld, ROOM } from './world.js';
-import { createPortrait } from './portrait.js';
+import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
-const smooth = (a, b, v) => { const t = clamp((v - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); };
-const smoother = (t) => t * t * t * (t * (t * 6 - 15) + 10);
 const lerp = (a, b, t) => a + (b - a) * t;
+const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const isTouch = matchMedia('(pointer: coarse)').matches;
+const body = document.body;
 
-// ---------- parts that work in both modes ----------
-$$('.project').forEach((el) => el.dataset.accent && el.style.setProperty('--accent', el.dataset.accent));
-const panels = $$('.panel');
-const N = panels.length;
+// ======================================================
+// Screen content (works in both modes)
+// ======================================================
+const views = Object.fromEntries($$('.view').map((v) => [v.dataset.view, v]));
+let current = 'menu';
+let enterCabinet = () => {};
+function openView(name, focus = true) {
+  if (!views[name]) return;
+  if (body.classList.contains('mode-3d')) {
+    Object.values(views).forEach((v) => v.classList.toggle('is-on', v === views[name]));
+    current = name;
+    if (name === 'projects') showGame(gameIdx);
+    else stopGameVideo();
+    if (focus && body.classList.contains('is-inside')) {
+      const f = $(name === 'menu' ? '.menu-list button' : '.back', views[name]);
+      f && f.focus({ preventScroll: true });
+    }
+  } else {
+    views[name].scrollIntoView({ behavior: 'smooth' });
+  }
+}
+$$('[data-open]').forEach((el) => el.addEventListener('click', (e) => {
+  e.preventDefault();
+  openView(el.dataset.open);
+  if (!body.classList.contains('is-inside')) enterCabinet();
+}));
 
-let lenis = null;
-const lockScroll = (on) => { if (!lenis) return; on ? lenis.stop() : lenis.start(); };
-
-// Lore pager
+// lore pager
 let lorePage = 0;
 const lorePages = $$('.lore-page');
 $$('[data-lore]').forEach((b) => b.addEventListener('click', () => {
@@ -35,387 +54,337 @@ $$('[data-lore]').forEach((b) => b.addEventListener('click', () => {
   $('#lore-count').textContent = `${lorePage + 1} / ${lorePages.length}`;
 }));
 
-// Project modal
-const modal = $('#modal');
-let lastFocus = null, modalCanvasEl = null;
-function openOverlay(el) { lastFocus = document.activeElement; el.hidden = false; lockScroll(true); $('[data-close]', el).focus(); }
-function closeOverlay(el) {
-  el.hidden = true; lockScroll(false);
-  const v = $('video', el); if (v) { v.pause(); v.removeAttribute('src'); v.load(); }
-  modalCanvasEl = null;
-  if (lastFocus) lastFocus.focus({ preventScroll: true });
-}
-function openProject(el, canvasSrc) {
-  const media = $('#modal-media'); media.innerHTML = '';
-  if (el.dataset.video) {
+// game select
+const gameBtns = $$('.game');
+const games = $$('.games .project');
+let gameIdx = 0;
+function stopGameVideo() { $$('.project-media video').forEach((v) => { v.pause(); v.remove(); }); }
+function showGame(i) {
+  gameIdx = (i + games.length) % games.length;
+  gameBtns.forEach((b, k) => b.classList.toggle('is-on', k === gameIdx));
+  games.forEach((g, k) => g.classList.toggle('is-on', k === gameIdx));
+  stopGameVideo();
+  const g = games[gameIdx];
+  if (g.dataset.video && body.classList.contains('mode-3d')) {
     const v = document.createElement('video');
-    Object.assign(v, { src: el.dataset.video, autoplay: true, loop: true, muted: true, playsInline: true, controls: true });
-    if (el.dataset.poster) v.poster = el.dataset.poster;
-    media.appendChild(v);
-  } else if (canvasSrc) {
-    modalCanvasEl = document.createElement('canvas'); modalCanvasEl.width = canvasSrc.width; modalCanvasEl.height = canvasSrc.height;
-    modalCanvasEl.dataset.src = 'ph'; modalCanvasEl._src = canvasSrc;
-    media.appendChild(modalCanvasEl);
-  } else {
-    media.innerHTML = '<p style="font-family:var(--font-display);color:var(--gold);font-size:28px">???</p>';
+    Object.assign(v, { src: g.dataset.video, poster: g.dataset.poster || '', muted: true, loop: true, autoplay: true, playsInline: true });
+    v.setAttribute('playsinline', ''); v.setAttribute('muted', '');
+    $('.project-media', g).appendChild(v);
+    v.play().catch(() => {});
   }
-  $('#modal-title').textContent = $('.project-name', el).textContent;
-  $('#modal-type').textContent = $('.project-type', el).textContent;
-  $('#modal-body').innerHTML = $('.project-body', el).innerHTML;
-  openOverlay(modal);
 }
-$$('.project-open').forEach((b) => b.addEventListener('click', () => {
-  const el = b.closest('.project');
-  openProject(el, el.dataset.featured ? world?.phCanvas : null);
+gameBtns.forEach((b, k) => { b.addEventListener('click', () => showGame(k)); b.addEventListener('mouseenter', () => showGame(k)); });
+
+// art viewer
+const arts = $$('.art');
+const viewer = $('#viewer');
+let artIdx = 0;
+function showArt(i) {
+  artIdx = (i + arts.length) % arts.length;
+  $('#viewer-img').src = arts[artIdx].dataset.orig;
+  $('#viewer-img').alt = $('img', arts[artIdx]).alt;
+  $('#viewer-count').textContent = `${artIdx + 1} / ${arts.length}`;
+}
+arts.forEach((a, i) => a.addEventListener('click', () => { showArt(i); viewer.hidden = false; $('[data-v="0"]', viewer).focus({ preventScroll: true }); }));
+$$('[data-v]').forEach((b) => b.addEventListener('click', () => {
+  const d = Number(b.dataset.v);
+  if (d === 0) viewer.hidden = true; else showArt(artIdx + d);
 }));
 
-// Art lightbox
-const lightbox = $('#lightbox');
-const arts = $$('#art .art');
-let lbIndex = 0;
-function showArt(i) {
-  lbIndex = (i + arts.length) % arts.length;
-  const fig = arts[lbIndex], img = $('img', fig);
-  $('#lightbox-img').src = fig.dataset.orig; $('#lightbox-img').alt = img.alt;
-  $('#lightbox-count').textContent = `${lbIndex + 1} / ${arts.length}`;
-}
-function openArt(i) { showArt(i); openOverlay(lightbox); }
-arts.forEach((f, i) => f.addEventListener('click', () => openArt(i)));
-$$('[data-lb]').forEach((b) => b.addEventListener('click', () => showArt(lbIndex + Number(b.dataset.lb))));
-
-$$('.overlay').forEach((o) => {
-  o.addEventListener('click', (e) => { if (e.target === o || e.target.closest('[data-close]')) closeOverlay(o); });
-});
+// keyboard: arrows move, Enter picks, Escape goes back
+const menuBtns = $$('.menu-list button');
+let menuSel = 0;
+menuBtns.forEach((b, i) => b.addEventListener('mouseenter', () => { menuSel = i; menuBtns.forEach((x, k) => x.classList.toggle('is-sel', k === i)); }));
 addEventListener('keydown', (e) => {
-  const open = $$('.overlay').find((o) => !o.hidden);
-  if (!open) return;
-  if (e.key === 'Escape') closeOverlay(open);
-  if (open === lightbox && e.key === 'ArrowRight') showArt(lbIndex + 1);
-  if (open === lightbox && e.key === 'ArrowLeft') showArt(lbIndex - 1);
+  if (!body.classList.contains('is-inside')) return;
+  if (e.key === 'Escape') {
+    if (!viewer.hidden) viewer.hidden = true;
+    else if (current !== 'menu') openView('menu');
+    else window.__exitCabinet && window.__exitCabinet();
+    e.preventDefault(); return;
+  }
+  const dir = e.key === 'ArrowDown' ? 1 : e.key === 'ArrowUp' ? -1 : 0;
+  if (current === 'menu' && dir) {
+    menuSel = (menuSel + dir + menuBtns.length) % menuBtns.length;
+    menuBtns.forEach((x, k) => x.classList.toggle('is-sel', k === menuSel));
+    menuBtns[menuSel].focus({ preventScroll: true }); e.preventDefault();
+  } else if (current === 'projects' && dir) { showGame(gameIdx + dir); gameBtns[gameIdx].focus({ preventScroll: true }); e.preventDefault(); }
+  else if (current === 'art' && !viewer.hidden && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) showArt(artIdx + (e.key === 'ArrowRight' ? 1 : -1));
 });
 
-// ---------- 3D ----------
-let world = null;
-start3D().catch((err) => { console.warn('3D view unavailable, staying in Quick view:', err); document.body.classList.remove('mode-3d'); });
+// ======================================================
+// 3D
+// ======================================================
+start3D().catch((err) => {
+  console.warn('3D view unavailable, staying in Quick view:', err);
+  body.classList.remove('mode-3d', 'is-inside', 'is-full');
+});
+
+// Solve the 3x3 homography that maps 4 src points onto 4 dst points.
+function homography(src, dst) {
+  const A = [], b = [];
+  for (let i = 0; i < 4; i++) {
+    const [x, y] = src[i], [u, v] = dst[i];
+    A.push([x, y, 1, 0, 0, 0, -u * x, -u * y]); b.push(u);
+    A.push([0, 0, 0, x, y, 1, -v * x, -v * y]); b.push(v);
+  }
+  for (let c = 0; c < 8; c++) {
+    let p = c; for (let r = c + 1; r < 8; r++) if (Math.abs(A[r][c]) > Math.abs(A[p][c])) p = r;
+    [A[c], A[p]] = [A[p], A[c]]; [b[c], b[p]] = [b[p], b[c]];
+    for (let r = 0; r < 8; r++) {
+      if (r === c) continue;
+      const f = A[r][c] / A[c][c];
+      for (let k = c; k < 8; k++) A[r][k] -= f * A[c][k];
+      b[r] -= f * b[c];
+    }
+  }
+  const h = b.map((v, i) => v / A[i][i]);
+  return `matrix3d(${h[0]},${h[3]},0,${h[6]},${h[1]},${h[4]},0,${h[7]},0,0,1,0,${h[2]},${h[5]},0,1)`;
+}
 
 async function start3D() {
   let renderer;
-  try {
-    renderer = new THREE.WebGLRenderer({ canvas: $('#scene'), antialias: false, powerPreference: 'high-performance' });
-  } catch (e) { throw new Error('WebGL not available'); }
-  document.body.classList.add('mode-3d');
-
+  try { renderer = new THREE.WebGLRenderer({ canvas: $('#scene'), antialias: false, powerPreference: 'high-performance' }); }
+  catch (e) { throw new Error('WebGL not available'); }
+  body.classList.add('mode-3d');
   renderer.outputColorSpace = THREE.SRGBColorSpace;
-  renderer.toneMapping = THREE.NeutralToneMapping;
-  renderer.toneMappingExposure = 1.05;
-  renderer.setPixelRatio(1);
+  renderer.toneMapping = THREE.NoToneMapping; // lighting is baked + tone mapped in Blender
+  const DPR = Math.min(devicePixelRatio || 1, 2);
+  renderer.setPixelRatio(DPR);
 
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 80);
-  const composer = new EffectComposer(renderer);
+  scene.background = new THREE.Color('#0b0708');
+  scene.fog = new THREE.Fog('#0b0708', 6, 13);
+  const camera = new THREE.PerspectiveCamera(30, innerWidth / innerHeight, 0.05, 40);
+
+  const rt = new THREE.WebGLRenderTarget(innerWidth * DPR, innerHeight * DPR, { type: THREE.HalfFloatType, samples: 4 });
+  const composer = new EffectComposer(renderer, rt);
+  composer.setPixelRatio(DPR);
   composer.addPass(new RenderPass(scene, camera));
-  const bloom = new UnrealBloomPass(new THREE.Vector2(256, 256), 0.55, 0.45, 0.82);
+  const bloom = new UnrealBloomPass(new THREE.Vector2(innerWidth / 2, innerHeight / 2), 0.7, 0.55, 1.0);
   composer.addPass(bloom);
   composer.addPass(new OutputPass());
+  const finish = new ShaderPass({
+    uniforms: { tDiffuse: { value: null }, uTime: { value: 0 }, uGrain: { value: 0.045 } },
+    vertexShader: 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.); }',
+    fragmentShader: `precision mediump float; uniform sampler2D tDiffuse; uniform float uTime, uGrain; varying vec2 vUv;
+      float rnd(vec2 p){ return fract(sin(dot(p, vec2(12.9898,78.233)) + uTime) * 43758.5453); }
+      void main(){ vec4 c = texture2D(tDiffuse, vUv);
+        float v = smoothstep(1.15, .35, length(vUv - .5) * 1.25);
+        c.rgb *= mix(.55, 1., v);
+        c.rgb += (rnd(vUv * 900.) - .5) * uGrain;
+        gl_FragColor = c; }`,
+  });
+  composer.addPass(finish);
 
-  // loading
-  const loaderText = $('#loader-text'), fill = $('#loader-fill');
+  // ---------- load ----------
+  const fill = $('#loader-fill');
   const manager = new THREE.LoadingManager();
-  let ready = false;
-  manager.onProgress = (_u, loaded, total) => { fill.style.width = `${Math.round((loaded / total) * 100)}%`; };
-  const texLoader = new THREE.TextureLoader(manager);
-  const loadTexture = (url, cb) => texLoader.load(url, (t) => { t.colorSpace = THREE.SRGBColorSpace; cb && cb(t); });
-
+  manager.onProgress = (_u, l, t) => { fill.style.width = `${Math.round((l / t) * 100)}%`; };
   await Promise.race([
     Promise.all(['16px "Press Start 2P"', '16px Silkscreen', '16px "Space Mono"'].map((f) => document.fonts.load(f))),
     new Promise((r) => setTimeout(r, 2500)),
   ]);
-  const avatar = await new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = 'assets/tex/avatar64.png'; });
+  const gltf = await new GLTFLoader(manager).loadAsync('assets/arcade.glb');
+  scene.add(gltf.scene);
 
-  world = buildWorld({ scene, loadTexture });
-  const featured = world.interactive.find((m) => m.userData.root?.userData.info.featured);
-  world.phCanvas = featured ? featured.userData.root.userData.info.canvas : null;
-  world.hoverables.forEach((r) => { r.userData.baseScale = r.scale.x; });
+  let screenMesh = null;
+  gltf.scene.traverse((o) => {
+    if (!o.isMesh) return;
+    if (o.name.includes('_baked')) {
+      o.material = new THREE.MeshBasicMaterial({ map: o.material.map });
+    } else if (o.name.startsWith('cab_screen')) {
+      screenMesh = o; o.material = new THREE.MeshBasicMaterial({ color: '#120a07' });
+    } else if (o.name.startsWith('cab_marquee')) {
+      o.material = new THREE.MeshBasicMaterial({ map: marqueeTexture(), color: new THREE.Color(1.5, 1.5, 1.5) });
+    } else if (o.name.startsWith('cab_coinslot')) {
+      o.material = new THREE.MeshBasicMaterial({ color: new THREE.Color('#ff3b30').multiplyScalar(2.6) });
+    }
+  });
+  if (!screenMesh) throw new Error('screen mesh missing');
 
-  const portrait = createPortrait(avatar);
-  portrait.group.position.set(0, 3.15, 1);
-  scene.add(portrait.group);
+  // soft light beam from the ceiling spot, with dust drifting through it
+  const beam = new THREE.Mesh(
+    new THREE.CylinderGeometry(0.12, 1.15, 3.4, 48, 1, true),
+    new THREE.ShaderMaterial({
+      transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide,
+      vertexShader: `varying vec2 vUv; varying float vEdge;
+        void main(){ vUv = uv; vec3 n = normalize(normalMatrix * normal); vec4 mv = modelViewMatrix * vec4(position,1.);
+          vEdge = abs(dot(n, normalize(-mv.xyz))); gl_Position = projectionMatrix * mv; }`,
+      fragmentShader: `precision mediump float; varying vec2 vUv; varying float vEdge;
+        void main(){ float a = pow(vUv.y, 1.6) * pow(vEdge, 2.2) * .11; gl_FragColor = vec4(1., .82, .55, a); }`,
+    }),
+  );
+  beam.position.set(0, 1.95, 0.62); beam.rotation.x = -0.12;
+  scene.add(beam);
+  const dustN = 240, dustPos = new Float32Array(dustN * 3), dustSeed = new Float32Array(dustN);
+  for (let i = 0; i < dustN; i++) {
+    const r = Math.sqrt(Math.random()) * 0.95, a = Math.random() * Math.PI * 2;
+    dustPos.set([Math.cos(a) * r, 0.3 + Math.random() * 3.0, 0.6 + Math.sin(a) * r], i * 3); dustSeed[i] = Math.random() * 100;
+  }
+  const dustGeo = new THREE.BufferGeometry(); dustGeo.setAttribute('position', new THREE.BufferAttribute(dustPos, 3));
+  const dc = document.createElement('canvas'); dc.width = dc.height = 32;
+  const dg = dc.getContext('2d'), rg = dg.createRadialGradient(16, 16, 0, 16, 16, 16);
+  rg.addColorStop(0, 'rgba(255,230,190,1)'); rg.addColorStop(1, 'rgba(255,230,190,0)'); dg.fillStyle = rg; dg.fillRect(0, 0, 32, 32);
+  const dust = new THREE.Points(dustGeo, new THREE.PointsMaterial({ size: 0.014, map: new THREE.CanvasTexture(dc), transparent: true, opacity: 0.55, depthWrite: false, blending: THREE.AdditiveBlending }));
+  scene.add(dust);
+  const dustBase = dustPos.slice();
+  const driftDust = (t) => {
+    for (let i = 0; i < dustN; i++) {
+      const s = dustSeed[i];
+      dustPos[i * 3] = dustBase[i * 3] + Math.sin(t * 0.13 + s) * 0.08;
+      dustPos[i * 3 + 1] = 0.3 + ((dustBase[i * 3 + 1] - 0.3 + t * 0.025 * (0.5 + (s % 1))) % 3.0);
+      dustPos[i * 3 + 2] = dustBase[i * 3 + 2] + Math.cos(t * 0.11 + s) * 0.08;
+    }
+    dustGeo.attributes.position.needsUpdate = true;
+  };
 
-  // ---------- stations ----------
-  const STATIONS = [
-    { target: [0, 3.1, 1], yaw: 0, pitch: 4, w: 6.4, h: 6.4 },          // hero
-    { target: [0, 3.15, 1], yaw: -42, pitch: 7, w: 6.2, h: 6.2 },        // about
-    { target: [0, 1.75, -8.4], yaw: 0, pitch: 13, w: 14.2, h: 5.6 },     // the arcade
-    { target: [0, 2.5, -12.8], yaw: 0, pitch: 6, w: 3.2, h: 3.3 },       // now playing
-    { target: [-ROOM.x, 3.45, -1], yaw: 90, pitch: 3, w: 13.8, h: 5.4 },  // gallery
-    { target: [ROOM.x - 0.5, 3.0, -2], yaw: -90, pitch: 4, w: 6.6, h: 6.9 }, // inventory
-    { target: [4, 3.45, ROOM.z], yaw: -180, pitch: 3, w: 5.6, h: 4.3 },   // quest board
-  ];
-  const sides = panels.map((p) => p.dataset.side || 'left');
+  // screen frame in world space: center, normal, up, right
+  gltf.scene.updateMatrixWorld(true);
+  screenMesh.geometry.computeBoundingBox();
+  const bb = screenMesh.geometry.boundingBox, ext = bb.getSize(new THREE.Vector3());
+  const axes = [new THREE.Vector3(1, 0, 0), new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, 0, 1)];
+  const order = [0, 1, 2].sort((a, b) => ext.getComponent(a) - ext.getComponent(b)); // thin, short, long
+  const nm = new THREE.Matrix3().getNormalMatrix(screenMesh.matrixWorld);
+  const N = axes[order[0]].clone().applyMatrix3(nm).normalize(); if (N.z < 0) N.negate();
+  const U = axes[order[1]].clone().applyMatrix3(nm).normalize(); if (U.y < 0) U.negate();
+  const R = new THREE.Vector3().crossVectors(U, N).normalize();
+  const C = bb.getCenter(new THREE.Vector3()); C.setComponent(order[0], bb.max.getComponent(order[0]));
+  screenMesh.localToWorld(C);
+  const SW = ext.getComponent(order[2]) * 0.985, SH = ext.getComponent(order[1]) * 0.985;
+  const corners = [[-1, 1], [1, 1], [1, -1], [-1, -1]].map(([sx, sy]) => C.clone().addScaledVector(R, sx * SW / 2).addScaledVector(U, sy * SH / 2));
+  const SRC = [[0, 0], [960, 0], [960, 720], [0, 720]];
 
-  let vw = innerWidth, vh = innerHeight, mobile = vw <= 760, layouts = [];
-  const STEP = 1.15; // viewport heights of scroll per station
+  // ---------- sizing ----------
+  let vw = innerWidth, vh = innerHeight, narrow = vw <= 760 || vw / vh < 0.9;
   const track = $('#scroll-track');
-  let pxScale = 1, qualityDrop = 0;
-
-  function measureLayouts() {
-    const top = 56 / vh;
-    layouts = panels.map((p, i) => {
-      if (mobile) {
-        const f = clamp((Math.min(p.scrollHeight, vh * 0.43) + 20) / vh, 0.2, 0.5);
-        return { ax: 1, ay: 1 - f - top, cx: 0.5, cy: top + (1 - f - top) / 2 };
-      }
-      const pw = p.getBoundingClientRect().width || Math.min(430, vw * 0.38);
-      const f = clamp((vw * 0.04 + pw + 28) / vw, 0.25, 0.55);
-      const ax = 1 - f;
-      return { ax, ay: 1, cx: sides[i] === 'right' ? ax / 2 : f + ax / 2, cy: 0.5 };
-    });
-  }
   function resize() {
-    vw = innerWidth; vh = innerHeight; mobile = vw <= 760;
-    const dpr = Math.min(devicePixelRatio || 1, 2);
-    const longSide = Math.max(vw, vh) * dpr;
-    pxScale = Math.max(1, longSide / (mobile ? 760 : 820)) * (1 + qualityDrop * 0.3);
-    const rw = Math.max(64, Math.round((vw * dpr) / pxScale)), rh = Math.max(64, Math.round((vh * dpr) / pxScale));
-    renderer.setSize(rw, rh, false);
-    composer.setSize(rw, rh);
+    vw = innerWidth; vh = innerHeight; narrow = vw <= 760 || vw / vh < 0.9;
+    renderer.setSize(vw, vh, false); composer.setSize(vw, vh);
+    bloom.setSize(vw / 2, vh / 2);
     camera.aspect = vw / vh; camera.updateProjectionMatrix();
-    track.style.height = `${(N - 1) * STEP * vh + vh}px`;
-    measureLayouts();
+    track.style.height = `${vh * 2.2}px`;
   }
-  resize();
-  addEventListener('resize', resize);
+  resize(); addEventListener('resize', resize);
 
-  // ---------- scroll ----------
-  lenis = new Lenis({ lerp: reduced ? 1 : 0.085, wheelMultiplier: 0.9 });
-  lenis.stop();
-  const stationY = (i) => i * STEP * vh;
-  const goTo = (i, immediate = false) => {
-    if (document.body.classList.contains('mode-doc')) { $(`#${panels[i].id}`).scrollIntoView({ behavior: 'smooth' }); return; }
-    lenis.scrollTo(stationY(i), { immediate: immediate || reduced, duration: 1.6, lock: false });
-  };
-  $$('[data-go]').forEach((a) => a.addEventListener('click', (e) => { e.preventDefault(); goTo(Number(a.dataset.go)); }));
-
-  let p = 0, snapTimer = 0;
-  lenis.on('scroll', ({ scroll }) => {
-    if (document.body.classList.contains('mode-doc')) return;
-    p = clamp(scroll / (STEP * vh), 0, N - 1);
-    $('#hud-hint').classList.add('gone');
-    clearTimeout(snapTimer);
-    snapTimer = setTimeout(() => {
-      const r = Math.round(p), off = Math.abs(p - r);
-      if (off > 0.06 && off < 0.5 && lenis.isScrolling === false) lenis.scrollTo(stationY(r), { duration: 0.9 });
-    }, 260);
-  });
-
-  // HUD
-  const dots = $('#hud-dots');
-  panels.forEach(() => dots.appendChild(document.createElement('i')));
-  const navLinks = $$('#topbar nav a');
-  let activeStation = -1;
-  function setActive(i) {
-    if (i === activeStation) return;
-    activeStation = i;
-    panels.forEach((pn, k) => { pn.classList.toggle('is-active', k === i); pn.setAttribute('aria-hidden', k === i ? 'false' : 'true'); });
-    if (i < 0) return;
-    $('#hud-num').textContent = `${i + 1}/${N}`;
-    $('#hud-label').textContent = panels[i].dataset.label;
-    [...dots.children].forEach((d, k) => d.classList.toggle('on', k === i));
-    const navFor = i === 3 ? 2 : i;
-    navLinks.forEach((a) => a.classList.toggle('is-active', Number(a.dataset.go) === navFor));
-    try { history.replaceState(null, '', `#${panels[i].id}`); } catch (e) { /* sandboxed */ }
-  }
-
-  // Quick view toggle
-  const qt = $('#quick-toggle');
-  let savedScroll = 0;
-  function setDocMode(on) {
-    if (on === document.body.classList.contains('mode-doc')) return;
-    if (on) {
-      savedScroll = lenis.scroll;
-      document.body.classList.add('mode-doc'); document.body.classList.remove('mode-3d');
-      panels.forEach((pn) => pn.removeAttribute('aria-hidden'));
-      lenis.start(); requestAnimationFrame(() => lenis.scrollTo(0, { immediate: true }));
-    } else {
-      document.body.classList.remove('mode-doc'); document.body.classList.add('mode-3d');
-      activeStation = -1; resize();
-      requestAnimationFrame(() => lenis.scrollTo(savedScroll, { immediate: true }));
-    }
-    qt.setAttribute('aria-pressed', String(on));
-    qt.textContent = on ? '3D view' : 'Quick view';
-  }
-  qt.addEventListener('click', () => { hideLoader(); setDocMode(!document.body.classList.contains('mode-doc')); });
-
-  // ---------- loader / start ----------
-  let started = false, assembleT = 0;
-  const startBtn = $('#loader-start'), quickBtn = $('#loader-quick');
-  function hideLoader() { $('#loader').classList.add('done'); setTimeout(() => { $('#loader').style.display = 'none'; }, 650); }
-  function begin() {
-    if (started || !ready) return;
-    started = true; hideLoader(); lenis.start();
-    const hashIdx = panels.findIndex((pn) => `#${pn.id}` === location.hash);
-    if (hashIdx > 0) goTo(hashIdx, true);
-    if (reduced) assembleT = 1;
-  }
-  startBtn.addEventListener('click', begin);
-  quickBtn.addEventListener('click', () => { started = true; hideLoader(); setDocMode(true); });
-  addEventListener('keydown', (e) => { if (!started && ready && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); begin(); } });
-  addEventListener('wheel', () => { if (!started && ready) begin(); }, { passive: true });
-  addEventListener('touchmove', () => { if (!started && ready) begin(); }, { passive: true });
-
-  const onReady = () => {
-    if (ready) return; ready = true;
-    fill.style.width = '100%'; loaderText.textContent = 'READY';
-    startBtn.hidden = false; quickBtn.hidden = false;
-  };
-  manager.onLoad = onReady;
-  setTimeout(onReady, 9000); // never get stuck on a slow texture
-
-  // ---------- picking ----------
-  const ray = new THREE.Raycaster();
-  const ndc = new THREE.Vector2(), mouse = { x: 0, y: 0, sx: 0, sy: 0 };
-  let hovered = null, pointerDirty = false, downAt = null, listHover = null;
-  const tip = $('#tooltip');
-  addEventListener('pointermove', (e) => {
-    mouse.x = (e.clientX / vw) * 2 - 1; mouse.y = -(e.clientY / vh) * 2 + 1;
-    tip.style.left = `${e.clientX}px`; tip.style.top = `${e.clientY}px`;
-    pointerDirty = true;
-  });
-  const overUI = (e) => e.target.closest('.panel, #topbar, .overlay, #loader');
-  addEventListener('pointerdown', (e) => { downAt = overUI(e) ? null : { x: e.clientX, y: e.clientY, t: performance.now() }; });
-  addEventListener('pointerup', (e) => {
-    if (!downAt || !started || document.body.classList.contains('mode-doc')) return;
-    const moved = Math.hypot(e.clientX - downAt.x, e.clientY - downAt.y);
-    downAt = null;
-    if (moved > 8) return;
-    mouse.x = (e.clientX / vw) * 2 - 1; mouse.y = -(e.clientY / vh) * 2 + 1;
-    const hit = pick();
-    if (hit) activate(hit.userData.info);
-  });
-  function pick() {
-    ndc.set(mouse.x, mouse.y);
-    ray.setFromCamera(ndc, camera);
-    const hits = ray.intersectObjects(world.interactive, false);
-    return hits.length ? hits[0].object.userData.root : null;
-  }
-  function activate(info) {
-    if (info.kind === 'project') openProject(info.el, info.featured ? info.canvas : null);
-    else if (info.kind === 'art') openArt(info.index);
-    else if (info.kind === 'note' && info.el) info.el.click();
-    else if (info.kind === 'skill') { info.el.animate([{ color: '#fbbf24', transform: 'translateX(6px)' }, { transform: 'none' }], { duration: 600 }); if (activeStation !== 5) goTo(5); }
-  }
-  // hovering a project name in the panel lights up its cabinet
-  $$('#projects .project, #now-playing .project').forEach((el) => {
-    el.addEventListener('mouseenter', () => { listHover = world.hoverables.find((r) => r.userData.info.el === el) || null; });
-    el.addEventListener('mouseleave', () => { listHover = null; });
-  });
-
-  // ---------- camera ----------
-  const tgt = new THREE.Vector3(), dir = new THREE.Vector3(), camPos = new THREE.Vector3(), right = new THREE.Vector3();
+  // ---------- camera rig ----------
   const tanH = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
-  const BOUND = { x: ROOM.x - 0.6, z: ROOM.z - 0.6, y: ROOM.h - 0.4 };
-  function placeCamera(pp, time) {
-    const i = Math.min(Math.floor(pp), N - 2), f = pp - i;
-    const t = smoother(clamp((f - 0.16) / 0.68, 0, 1));
-    const A = STATIONS[i], B = STATIONS[i + 1], LA = layouts[i], LB = layouts[i + 1];
-    tgt.set(lerp(A.target[0], B.target[0], t), lerp(A.target[1], B.target[1], t), lerp(A.target[2], B.target[2], t));
-    const yaw = THREE.MathUtils.degToRad(lerp(A.yaw, B.yaw, t)), pitch = THREE.MathUtils.degToRad(lerp(A.pitch, B.pitch, t));
-    dir.set(Math.sin(yaw) * Math.cos(pitch), Math.sin(pitch), Math.cos(yaw) * Math.cos(pitch));
-    const w = lerp(A.w, B.w, t), h = lerp(A.h, B.h, t);
-    const ax = lerp(LA.ax, LB.ax, t), ay = lerp(LA.ay, LB.ay, t), cx = lerp(LA.cx, LB.cx, t), cy = lerp(LA.cy, LB.cy, t);
-    // pull back further mid-transit so moves read as a sweep, not a slide
-    const arc = Math.sin(Math.PI * t) * (A.yaw !== B.yaw ? 1.35 : 1.12);
-    let d = Math.max(h / (2 * ay * tanH), w / (2 * camera.aspect * ax * tanH)) * Math.max(1, arc);
-    // keep the camera inside the room
-    for (const [k, b] of [['x', BOUND.x], ['z', BOUND.z]]) {
-      const dc = dir[k];
-      if (Math.abs(dc) > 1e-4) d = Math.min(d, ((dc > 0 ? b : -b) - tgt[k]) / dc);
-    }
-    if (dir.y > 1e-4) d = Math.min(d, (BOUND.y - tgt.y) / dir.y);
-    d = Math.max(d, 1.2);
-    // gentle life: idle breathing + pointer parallax
-    if (!reduced) {
-      mouse.sx = lerp(mouse.sx, isTouch ? 0 : mouse.x, 0.05); mouse.sy = lerp(mouse.sy, isTouch ? 0 : mouse.y, 0.05);
-      right.set(Math.cos(yaw), 0, -Math.sin(yaw));
-      tgt.addScaledVector(right, mouse.sx * 0.18 * (w / 6)).add({ x: 0, y: mouse.sy * 0.1 * (h / 5) + Math.sin(time * 0.6) * 0.03, z: 0 });
-    }
-    camPos.copy(tgt).addScaledVector(dir, d);
-    camera.position.copy(camPos);
-    camera.lookAt(tgt);
-    camera.setViewOffset(vw, vh, (0.5 - cx) * vw, (0.5 - cy) * vh, vw, vh);
+  const WIDE = new THREE.Vector3(-1.15, 1.12, 4.0), WIDE_T = new THREE.Vector3(0.02, 0.96, 0);
+  const pos = new THREE.Vector3(), tgt = new THREE.Vector3(), up = new THREE.Vector3(), tmp = new THREE.Vector3();
+  const mouse = { x: 0, y: 0, sx: 0, sy: 0 };
+  addEventListener('pointermove', (e) => { mouse.x = (e.clientX / vw) * 2 - 1; mouse.y = -(e.clientY / vh) * 2 + 1; });
+  function insideDist() {
+    return Math.max(SH / (0.9 * 2 * tanH), SW / (0.95 * 2 * tanH * camera.aspect));
   }
+  function placeCamera(p, time) {
+    const e = ease(p);
+    const IN = C.clone().addScaledVector(N, insideDist());
+    const MID = C.clone().addScaledVector(N, 1.6).add(new THREE.Vector3(-0.35, -0.05, 0));
+    const W0 = narrow ? WIDE_T.clone().add(tmp.copy(WIDE).sub(WIDE_T).multiplyScalar(1.5)) : WIDE;
+    const curve = new THREE.QuadraticBezierCurve3(W0, MID, IN);
+    curve.getPoint(e, pos);
+    tgt.lerpVectors(WIDE_T, C, clamp(e * 1.25, 0, 1));
+    up.set(0, 1, 0).lerp(U, clamp((e - 0.5) * 2, 0, 1)).normalize();
+    if (!reduced) {
+      const k = 1 - e;
+      mouse.sx = lerp(mouse.sx, isTouch ? 0 : mouse.x, 0.04); mouse.sy = lerp(mouse.sy, isTouch ? 0 : mouse.y, 0.04);
+      pos.x += mouse.sx * 0.35 * k; pos.y += mouse.sy * 0.15 * k + Math.sin(time * 0.5) * 0.02 * k;
+    }
+    camera.position.copy(pos); camera.up.copy(up); camera.lookAt(tgt);
+    // frame the cabinet beside the intro text on the wide shot
+    const cx = narrow ? 0.5 : lerp(0.64, 0.5, e), cy = narrow ? lerp(0.36, 0.5, e) : 0.5;
+    camera.setViewOffset(vw, vh, (0.5 - cx) * vw, (0.5 - cy) * vh, vw, vh);
+    camera.updateMatrixWorld();
+  }
+  const screenEl = $('#screen');
+  const ndc = new THREE.Vector3();
+  function mapScreen() {
+    if (body.classList.contains('is-full')) { screenEl.style.transform = ''; return; }
+    const dst = corners.map((c) => { ndc.copy(c).project(camera); return [(ndc.x + 1) / 2 * vw, (1 - ndc.y) / 2 * vh]; });
+    screenEl.style.transform = homography(SRC, dst);
+  }
+
+  // ---------- scroll: 0 = wide shot, 1 = inside the screen ----------
+  const lenis = new Lenis({ lerp: reduced ? 1 : 0.07, wheelMultiplier: 0.8 });
+  const maxScroll = () => vh * 1.2;
+  let p = 0, renderP = 0, snapT = 0;
+  lenis.on('scroll', ({ scroll }) => {
+    if (!body.classList.contains('mode-3d')) return;
+    p = clamp(scroll / maxScroll(), 0, 1);
+    clearTimeout(snapT);
+    snapT = setTimeout(() => { if (p > 0.04 && p < 0.96) lenis.scrollTo(p > 0.4 ? maxScroll() : 0, { duration: 1.4 }); }, 220);
+  });
+  enterCabinet = () => lenis.scrollTo(maxScroll(), { duration: reduced ? 0 : 2.2 });
+  window.__exitCabinet = () => lenis.scrollTo(0, { duration: reduced ? 0 : 1.8 });
+  $('#intro-start').addEventListener('click', enterCabinet);
+  $('#exit-btn').addEventListener('click', window.__exitCabinet);
+  screenEl.addEventListener('click', () => { if (!body.classList.contains('is-inside')) enterCabinet(); });
+
+  // Quick view
+  const qt = $('#quick-toggle');
+  qt.addEventListener('click', () => {
+    const toDoc = body.classList.contains('mode-3d');
+    body.classList.toggle('mode-3d', !toDoc);
+    if (toDoc) { body.classList.remove('is-inside', 'is-full'); screenEl.style.transform = ''; stopGameVideo(); }
+    qt.setAttribute('aria-pressed', String(toDoc)); qt.textContent = toDoc ? '3D view' : 'Quick view';
+    requestAnimationFrame(() => { lenis.resize(); lenis.scrollTo(0, { immediate: true }); p = renderP = 0; });
+  });
 
   // ---------- loop ----------
   const clock = new THREE.Clock();
-  let last = 0, lastAnim = 0, lastVid = 0, slowFrames = 0, renderP = 0;
+  let last = 0, inside = false;
   function frame() {
     requestAnimationFrame(frame);
     const now = clock.getElapsedTime(), dt = Math.min(0.1, now - last); last = now;
     lenis.raf(now * 1000);
-    if (document.body.classList.contains('mode-doc')) return;
-
-    renderP = reduced ? p : lerp(renderP, p, 1 - Math.pow(0.0001, dt));
+    if (!body.classList.contains('mode-3d')) return;
+    renderP = reduced ? p : lerp(renderP, p, 1 - Math.pow(0.002, dt));
     if (Math.abs(renderP - p) < 1e-4) renderP = p;
-    const near = Math.round(renderP);
-    setActive(started && Math.abs(renderP - near) < 0.32 ? near : -1);
+    const nowInside = renderP > 0.985;
+    if (nowInside !== inside) {
+      inside = nowInside;
+      body.classList.toggle('is-inside', inside);
+      body.classList.toggle('is-full', inside && narrow);
+      if (inside) { const f = $(current === 'menu' ? '.menu-list button' : '.back', views[current]); f && f.focus({ preventScroll: true }); if (current === 'projects') showGame(gameIdx); }
+      else stopGameVideo();
+    }
+    $('#intro').classList.toggle('gone', renderP > 0.08);
     placeCamera(renderP, now);
-
-    // portrait
-    if (started && assembleT < 1) assembleT = Math.min(1, assembleT + dt / 2.4);
-    const u = portrait.uniforms;
-    u.uTime.value = now;
-    u.uAssemble.value = assembleT;
-    u.uRelief.value = smooth(0.15, 0.85, renderP);
-    u.uScatter.value = smooth(1.25, 1.95, renderP);
-    portrait.group.rotation.y = -0.22 * u.uRelief.value * (1 - u.uScatter.value) + (reduced ? 0 : Math.sin(now * 0.4) * 0.03);
-
-    // hover
-    if (pointerDirty && started && !isTouch) {
-      pointerDirty = false;
-      const h = pick();
-      if (h !== hovered) {
-        hovered = h;
-        document.body.classList.toggle('is-hovering', !!h);
-        tip.classList.toggle('on', !!h);
-        if (h) tip.textContent = h.userData.info.label;
-      }
-    }
-    for (const r of world.hoverables) {
-      const on = r === hovered || r === listHover ? 1 : 0;
-      r.userData.hover = lerp(r.userData.hover, on, 1 - Math.pow(0.001, dt));
-      const hv = r.userData.hover;
-      if (r.userData.info.pop) { r.position.z = r.userData.base.z + hv * 0.2; }
-      else r.scale.setScalar(r.userData.baseScale * (1 + hv * 0.035));
-    }
-
-    // animated canvas screens ~15fps
-    if (now - lastAnim > 1 / 15) {
-      lastAnim = now;
-      world.animated.forEach((t) => t.userData.draw(now));
-      if (modalCanvasEl && !modal.hidden) modalCanvasEl.getContext('2d').drawImage(modalCanvasEl._src, 0, 0);
-    }
-    // only play videos the camera is near
-    if (now - lastVid > 0.3) {
-      lastVid = now;
-      for (const v of world.videos) {
-        const want = started && v.stations.some((s) => Math.abs(renderP - s) < 1.15);
-        if (want && v.video.paused) v.video.play().catch(() => {});
-        else if (!want && !v.video.paused) v.video.pause();
-      }
-    }
-
+    mapScreen();
+    if (!reduced) driftDust(now);
+    beam.visible = dust.visible = renderP < 0.97;
+    finish.uniforms.uTime.value = now % 10;
     composer.render(dt);
-
-    // adaptive quality: if frames stay slow, render fewer pixels, then drop bloom
-    if (dt > 1 / 32) slowFrames++; else slowFrames = Math.max(0, slowFrames - 1);
-    if (slowFrames > 90 && qualityDrop < 3) { qualityDrop++; slowFrames = 0; if (qualityDrop === 3) bloom.enabled = false; resize(); }
   }
+
+  // ---------- reveal ----------
+  $('#loader').classList.add('done');
+  setTimeout(() => { $('#loader').style.display = 'none'; }, 900);
+  const hashView = location.hash.slice(1);
+  if (views[hashView]) { openView(hashView, false); requestAnimationFrame(() => enterCabinet()); }
   frame();
 
-  // test hook (used by the QA screenshots, harmless in production)
-  window.__arcade = {
-    setP: (v) => { p = renderP = v; },
-    start: () => { begin(); assembleT = 1; },
-    info: () => ({ calls: renderer.info.render.calls, tris: renderer.info.render.triangles, px: [renderer.domElement.width, renderer.domElement.height], qualityDrop }),
-  };
+  window.__arcade = { setP: (v) => { p = renderP = v; }, info: () => ({ calls: renderer.info.render.calls, inside }) };
+}
+
+// Marquee art: backlit sign with the name in the pixel font
+function marqueeTexture() {
+  const c = document.createElement('canvas'); c.width = 1024; c.height = 372;
+  const g = c.getContext('2d');
+  const grd = g.createLinearGradient(0, 0, 0, 372);
+  grd.addColorStop(0, '#3a1206'); grd.addColorStop(0.5, '#7a2a08'); grd.addColorStop(1, '#2a0d05');
+  g.fillStyle = grd; g.fillRect(0, 0, 1024, 372);
+  g.globalAlpha = 0.18; g.fillStyle = '#fbbf24';
+  for (let i = -400; i < 1100; i += 60) { g.save(); g.translate(i, 0); g.transform(1, 0, -0.6, 1, 0, 0); g.fillRect(0, 0, 18, 372); g.restore(); }
+  g.globalAlpha = 1;
+  g.textAlign = 'center'; g.textBaseline = 'middle';
+  g.font = '82px "Press Start 2P", monospace';
+  g.fillStyle = '#7f1d1d'; g.fillText('TAYMCQUAYA', 518, 176);
+  g.shadowColor = '#fbbf24'; g.shadowBlur = 30; g.fillStyle = '#ffe9a8'; g.fillText('TAYMCQUAYA', 512, 170);
+  g.shadowBlur = 0; g.font = '26px "Press Start 2P", monospace'; g.fillStyle = '#fde8c8';
+  g.fillText('★ INSERT COIN ★', 512, 290);
+  g.strokeStyle = '#fbbf24'; g.lineWidth = 6; g.strokeRect(14, 14, 996, 344);
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace; t.flipY = false; t.anisotropy = 8;
+  return t;
 }

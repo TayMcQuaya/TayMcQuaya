@@ -18,7 +18,7 @@
   <meta name="twitter:description" content="Enter the Pixel World - explore my portfolio of games, pixel art, Web3 tools, and more.">
   <meta name="twitter:image" content="https://www.taymcquaya.com/images/outer.png">
   <meta name="twitter:site" content="@taymcquaya">
-  <meta name="theme-color" content="#1a0f0a">
+  <meta name="theme-color" content="#0b0708">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
@@ -41,260 +41,228 @@
 <body>
   <canvas id="scene" aria-hidden="true"></canvas>
 
-  <!-- Loader -->
   <div id="loader" aria-live="polite">
-    <div class="loader-inner">
-      <p class="loader-title">TAYMCQUAYA</p>
-      <p class="loader-text" id="loader-text">LOADING...</p>
-      <div class="loader-bar"><span id="loader-fill"></span></div>
-      <button class="loader-start" id="loader-start" type="button" hidden>&#9654; PRESS START</button>
-      <button class="loader-quick" id="loader-quick" type="button" hidden>or open Quick view</button>
-    </div>
+    <p class="loader-text" id="loader-text">LOADING</p>
+    <div class="loader-bar"><span id="loader-fill"></span></div>
   </div>
 
-  <!-- Top bar -->
   <header id="topbar">
-    <a class="brand" href="#hero" data-go="0">TAYMCQUAYA</a>
+    <a class="brand" href="#menu" data-open="menu">TAYMCQUAYA</a>
     <nav aria-label="Main">
-      <a href="#hero" data-go="0">Home</a>
-      <a href="#about" data-go="1">About</a>
-      <a href="#projects" data-go="2">Projects</a>
-      <a href="#art" data-go="4">Art</a>
-      <a href="#skills" data-go="5">Skills</a>
-      <a href="#contact" data-go="6">Contact</a>
+      <a href="#about" data-open="about">About</a>
+      <a href="#projects" data-open="projects">Projects</a>
+      <a href="#art" data-open="art">Art</a>
+      <a href="#skills" data-open="skills">Skills</a>
+      <a href="#contact" data-open="contact">Contact</a>
     </nav>
     <button id="quick-toggle" type="button" aria-pressed="false">Quick view</button>
   </header>
 
-  <!-- HUD -->
-  <div id="hud" aria-hidden="true">
-    <div class="hud-stage"><span id="hud-num">1/7</span> <span id="hud-label">HOME</span></div>
-    <div class="hud-dots" id="hud-dots"></div>
-    <div class="hud-hint" id="hud-hint">Scroll to explore &#8595;</div>
+  <!-- Wide shot intro text -->
+  <div id="intro" aria-hidden="true">
+    <p class="intro-kicker">Developer / Pixel Artist / Creator</p>
+    <p class="intro-title">TAYMCQUAYA</p>
+    <p class="intro-sub">Games, SaaS, Websites, Pixel Art. If I can dream it, I can build it</p>
+    <button type="button" class="intro-start" id="intro-start">&#9654; Press start</button>
+    <p class="intro-hint">or scroll</p>
   </div>
+  <button type="button" id="exit-btn" aria-label="Step back from the cabinet">&#8593; Step back</button>
 
-  <!-- Content: in 3D mode each panel shows at its station; in Quick view they stack as a normal page -->
-  <main id="panels">
+  <!-- The site, running on the cabinet's screen -->
+  <div id="screen-wrap">
+    <div id="screen" class="crt">
 
-    <section class="panel" id="hero" data-station="0" data-side="left" data-label="HOME">
-      <p class="eyebrow">&gt; PLAYER 1</p>
-      <h1 class="hero-title">TAYMCQUAYA</h1>
-      <p class="hero-role">Developer / Pixel Artist / Creator</p>
-      <p class="hero-tag">Games, SaaS, Websites, Pixel Art. If I can dream it, I can build it</p>
-      <div class="btn-row">
-        <a class="btn btn-primary" href="#contact" data-go="6">&#9654; Get In Touch</a>
-        <a class="btn" href="#projects" data-go="2">See the Arcade</a>
-      </div>
-      <img class="doc-only hero-avatar" src="assets/tex/avatar512.jpg" alt="TayMcQuaya avatar" width="256" height="256" loading="lazy">
-    </section>
-
-    <section class="panel" id="about" data-station="1" data-side="left" data-label="ABOUT">
-      <p class="eyebrow">~ About Me ~</p>
-      <h2>LORE</h2>
-      <div class="lore">
-        <div class="lore-page is-on" data-page="0">
-          <p><strong>I'm Tayfun.</strong> I dropped out of college, moved to Bali, and started building. Nothing against theory. I just couldn't ignore what the <b>entire internet was making possible</b> outside the lecture hall.</p>
-          <p>In 2024 I went all in on vibe coding as a full time pursuit, learning by doing every single day. Six spoken languages. <b>All self taught, all from curiosity.</b></p>
+      <section class="view is-on" id="menu" data-view="menu" aria-label="Main menu">
+        <div class="menu-top">
+          <img class="menu-avatar" src="assets/tex/avatar512.jpg" alt="TayMcQuaya avatar" width="128" height="128">
+          <div>
+            <h1 class="logo">TAYMCQUAYA</h1>
+            <p class="logo-sub">Developer / Pixel Artist / Creator</p>
+          </div>
         </div>
-        <div class="lore-page" data-page="1">
-          <p><b>Pixel art and game dev is where I started.</b> Every character, animation, and game asset on this site was drawn by hand, one pixel at a time (the profile pic being the one exception).</p>
-          <p>It was meditative, precise, and deeply satisfying. The foundation everything else got built on.</p>
-          <p>2020 changed everything. Crypto and NFTs pulled me into <b>Web3</b>.</p>
-          <p>I found communities and builders who showed me what's possible when you <b>follow your curiosity and keep building.</b></p>
+        <p class="menu-tag">Games, SaaS, Websites, Pixel Art. If I can dream it, I can build it</p>
+        <ul class="menu-list" role="menu">
+          <li><button type="button" role="menuitem" data-open="about">About</button></li>
+          <li><button type="button" role="menuitem" data-open="projects">Projects</button></li>
+          <li><button type="button" role="menuitem" data-open="art">Pixel Art</button></li>
+          <li><button type="button" role="menuitem" data-open="skills">Skills</button></li>
+          <li><button type="button" role="menuitem" data-open="contact">Contact</button></li>
+        </ul>
+        <p class="menu-foot"><span class="blink">INSERT COIN</span><span>&copy; 2026 TAYMCQUAYA</span></p>
+      </section>
+
+      <section class="view" id="about" data-view="about" aria-label="About">
+        <header class="view-head"><button type="button" class="back" data-open="menu">&#9664; Menu</button><h2>~ About Me ~</h2></header>
+        <div class="about-body">
+          <img class="about-avatar" src="assets/tex/avatar512.jpg" alt="" width="180" height="180" loading="lazy">
+          <div class="dialog">
+            <p class="dialog-name">LORE</p>
+            <div class="lore">
+              <div class="lore-page is-on" data-page="0">
+                <p><strong>I'm Tayfun.</strong> I dropped out of college, moved to Bali, and started building. Nothing against theory. I just couldn't ignore what the <b>entire internet was making possible</b> outside the lecture hall.</p>
+                <p>In 2024 I went all in on vibe coding as a full time pursuit, learning by doing every single day. Six spoken languages. <b>All self taught, all from curiosity.</b></p>
+              </div>
+              <div class="lore-page" data-page="1">
+                <p><b>Pixel art and game dev is where I started.</b> Every character, animation, and game asset on this site was drawn by hand, one pixel at a time (the profile pic being the one exception).</p>
+                <p>It was meditative, precise, and deeply satisfying. The foundation everything else got built on.</p>
+                <p>2020 changed everything. Crypto and NFTs pulled me into <b>Web3</b>.</p>
+                <p>I found communities and builders who showed me what's possible when you <b>follow your curiosity and keep building.</b></p>
+              </div>
+              <div class="lore-page" data-page="2">
+                <p>Now I build <b>whatever catches my fire.</b></p>
+                <p>Games, SaaS tools, websites, Telegram bots, whatever the idea demands.</p>
+                <p><b>If I can dream it, I ship it.</b></p>
+                <p>I get better every day. This site is a snapshot, not the full picture.</p>
+                <p><b>The best stuff? It's still loading.</b></p>
+              </div>
+            </div>
+            <div class="lore-nav">
+              <button type="button" class="pill" data-lore="-1">&lt; PREV</button>
+              <span class="lore-count" id="lore-count">1 / 3</span>
+              <button type="button" class="pill" data-lore="1">NEXT &gt;</button>
+            </div>
+          </div>
         </div>
-        <div class="lore-page" data-page="2">
-          <p>Now I build <b>whatever catches my fire.</b></p>
-          <p>Games, SaaS tools, websites, Telegram bots, whatever the idea demands.</p>
-          <p><b>If I can dream it, I ship it.</b></p>
-          <p>I get better every day. This site is a snapshot, not the full picture.</p>
-          <p><b>The best stuff? It's still loading.</b></p>
+        <dl class="stats">
+          <div><dt>Languages</dt><dd>6</dd></div>
+          <div><dt>Countries</dt><dd>7</dd></div>
+          <div><dt>Grind Level</dt><dd>INFINITE</dd></div>
+        </dl>
+      </section>
+
+      <section class="view" id="projects" data-view="projects" aria-label="Projects">
+        <header class="view-head"><button type="button" class="back" data-open="menu">&#9664; Menu</button><h2>~ Select Game ~</h2></header>
+        <div class="select">
+          <ul class="select-list" id="select-list">
+            <li><button type="button" class="game is-on" data-game="0">Floppy Tromp 2D</button></li>
+            <li><button type="button" class="game" data-game="1">JavaScript Journey</button></li>
+            <li><button type="button" class="game" data-game="2">OpenOPen</button></li>
+            <li><button type="button" class="game" data-game="3">Zombieshooter 3D</button></li>
+            <li><button type="button" class="game" data-game="4">Descent</button></li>
+            <li><button type="button" class="game" data-game="5">WhatsNote</button></li>
+            <li><button type="button" class="game" data-game="6">Coming Soon</button></li>
+          </ul>
+          <div class="games">
+            <article class="project is-on" data-video="assets/vid/floppytromp.mp4" data-poster="assets/tex/floppytromp.jpg">
+              <div class="project-media"></div>
+              <h3 class="project-name">Floppy Tromp 2D</h3>
+              <p class="project-type">Game</p>
+              <p>Election season satire built in Unity. Hand drew every character, shipped in a week with Web3 wallet gating baked in. Gates are open now, free for everyone to play.</p>
+              <ul class="tags"><li>Unity</li><li>Pixel Art</li><li>Web3</li><li>Game Dev</li></ul>
+              <p class="actions"><a class="pill pill-hot" href="https://taymcquaya.github.io/FloppyTromp/" target="_blank" rel="noopener">Play Now</a><a class="pill" href="https://www.youtube.com/watch?v=2KdoXTuNmQY" target="_blank" rel="noopener">Watch on YouTube</a></p>
+            </article>
+            <article class="project" data-video="assets/vid/javascript.mp4" data-poster="assets/tex/javascript.jpg">
+              <div class="project-media"></div>
+              <h3 class="project-name">JavaScript Journey</h3>
+              <p class="project-type">Website</p>
+              <p>Built for beginners who want to learn JavaScript without paying for another course. Zero to hero, completely free, made with non tech folks in mind.</p>
+              <ul class="tags"><li>JavaScript</li><li>Education</li><li>Tutorial</li></ul>
+              <p class="actions"><a class="pill pill-hot" href="https://taymcquaya.github.io/Javascript-Journey/" target="_blank" rel="noopener">Visit</a></p>
+            </article>
+            <article class="project" data-video="assets/vid/openopen.mp4" data-poster="assets/tex/openopen.jpg">
+              <div class="project-media"></div>
+              <h3 class="project-name">OpenOPen</h3>
+              <p class="project-type">App</p>
+              <p>A fully functional text editor built from scratch in my early vibe coding days, a personal stress test to see how far I could push the limits. Works just fine.</p>
+              <ul class="tags"><li>Python</li><li>Open Source</li><li>Desktop</li></ul>
+              <p class="actions"><a class="pill pill-hot" href="https://github.com/TayMcQuaya/OpenOPen/tree/executable" target="_blank" rel="noopener">Download</a></p>
+            </article>
+            <article class="project" data-video="assets/vid/zombieshooter.mp4" data-poster="assets/tex/zombieshooter.jpg">
+              <div class="project-media"></div>
+              <h3 class="project-name">Zombieshooter 3D</h3>
+              <p class="project-type">Game</p>
+              <p>A browser based 3D zombie shooter. Point, click, survive. Built for speed, runs right in your tab, no install needed.</p>
+              <ul class="tags"><li>3D</li><li>Game Dev</li><li>Browser</li><li>Shooter</li></ul>
+              <p class="actions"><a class="pill pill-hot" href="https://taymcquaya.github.io/Zombieshooter3D/" target="_blank" rel="noopener">Play Now</a></p>
+            </article>
+            <article class="project" data-video="assets/vid/decent.mp4" data-poster="assets/tex/decent.jpg">
+              <div class="project-media"></div>
+              <h3 class="project-name">Descent</h3>
+              <p class="project-type">Website</p>
+              <p>A 3D horror website built with Three.js. Pure showcase, just for fun. Step into the dark, find what's hidden, and try not to lose your nerve.</p>
+              <ul class="tags"><li>3D</li><li>Three.js</li><li>Horror</li><li>Web</li></ul>
+              <p class="actions"><a class="pill pill-hot" href="#">Visit</a></p>
+            </article>
+            <article class="project" data-video="assets/vid/whatsnote.mp4" data-poster="assets/tex/whatsnote.jpg">
+              <div class="project-media"></div>
+              <h3 class="project-name">WhatsNote</h3>
+              <p class="project-type">App</p>
+              <p>Got tired of abusing WhatsApp groups for to do lists, so I built my own. Each chat is a project, each message is a task. Portable .exe, no install, no account, no internet needed.</p>
+              <ul class="tags"><li>Electron</li><li>Desktop</li><li>Productivity</li><li>Windows</li></ul>
+              <p class="actions"><a class="pill pill-hot" href="https://github.com/TayMcQuaya/WhatsNote/releases" target="_blank" rel="noopener">Download</a></p>
+            </article>
+            <article class="project project-soon">
+              <div class="project-media soon-media"><span>???</span></div>
+              <h3 class="project-name">Coming Soon</h3>
+              <p class="project-type">???</p>
+              <p>Something new is being built. New cabinet dropping soon. Check back later or DM for a sneak peek.</p>
+              <ul class="tags"><li>WIP</li><li>Soon</li></ul>
+            </article>
+          </div>
         </div>
-      </div>
-      <div class="lore-nav">
-        <button type="button" class="btn btn-small" data-lore="-1">&lt; PREV</button>
-        <span class="lore-count" id="lore-count">1 / 3</span>
-        <button type="button" class="btn btn-small" data-lore="1">NEXT &gt;</button>
-      </div>
-      <dl class="stats">
-        <div><dt>Languages</dt><dd>6</dd></div>
-        <div><dt>Countries</dt><dd>7</dd></div>
-        <div><dt>Grind Level</dt><dd>INFINITE</dd></div>
-      </dl>
-    </section>
+        <p class="more">And much much more to come...</p>
+      </section>
 
-    <section class="panel" id="projects" data-station="2" data-side="left" data-label="THE ARCADE">
-      <p class="eyebrow">~ The Arcade ~</p>
-      <h2>Projects</h2>
-      <p class="hint-3d">Every cabinet is a project. Click one to play its demo.</p>
-      <div class="project-list">
-        <article class="project" data-key="floppytromp" data-accent="#ef4444" data-video="assets/vid/floppytromp.mp4" data-poster="assets/tex/floppytromp.jpg">
-          <button type="button" class="project-open"><span class="project-name">Floppy Tromp 2D</span><span class="project-type">Game</span></button>
-          <div class="project-body">
-            <p>Election season satire built in Unity. Hand drew every character, shipped in a week with Web3 wallet gating baked in. Gates are open now, free for everyone to play.</p>
-            <ul class="tags"><li>Unity</li><li>Pixel Art</li><li>Web3</li><li>Game Dev</li></ul>
-            <div class="btn-row"><a class="btn btn-primary project-link" href="https://taymcquaya.github.io/FloppyTromp/" target="_blank" rel="noopener">Play Now</a><a class="btn" href="https://www.youtube.com/watch?v=2KdoXTuNmQY" target="_blank" rel="noopener">Watch on YouTube</a></div>
-          </div>
-        </article>
-        <article class="project" data-key="javascript" data-accent="#fbbf24" data-video="assets/vid/javascript.mp4" data-poster="assets/tex/javascript.jpg">
-          <button type="button" class="project-open"><span class="project-name">JavaScript Journey</span><span class="project-type">Website</span></button>
-          <div class="project-body">
-            <p>Built for beginners who want to learn JavaScript without paying for another course. Zero to hero, completely free, made with non tech folks in mind.</p>
-            <ul class="tags"><li>JavaScript</li><li>Education</li><li>Tutorial</li></ul>
-            <div class="btn-row"><a class="btn btn-primary project-link" href="https://taymcquaya.github.io/Javascript-Journey/" target="_blank" rel="noopener">Visit</a></div>
-          </div>
-        </article>
-        <article class="project" data-key="openopen" data-accent="#2dd4bf" data-video="assets/vid/openopen.mp4" data-poster="assets/tex/openopen.jpg">
-          <button type="button" class="project-open"><span class="project-name">OpenOPen</span><span class="project-type">App</span></button>
-          <div class="project-body">
-            <p>A fully functional text editor built from scratch in my early vibe coding days, a personal stress test to see how far I could push the limits. Works just fine.</p>
-            <ul class="tags"><li>Python</li><li>Open Source</li><li>Desktop</li></ul>
-            <div class="btn-row"><a class="btn btn-primary project-link" href="https://github.com/TayMcQuaya/OpenOPen/tree/executable" target="_blank" rel="noopener">Download</a></div>
-          </div>
-        </article>
-        <article class="project" data-key="zombieshooter" data-accent="#84cc16" data-video="assets/vid/zombieshooter.mp4" data-poster="assets/tex/zombieshooter.jpg">
-          <button type="button" class="project-open"><span class="project-name">Zombieshooter 3D</span><span class="project-type">Game</span></button>
-          <div class="project-body">
-            <p>A browser based 3D zombie shooter. Point, click, survive. Built for speed, runs right in your tab, no install needed.</p>
-            <ul class="tags"><li>3D</li><li>Game Dev</li><li>Browser</li><li>Shooter</li></ul>
-            <div class="btn-row"><a class="btn btn-primary project-link" href="https://taymcquaya.github.io/Zombieshooter3D/" target="_blank" rel="noopener">Play Now</a></div>
-          </div>
-        </article>
-        <article class="project" data-key="decent" data-accent="#a855f7" data-video="assets/vid/decent.mp4" data-poster="assets/tex/decent.jpg">
-          <button type="button" class="project-open"><span class="project-name">Descent</span><span class="project-type">Website</span></button>
-          <div class="project-body">
-            <p>A 3D horror website built with Three.js. Pure showcase, just for fun. Step into the dark, find what's hidden, and try not to lose your nerve.</p>
-            <ul class="tags"><li>3D</li><li>Three.js</li><li>Horror</li><li>Web</li></ul>
-            <div class="btn-row"><a class="btn btn-primary project-link" href="#">Visit</a></div>
-          </div>
-        </article>
-        <article class="project" data-key="whatsnote" data-accent="#22c55e" data-video="assets/vid/whatsnote.mp4" data-poster="assets/tex/whatsnote.jpg">
-          <button type="button" class="project-open"><span class="project-name">WhatsNote</span><span class="project-type">App</span></button>
-          <div class="project-body">
-            <p>Got tired of abusing WhatsApp groups for to do lists, so I built my own. Each chat is a project, each message is a task. Portable .exe, no install, no account, no internet needed.</p>
-            <ul class="tags"><li>Electron</li><li>Desktop</li><li>Productivity</li><li>Windows</li></ul>
-            <div class="btn-row"><a class="btn btn-primary project-link" href="https://github.com/TayMcQuaya/WhatsNote/releases" target="_blank" rel="noopener">Download</a></div>
-          </div>
-        </article>
-        <article class="project project-soon" data-key="soon" data-accent="#8b7355" data-soon="1">
-          <button type="button" class="project-open"><span class="project-name">Coming Soon</span><span class="project-type">???</span></button>
-          <div class="project-body">
-            <p>Something new is being built. New cabinet dropping soon. Check back later or DM for a sneak peek.</p>
-            <ul class="tags"><li>WIP</li><li>Soon</li></ul>
-          </div>
-        </article>
-      </div>
-      <p class="more">And much much more to come...</p>
-    </section>
-
-    <section class="panel" id="now-playing" data-station="3" data-side="left" data-label="NOW PLAYING">
-      <p class="eyebrow">&#9733; Now Playing &#9733;</p>
-      <article class="project project-featured" data-key="panelhaus" data-accent="#fbbf24" data-featured="1">
-        <h2 class="project-name">Panel Haus</h2>
-        <p class="project-type">SaaS &middot; Co-founder &amp; CTO</p>
-        <div class="project-body">
-          <p>Building an AI-powered comic creation platform end to end: canvas editor, AI image pipeline, payments, print-ready export, mobile apps.</p>
-          <ul class="tags"><li>AI</li><li>SaaS</li><li>Comics</li><li>Co-founder</li></ul>
-          <div class="btn-row"><a class="btn btn-primary project-link" href="https://www.panelhaus.app" target="_blank" rel="noopener">Visit Panel Haus</a></div>
+      <section class="view" id="art" data-view="art" aria-label="Pixel art">
+        <header class="view-head"><button type="button" class="back" data-open="menu">&#9664; Menu</button><h2>~ Pixel Art ~</h2></header>
+        <div class="art-grid">
+          <button type="button" class="art" data-orig="images/art5.gif"><img src="assets/tex/art5.png" alt="Pixel Art 5" loading="lazy"></button>
+          <button type="button" class="art" data-orig="images/art7.gif"><img src="assets/tex/art7.png" alt="Pixel Art 7" loading="lazy"></button>
+          <button type="button" class="art" data-orig="images/art8.gif"><img src="assets/tex/art8.png" alt="Pixel Art 8" loading="lazy"></button>
+          <button type="button" class="art" data-orig="images/art09.gif"><img src="assets/tex/art09.png" alt="Pixel Art 9" loading="lazy"></button>
+          <button type="button" class="art" data-orig="images/art10.gif"><img src="assets/tex/art10.png" alt="Pixel Art 10" loading="lazy"></button>
+          <button type="button" class="art" data-orig="images/art24.gif"><img src="assets/tex/art24.png" alt="Pixel Art 24" loading="lazy"></button>
+          <button type="button" class="art" data-orig="images/art1.png"><img src="assets/tex/art1.png" alt="Pixel Art 1" loading="lazy"></button>
+          <button type="button" class="art" data-orig="images/art4.png"><img src="assets/tex/art4.png" alt="Pixel Art 4" loading="lazy"></button>
+          <button type="button" class="art" data-orig="images/art12.png"><img src="assets/tex/art12.png" alt="Pixel Art 12" loading="lazy"></button>
+          <button type="button" class="art" data-orig="images/art21.png"><img src="assets/tex/art21.png" alt="Pixel Art 21" loading="lazy"></button>
+          <button type="button" class="art" data-orig="images/art25.png"><img src="assets/tex/art25.png" alt="Pixel Art 25" loading="lazy"></button>
+          <button type="button" class="art" data-orig="images/art26.Png"><img src="assets/tex/art26.png" alt="Pixel Art 26" loading="lazy"></button>
         </div>
-      </article>
-    </section>
+        <p class="actions center"><a class="pill pill-hot" href="archive.html">&#9654; View Full Archive</a></p>
+        <div class="viewer" id="viewer" hidden>
+          <img id="viewer-img" alt="">
+          <div class="viewer-nav">
+            <button type="button" class="pill" data-v="-1">&lt; PREV</button>
+            <span id="viewer-count"></span>
+            <button type="button" class="pill" data-v="1">NEXT &gt;</button>
+            <button type="button" class="pill" data-v="0">CLOSE</button>
+          </div>
+        </div>
+      </section>
 
-    <section class="panel" id="art" data-station="4" data-side="right" data-label="PIXEL ART">
-      <p class="eyebrow">~ Pixel Art ~</p>
-      <h2>The Gallery</h2>
-      <p class="hint-3d">Hand drawn, one pixel at a time. Click a frame to see it full size.</p>
-      <div class="art-grid">
-        <figure class="art" data-tex="assets/tex/art5.png" data-video="assets/vid/art5.mp4" data-orig="images/art5.gif"><img src="assets/tex/art5.png" alt="Pixel Art 5" loading="lazy"></figure>
-        <figure class="art" data-tex="assets/tex/art7.png" data-video="assets/vid/art7.mp4" data-orig="images/art7.gif"><img src="assets/tex/art7.png" alt="Pixel Art 7" loading="lazy"></figure>
-        <figure class="art" data-tex="assets/tex/art8.png" data-video="assets/vid/art8.mp4" data-orig="images/art8.gif"><img src="assets/tex/art8.png" alt="Pixel Art 8" loading="lazy"></figure>
-        <figure class="art" data-tex="assets/tex/art09.png" data-video="assets/vid/art09.mp4" data-orig="images/art09.gif"><img src="assets/tex/art09.png" alt="Pixel Art 9" loading="lazy"></figure>
-        <figure class="art" data-tex="assets/tex/art10.png" data-video="assets/vid/art10.mp4" data-orig="images/art10.gif"><img src="assets/tex/art10.png" alt="Pixel Art 10" loading="lazy"></figure>
-        <figure class="art" data-tex="assets/tex/art24.png" data-video="assets/vid/art24.mp4" data-orig="images/art24.gif"><img src="assets/tex/art24.png" alt="Pixel Art 24" loading="lazy"></figure>
-        <figure class="art" data-tex="assets/tex/art1.png" data-orig="images/art1.png"><img src="assets/tex/art1.png" alt="Pixel Art 1" loading="lazy"></figure>
-        <figure class="art" data-tex="assets/tex/art4.png" data-orig="images/art4.png"><img src="assets/tex/art4.png" alt="Pixel Art 4" loading="lazy"></figure>
-        <figure class="art" data-tex="assets/tex/art12.png" data-orig="images/art12.png"><img src="assets/tex/art12.png" alt="Pixel Art 12" loading="lazy"></figure>
-        <figure class="art" data-tex="assets/tex/art21.png" data-orig="images/art21.png"><img src="assets/tex/art21.png" alt="Pixel Art 21" loading="lazy"></figure>
-        <figure class="art" data-tex="assets/tex/art25.png" data-orig="images/art25.png"><img src="assets/tex/art25.png" alt="Pixel Art 25" loading="lazy"></figure>
-        <figure class="art" data-tex="assets/tex/art26.png" data-orig="images/art26.Png"><img src="assets/tex/art26.png" alt="Pixel Art 26" loading="lazy"></figure>
-      </div>
-      <div class="btn-row"><a class="btn btn-primary" href="archive.html">&#9654; View Full Archive</a></div>
-    </section>
+      <section class="view" id="skills" data-view="skills" aria-label="Skills">
+        <header class="view-head"><button type="button" class="back" data-open="menu">&#9664; Menu</button><h2>~ The Inventory ~</h2></header>
+        <p class="sheet-meta"><span>LVL ??</span> TayMcQuaya &middot; Developer / Pixel Artist / Creator</p>
+        <ul class="inventory">
+          <li><i>💻</i>C#</li><li><i>☕</i>Java</li><li><i>⚡</i>JavaScript</li><li><i>🔷</i>TypeScript</li>
+          <li><i>⚛️</i>React</li><li><i>▲</i>Next.js</li><li><i>🟢</i>Node.js</li><li><i>🐍</i>Python</li>
+          <li><i>🌐</i>HTML/CSS</li><li><i>🎨</i>Pixel Art</li><li><i>🔗</i>Web3</li><li><i>🤖</i>AI</li>
+          <li><i>🎮</i>Game Dev</li><li><i>🚀</i>Hustle</li><li><i>🤝</i>Soft Skills</li><li><i>💩</i>Shitposting</li>
+        </ul>
+      </section>
 
-    <section class="panel" id="skills" data-station="5" data-side="left" data-label="INVENTORY">
-      <p class="eyebrow">~ The Inventory ~</p>
-      <h2>Character Sheet</h2>
-      <p class="sheet-meta"><span>LVL ??</span> TayMcQuaya &middot; Developer / Pixel Artist / Creator</p>
-      <ul class="skills">
-        <li data-emoji="💻">C#</li>
-        <li data-emoji="☕">Java</li>
-        <li data-emoji="⚡">JavaScript</li>
-        <li data-emoji="🔷">TypeScript</li>
-        <li data-emoji="⚛️">React</li>
-        <li data-emoji="▲">Next.js</li>
-        <li data-emoji="🟢">Node.js</li>
-        <li data-emoji="🐍">Python</li>
-        <li data-emoji="🌐">HTML/CSS</li>
-        <li data-emoji="🎨">Pixel Art</li>
-        <li data-emoji="🔗">Web3</li>
-        <li data-emoji="🤖">AI</li>
-        <li data-emoji="🎮">Game Dev</li>
-        <li data-emoji="🚀">Hustle</li>
-        <li data-emoji="🤝">Soft Skills</li>
-        <li data-emoji="💩">Shitposting</li>
-      </ul>
-    </section>
+      <section class="view" id="contact" data-view="contact" aria-label="Contact">
+        <header class="view-head"><button type="button" class="back" data-open="menu">&#9664; Menu</button><h2>~ Get In Touch ~</h2></header>
+        <p class="contact-lead">Have a project in mind, want to collaborate, or just want to say hello? I'm always open to new adventures.</p>
+        <table class="scores">
+          <thead><tr><th>Rank</th><th>Name</th><th>Score</th></tr></thead>
+          <tbody>
+            <tr><td>1ST</td><td><a href="https://x.com/taymcquaya" target="_blank" rel="noopener">X / Twitter</a></td><td>@taymcquaya</td></tr>
+            <tr><td>2ND</td><td><a href="https://www.linkedin.com/in/tayfun-ergun-taymcquaya/" target="_blank" rel="noopener">LinkedIn</a></td><td>Tayfun Ergun</td></tr>
+            <tr><td>3RD</td><td><a href="https://github.com/taymcquaya" target="_blank" rel="noopener">GitHub</a></td><td>taymcquaya</td></tr>
+            <tr><td>4TH</td><td><a href="mailto:taymcquaya@gmail.com">Email</a></td><td>taymcquaya@gmail.com</td></tr>
+          </tbody>
+        </table>
+        <p class="muted">Choose your preferred way to connect — whether it's a DM, a pull request, or a good old-fashioned email.</p>
+        <p class="actions"><a class="pill pill-hot" href="mailto:taymcquaya@gmail.com">&#9654; Send Mail</a><span class="available">Available for freelance &amp; collabs</span></p>
+        <p class="legal">&copy; 2026 TayMcQuaya. All rights reserved. <a href="privacy-policy.html">Privacy Policy</a> | <a href="terms-of-service.html">Terms of Service</a></p>
+      </section>
 
-    <section class="panel" id="contact" data-station="6" data-side="left" data-label="QUEST BOARD">
-      <p class="eyebrow">&#9733; Quest Board &#9733;</p>
-      <h2>Get In Touch</h2>
-      <p>Have a project in mind, want to collaborate, or just want to say hello? I'm always open to new adventures.</p>
-      <p class="muted">Choose your preferred way to connect — whether it's a DM, a pull request, or a good old-fashioned email.</p>
-      <ul class="contact-links">
-        <li><a class="contact" href="https://x.com/taymcquaya" target="_blank" rel="noopener" data-note="X / Twitter" data-sub="@taymcquaya">X / Twitter</a></li>
-        <li><a class="contact" href="https://www.linkedin.com/in/tayfun-ergun-taymcquaya/" target="_blank" rel="noopener" data-note="LinkedIn" data-sub="Tayfun Ergun">LinkedIn</a></li>
-        <li><a class="contact" href="https://github.com/taymcquaya" target="_blank" rel="noopener" data-note="GitHub" data-sub="taymcquaya">GitHub</a></li>
-        <li><a class="contact" href="mailto:taymcquaya@gmail.com" data-note="Email" data-sub="taymcquaya@gmail.com">Email</a></li>
-      </ul>
-      <p class="email-text">taymcquaya@gmail.com</p>
-      <div class="btn-row"><a class="btn btn-primary" href="mailto:taymcquaya@gmail.com">&#9654; Send Mail</a></div>
-      <p class="available">Available for freelance &amp; collabs</p>
-      <footer class="site-foot">
-        <p>&copy; 2026 TayMcQuaya. All rights reserved.</p>
-        <p><a href="privacy-policy.html">Privacy Policy</a> | <a href="terms-of-service.html">Terms of Service</a></p>
-      </footer>
-    </section>
-  </main>
+    </div>
+  </div>
 
   <div id="scroll-track" aria-hidden="true"></div>
-
-  <!-- Project modal -->
-  <div id="modal" class="overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title" hidden>
-    <div class="overlay-card">
-      <button type="button" class="overlay-close" data-close aria-label="Close">&#10005;</button>
-      <div class="modal-media" id="modal-media"></div>
-      <div class="modal-text">
-        <p class="project-type" id="modal-type"></p>
-        <h2 id="modal-title"></h2>
-        <div id="modal-body"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Art lightbox -->
-  <div id="lightbox" class="overlay" role="dialog" aria-modal="true" aria-label="Pixel art viewer" hidden>
-    <div class="overlay-card lightbox-card">
-      <button type="button" class="overlay-close" data-close aria-label="Close">&#10005;</button>
-      <img id="lightbox-img" alt="">
-      <div class="lightbox-nav">
-        <button type="button" class="btn btn-small" data-lb="-1">&lt; PREV</button>
-        <span id="lightbox-count"></span>
-        <button type="button" class="btn btn-small" data-lb="1">NEXT &gt;</button>
-      </div>
-    </div>
-  </div>
-
-  <div id="tooltip" aria-hidden="true"></div>
-
   <script type="module" src="js/main.js"></script>
 </body>
 </html>
