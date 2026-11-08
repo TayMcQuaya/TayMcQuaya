@@ -5,7 +5,7 @@
 ```
 pip install bpy==5.2.3 pillow scipy   # Python 3.13
 python build.py build      # or: python build.py preview 32  (test render)
-python bake.py 1.0         # ~5 min on 2 CPU cores
-cp <out>/arcade.glb ../../assets/arcade.glb
+python bake.py 1.0         # ~13 min on 2 CPU cores (5 bake groups)
+cp <out>/arcade3.glb ../../assets/arcade3.glb
 ```
 Output folder is set by `OUT` at the top of each script.

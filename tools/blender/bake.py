@@ -7,14 +7,16 @@ from scipy.ndimage import gaussian_filter
 
 OUT = '/home/claude/scratch/blend'
 SCALE = float(sys.argv[1]) if len(sys.argv) > 1 else 1.0
-bpy.ops.wm.open_mainfile(filepath=f'{OUT}/scene.blend')
+bpy.ops.wm.open_mainfile(filepath=f'{OUT}/scene3.blend')
 scene = bpy.context.scene
 scene.render.engine = 'CYCLES'; scene.cycles.device = 'CPU'
 scene.render.bake.margin = 16
 scene.cycles.use_denoising = False
 
-DYN = ('cab_screen', 'cab_marquee', 'cab_coinslot')
-def is_dyn(o): return o.name.startswith(DYN)
+def is_dyn(o):
+    n = o.name
+    return (n.endswith('screen') or n.endswith('marquee') or 'coinslot' in n or n.startswith(('art', 'lamp', 'exit_sign', 'board_screen', 'neon_'))
+            or (n.startswith('cart') and n.endswith('_label')))
 
 def select_only(objs):
     bpy.ops.object.select_all(action='DESELECT')
@@ -27,10 +29,11 @@ select_only(allobjs); bpy.ops.object.parent_clear(type='CLEAR_KEEP_TRANSFORM')
 for o in [o for o in scene.objects if o.type == 'EMPTY']: bpy.data.objects.remove(o)
 
 GROUPS = [
-    ('cab', lambda o: o.name.startswith('cab_') and not is_dyn(o), 2048, 40, 1.4),
-    ('bg', lambda o: o.name.startswith(('bgL_', 'bgR_')), 1024, 24, 1.2),
-    ('floor', lambda o: o.name == 'floor', 2048, 28, 2.2),
-    ('wall', lambda o: o.name == 'wall', 1024, 24, 2.0),
+    ('hero', lambda o: o.name.startswith('hero_') and not is_dyn(o), 2048, 36, 1.4),
+    ('row', lambda o: o.name.startswith('proj') and not is_dyn(o), 4096, 24, 1.6),
+    ('floor', lambda o: o.name == 'floor', 2048, 26, 2.4),
+    ('walls', lambda o: o.name.startswith('wall_'), 2048, 20, 2.2),
+    ('props', lambda o: o.name.startswith(('gal_', 'shelf_', 'door_', 'board_frame', 'board_cork')) or (o.name.startswith('cart') and not is_dyn(o)), 2048, 26, 1.6),
 ]
 
 def aces(x):
@@ -53,11 +56,11 @@ for name, pred, size, samples, sigma in GROUPS:
     ob = bpy.context.view_layer.objects.active; ob.name = f'{name}_baked'
     bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
     me = ob.data
-    if name in ('cab', 'bg'):
+    if name in ('hero', 'row', 'props', 'walls'):
         while len(me.uv_layers): me.uv_layers.remove(me.uv_layers[0])
         me.uv_layers.new(name='bake')
         bpy.ops.object.mode_set(mode='EDIT'); bpy.ops.mesh.select_all(action='SELECT')
-        bpy.ops.uv.smart_project(angle_limit=math.radians(55), island_margin=0.006, area_weight=0.0)
+        bpy.ops.uv.smart_project(angle_limit=math.radians(55), island_margin=0.004 if size >= 4096 else 0.006, area_weight=0.0)
         bpy.ops.object.mode_set(mode='OBJECT')
     img = bpy.data.images.new(f'{name}_img', size, size, float_buffer=True, alpha=True)
     img.generated_color = (0, 0, 0, 0)
@@ -82,7 +85,7 @@ for name, pred, size, samples, sigma in GROUPS:
     rgb = to_srgb(aces(rgb * 1.15))
     out = (np.flipud(np.clip(rgb, 0, 1)) * 255 + 0.5).astype(np.uint8)
     path = f'{OUT}/{name}_baked.jpg'
-    Image.fromarray(out).save(path, quality=90)
+    Image.fromarray(out).save(path, quality=88 if size >= 4096 else 90)
     # swap materials for a single baked material
     bm = bpy.data.materials.new(f'{name}_bakedmat')
     try: bm.use_nodes = True
@@ -96,7 +99,7 @@ for name, pred, size, samples, sigma in GROUPS:
 
 dyn = [o for o in scene.objects if is_dyn(o)]
 select_only(baked + dyn)
-bpy.ops.export_scene.gltf(filepath=f'{OUT}/arcade.glb', export_format='GLB', use_selection=True,
+bpy.ops.export_scene.gltf(filepath=f'{OUT}/arcade3.glb', export_format='GLB', use_selection=True,
                           export_apply=True, export_yup=True, export_image_format='JPEG', export_jpeg_quality=90,
                           export_cameras=False, export_lights=False)
-print('EXPORTED', os.path.getsize(f'{OUT}/arcade.glb') // 1024, 'KB', flush=True)
+print('EXPORTED', os.path.getsize(f'{OUT}/arcade3.glb') // 1024, 'KB', flush=True)

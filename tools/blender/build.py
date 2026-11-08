@@ -268,45 +268,158 @@ def cabinet(prefix, ox=0.0, oy=0.0, rotz=0.0, sidem='side', dim=False):
     root.location = (ox, oy, 0); root.rotation_euler = (0, 0, rotz)
     return root, objs
 
-main_root, main_objs = cabinet('cab_')
-bgL, bgL_objs = cabinet('bgL_', 2.55, 1.75, math.radians(-34), 'sideB', True)
-bgR, bgR_objs = cabinet('bgR_', 1.4, 1.15, math.radians(-24), 'sideC', True)
+# ================================================================ v3: the whole arcade
+# Coordinates: Blender X = three.js X, Blender -Y = three.js +Z (forward), Blender Z = up.
+# Cabinets face Blender -Y. Camera lives at negative Y (positive three.js Z) in front of them.
+ROOM_X, ROOM_Y_BACK, ROOM_Y_FRONT, ROOM_H = 9.0, 6.2, -8.6, 5.0   # walls at x=±9, back wall y=+6.2, front wall y=-8.6
 
-# room
-bpy.ops.mesh.primitive_plane_add(size=1); floor = bpy.context.object; floor.name = 'floor'; floor.scale = (9, 9, 1); floor.data.materials.append(M['floor'])
-bpy.ops.mesh.primitive_plane_add(size=1); wall = bpy.context.object; wall.name = 'wall'; wall.scale = (9, 4, 1)
-wall.rotation_euler = (math.pi / 2, 0, 0); wall.location = (0, 2.1, 2); wall.data.materials.append(M['wall'])
+M['screen_row'] = mat('screen_row', '#000000', 0.2, '#6f8aa6', 0.9)
+M['marquee_row'] = mat('marquee_row', '#000000', 0.3, '#ffcf8a', 3.2)
+M['frame'] = mat('frame', '#3a2216', 0.5)
+M['lamp'] = mat('lamp', '#000000', 0.3, '#ffe2a8', 2.5)
+M['wood'] = mat('wood', '#5a3418', 0.75)
+M['cart'] = mat('cart', '#2b2622', 0.5)
+M['cork'] = mat('cork', '#8a5a32', 1.0)
+M['exit'] = mat('exit', '#000000', 0.3, '#ff3b30', 7.0)
+M['ceil'] = mat('ceil', '#120b08', 1.0)
+M['ledteal'] = mat('ledteal', '#000000', 0.3, '#2dd4bf', 2.5)
+M['stripe'] = mat('stripe', '#000000', 0.3, '#f59e0b', 1.6)
 
-# lights
+# hero cabinet (About) in the middle of the room
+hero_root, _ = cabinet('hero_', 0.0, 0.2, 0.0, 'side')
+
+# project row along the back wall: 7 cabinets, distinct side art
+row_pal = [['#ef4444', '#f97316', '#fbbf24'], ['#fbbf24', '#f59e0b', '#ffffff'], ['#2dd4bf', '#38bdf8', '#a855f7'],
+           ['#84cc16', '#22c55e', '#fbbf24'], ['#a855f7', '#ff4fa3', '#38bdf8'], ['#22c55e', '#2dd4bf', '#ffffff'], ['#8b7355', '#6b5a45', '#f59e0b']]
+for i, cols in enumerate(row_pal):
+    M[f'sideP{i}'] = side_mat(f'sideP{i}', cols)
+ROW_Y = 5.75
+ROW_X = [-4.5, -3.0, -1.5, 0.0, 1.5, 3.0, 4.5]
+for i, x in enumerate(ROW_X):
+    cabinet(f'proj{i}_', x, ROW_Y, 0.0, f'sideP{i}')
+# swap row screens/marquees to the row materials (dimmer, neutral)
+for o in scene.objects:
+    if o.name.startswith('proj') and o.name.endswith('screen'): o.data.materials[0] = M['screen_row']
+    if o.name.startswith('proj') and o.name.endswith('marquee'): o.data.materials[0] = M['marquee_row']
+# hazard tape on the last one
+for r in (0.5, -0.5):
+    bpy.ops.mesh.primitive_cube_add(size=1); t = bpy.context.object; t.name = f'proj6_tape{r}'
+    t.scale = (0.75, 0.005, 0.045); t.location = (ROW_X[6], ROW_Y - 0.44, 1.62); t.rotation_euler = (0, r, 0); t.data.materials.append(M['stripe'])
+
+# room shell
+def box(name, loc, scale, material):
+    bpy.ops.mesh.primitive_cube_add(size=1); o = bpy.context.object; o.name = name
+    o.location = loc; o.scale = scale; o.data.materials.append(material); return o
+bpy.ops.mesh.primitive_plane_add(size=1); floor = bpy.context.object; floor.name = 'floor'
+floor.scale = (ROOM_X * 2, ROOM_Y_BACK - ROOM_Y_FRONT, 1); floor.location = (0, (ROOM_Y_BACK + ROOM_Y_FRONT) / 2, 0); floor.data.materials.append(M['floor'])
+depth = ROOM_Y_BACK - ROOM_Y_FRONT
+box('wall_back', (0, ROOM_Y_BACK + 0.05, ROOM_H / 2), (ROOM_X * 2 + 0.2, 0.1, ROOM_H), M['wall'])
+box('wall_front', (0, ROOM_Y_FRONT - 0.05, ROOM_H / 2), (ROOM_X * 2 + 0.2, 0.1, ROOM_H), M['wall'])
+box('wall_left', (-ROOM_X - 0.05, (ROOM_Y_BACK + ROOM_Y_FRONT) / 2, ROOM_H / 2), (0.1, depth, ROOM_H), M['wall'])
+box('wall_right', (ROOM_X + 0.05, (ROOM_Y_BACK + ROOM_Y_FRONT) / 2, ROOM_H / 2), (0.1, depth, ROOM_H), M['wall'])
+box('wall_ceil', (0, (ROOM_Y_BACK + ROOM_Y_FRONT) / 2, ROOM_H + 0.05), (ROOM_X * 2, depth, 0.1), M['ceil'])
+# wainscot rail + baseboard on all walls
+for nm, loc, sc in [('back', (0, ROOM_Y_BACK - 0.03, 1.2), (ROOM_X * 2, 0.06, 0.08)), ('front', (0, ROOM_Y_FRONT + 0.03, 1.2), (ROOM_X * 2, 0.06, 0.08)),
+                    ('left', (-ROOM_X + 0.03, (ROOM_Y_BACK + ROOM_Y_FRONT) / 2, 1.2), (0.06, depth, 0.08)), ('right', (ROOM_X - 0.03, (ROOM_Y_BACK + ROOM_Y_FRONT) / 2, 1.2), (0.06, depth, 0.08))]:
+    box(f'wall_rail_{nm}', loc, sc, M['kick']); l2 = list(loc); l2[2] = 0.12; s2 = list(sc); s2[2] = 0.24; box(f'wall_base_{nm}', tuple(l2), tuple(s2), M['kick'])
+# amber neon strip along the ceiling edge (baked as emissive)
+for nm, loc, sc in [('back', (0, ROOM_Y_BACK - 0.06, ROOM_H - 0.25), (ROOM_X * 2, 0.04, 0.04)), ('front', (0, ROOM_Y_FRONT + 0.06, ROOM_H - 0.25), (ROOM_X * 2, 0.04, 0.04)),
+                    ('left', (-ROOM_X + 0.06, (ROOM_Y_BACK + ROOM_Y_FRONT) / 2, ROOM_H - 0.25), (0.04, depth, 0.04)), ('right', (ROOM_X - 0.06, (ROOM_Y_BACK + ROOM_Y_FRONT) / 2, ROOM_H - 0.25), (0.04, depth, 0.04))]:
+    box(f'wall_neon_{nm}', loc, sc, M['stripe'])
+
+# gallery on the right wall: 12 frames, 2 rows x 6, art planes dynamic
+ART_Z = [(-4.5 + 1.5 * c) for c in range(6)]   # along Blender Y
+ART_ROWS = [2.25, 1.05]
+for i in range(12):
+    r, c = divmod(i, 6)
+    y = ART_Z[c]; z = ART_ROWS[r]
+    box(f'gal_frame{i}', (ROOM_X - 0.045, y, z), (0.07, 1.14, 1.04), M['frame'])
+    bpy.ops.mesh.primitive_plane_add(size=1); a = bpy.context.object; a.name = f'art{i}'
+    a.scale = (1.0, 0.9, 1); a.rotation_euler = (math.pi / 2, 0, -math.pi / 2); a.location = (ROOM_X - 0.085, y, z)
+    a.data.materials.append(mat(f'artm{i}', '#222222', 0.6))
+    if r == 0:
+        box(f'gal_lamparm{i}', (ROOM_X - 0.15, y, z + 0.72), (0.3, 0.05, 0.03), M['metal'])
+        box(f'lamp{i}', (ROOM_X - 0.26, y, z + 0.70), (0.08, 0.5, 0.03), M['lamp'])
+    else:
+        box(f'lamp{i}', (ROOM_X - 0.1, y, z - 0.62), (0.03, 0.9, 0.025), M['lamp'])
+
+# skills shelf on the front wall (faces +Y toward the room)
+SH_X, SH_Y = 4.4, ROOM_Y_FRONT + 0.4
+SW_, SH_, SD_ = 3.6, 3.3, 0.5
+box('shelf_side_l', (SH_X - SW_ / 2, SH_Y, SH_ / 2), (0.1, SD_, SH_), M['wood'])
+box('shelf_side_r', (SH_X + SW_ / 2, SH_Y, SH_ / 2), (0.1, SD_, SH_), M['wood'])
+box('shelf_back', (SH_X, SH_Y - SD_ / 2 + 0.02, SH_ / 2), (SW_, 0.04, SH_), M['panel'])
+rows_y = [0.25, 1.0, 1.75, 2.5, 3.25]
+for k, zz in enumerate(rows_y):
+    box(f'shelf_board{k}', (SH_X, SH_Y, zz), (SW_, SD_, 0.07), M['wood'])
+    if k > 0: box(f'shelf_led{k}', (SH_X, SH_Y + SD_ / 2 - 0.04, zz - 0.05), (SW_ - 0.2, 0.02, 0.02), M['ledteal'])
+for i in range(16):
+    r, c = divmod(i, 4)
+    cx = SH_X - 1.2 + c * 0.8; cz = rows_y[3 - r] + 0.07 + 0.31
+    box(f'cart{i}', (cx, SH_Y + 0.02, cz), (0.56, 0.12, 0.62), M['cart'])
+    bpy.ops.mesh.primitive_plane_add(size=1); lb = bpy.context.object; lb.name = f'cart{i}_label'
+    lb.scale = (0.46, 0.54, 1); lb.rotation_euler = (math.pi / 2, 0, 0); lb.location = (cx, SH_Y + 0.02 - 0.062, cz)
+    lb.data.materials.append(mat(f'cartlm{i}', '#333333', 0.5))
+
+# exit door + high-score board on the front wall
+DX = -3.2
+box('door_hole', (DX, ROOM_Y_FRONT + 0.03, 1.55), (1.9, 0.02, 3.1), M['black'])
+box('door_frame_l', (DX - 1.02, ROOM_Y_FRONT + 0.08, 1.6), (0.16, 0.16, 3.2), M['kick'])
+box('door_frame_r', (DX + 1.02, ROOM_Y_FRONT + 0.08, 1.6), (0.16, 0.16, 3.2), M['kick'])
+box('door_frame_t', (DX, ROOM_Y_FRONT + 0.08, 3.22), (2.2, 0.16, 0.16), M['kick'])
+bpy.ops.mesh.primitive_plane_add(size=1); ex = bpy.context.object; ex.name = 'exit_sign'
+ex.scale = (1.1, 0.34, 1); ex.rotation_euler = (math.pi / 2, 0, 0); ex.location = (DX, ROOM_Y_FRONT + 0.2, 3.6); ex.data.materials.append(M['exit'])
+BX = -0.4
+box('board_frame', (BX, ROOM_Y_FRONT + 0.05, 2.0), (2.4, 0.08, 1.8), M['wood'])
+box('board_cork', (BX, ROOM_Y_FRONT + 0.1, 2.0), (2.2, 0.02, 1.6), M['cork'])
+bpy.ops.mesh.primitive_plane_add(size=1); bs = bpy.context.object; bs.name = 'board_screen'
+bs.scale = (2.0, 1.4, 1); bs.rotation_euler = (math.pi / 2, 0, 0); bs.location = (BX, ROOM_Y_FRONT + 0.12, 2.0); bs.data.materials.append(mat('boardm', '#111111', 0.5, '#404040', 0.4))
+
+# big neon over the row (dynamic text planes at runtime; emissive bars baked for glow)
+bpy.ops.mesh.primitive_plane_add(size=1); ne = bpy.context.object; ne.name = 'neon_title'
+ne.scale = (8.0, 1.25, 1); ne.rotation_euler = (math.pi / 2, 0, math.pi); ne.location = (0, ROOM_Y_BACK - 0.08, 3.95); ne.data.materials.append(mat('neonm', '#000000', 0.5, '#f59e0b', 3.0))
+bpy.ops.mesh.primitive_plane_add(size=1); ns = bpy.context.object; ns.name = 'neon_sub'
+ns.scale = (3.2, 0.5, 1); ns.rotation_euler = (math.pi / 2, 0, math.pi); ns.location = (0, ROOM_Y_BACK - 0.08, 3.05); ns.data.materials.append(mat('neonsm', '#000000', 0.5, '#ff4fa3', 2.2))
+
+# ---- lights
 def area(name, loc, target, size, energy, color):
     ld = bpy.data.lights.new(name, 'AREA'); ld.size = size; ld.energy = energy; ld.color = hexc(color)[:3]
     o = link(bpy.data.objects.new(name, ld)); o.location = loc
-    d = Vector(target) - Vector(loc); o.rotation_euler = d.to_track_quat('-Z', 'Y').to_euler()
-    return o
-area('key', (-1.4, -2.2, 2.4), (0, 0, 0.9), 1.6, 260, '#ffe2c4')
-area('rimR', (1.5, 1.0, 2.1), (0, 0, 1.0), 1.0, 220, '#ff4fa3')
-area('rimL', (-1.6, 0.8, 1.7), (0, 0, 1.0), 1.0, 140, '#2dd4bf')
-sd = bpy.data.lights.new('top', 'SPOT'); sd.energy = 260; sd.spot_size = math.radians(55); sd.spot_blend = 0.6; sd.color = hexc('#ffd8a8')[:3]; sd.shadow_soft_size = 0.4
-top = link(bpy.data.objects.new('top', sd)); top.location = (0, -0.7, 3.4); top.rotation_euler = (math.radians(12), 0, 0)
+    d = Vector(target) - Vector(loc); o.rotation_euler = d.to_track_quat('-Z', 'Y').to_euler(); return o
+def spot(name, loc, target, energy, color, size_deg=50, blend=0.6, soft=0.35):
+    sd = bpy.data.lights.new(name, 'SPOT'); sd.energy = energy; sd.spot_size = math.radians(size_deg); sd.spot_blend = blend; sd.color = hexc(color)[:3]; sd.shadow_soft_size = soft
+    o = link(bpy.data.objects.new(name, sd)); o.location = loc
+    d = Vector(target) - Vector(loc); o.rotation_euler = d.to_track_quat('-Z', 'Y').to_euler(); return o
+area('key_hero', (-1.4, -2.2, 3.2), (0, 0.2, 0.9), 1.6, 320, '#ffe2c4')
+spot('top_hero', (0.2, -0.5, ROOM_H - 0.1), (0, 0.2, 0.5), 260, '#ffd8a8', 55)
+area('rim_hero', (2.2, 1.6, 2.2), (0, 0.2, 1.0), 1.0, 160, '#ff4fa3')
+for i, x in enumerate(ROW_X):
+    spot(f'row_spot{i}', (x, ROW_Y - 1.4, ROOM_H - 0.1), (x, ROW_Y, 0.6), 170, '#ffd2a0' if i % 2 == 0 else '#ffe6c8', 48, 0.5)
+area('row_fill', (0, 1.5, 3.0), (0, ROW_Y, 1.0), 6.0, 90, '#f2c9a0')
+for yy in (-3.75, -0.75, 2.25):
+    area(f'gal_light{yy}', (ROOM_X - 1.6, yy, 3.9), (ROOM_X, yy, 1.6), 1.8, 150, '#ffe0b0')
+spot('shelf_spot', (SH_X, SH_Y + 2.3, ROOM_H - 0.1), (SH_X, SH_Y, 1.5), 220, '#ffe6c8', 50, 0.5)
+area('door_red', (DX, ROOM_Y_FRONT + 1.0, 3.3), (DX, ROOM_Y_FRONT, 1.5), 1.6, 90, '#ff5a4a')
+area('board_light', (BX, ROOM_Y_FRONT + 1.6, 3.6), (BX, ROOM_Y_FRONT, 2.0), 1.2, 110, '#ffe0b0')
+area('wash_magenta', (-ROOM_X + 0.5, -1.0, 2.6), (-2, -1.0, 1.0), 2.5, 120, '#ff4fa3')
+area('wash_teal', (ROOM_X - 0.5, -5.5, 2.6), (3, -5.0, 1.0), 2.0, 90, '#2dd4bf')
 world = bpy.data.worlds.new('w'); scene.world = world
 try: world.use_nodes = True
 except Exception: pass
-world.node_tree.nodes['Background'].inputs['Color'].default_value = hexc('#0b0708')
+world.node_tree.nodes['Background'].inputs['Color'].default_value = hexc('#0a0607')
 world.node_tree.nodes['Background'].inputs['Strength'].default_value = 1.0
-
-scene.render.engine = 'CYCLES'
-scene.cycles.device = 'CPU'
+scene.render.engine = 'CYCLES'; scene.cycles.device = 'CPU'
 
 if MODE == 'preview':
-    cam_d = bpy.data.cameras.new('cam'); cam_d.lens = 45
-    cam = link(bpy.data.objects.new('cam', cam_d)); cam.location = (-1.25, -2.9, 1.2)
-    cam.rotation_euler = (Vector((0, 0, 1.0)) - cam.location).to_track_quat('-Z', 'Y').to_euler()
+    cam_d = bpy.data.cameras.new('cam'); cam_d.lens = 35
+    cam = link(bpy.data.objects.new('cam', cam_d))
+    views = {'hero': ((-1.5, -3.6, 1.3), (0, 0.2, 1.0)), 'row': ((-1.5, 2.4, 1.3), (-0.6, ROW_Y, 1.1)), 'gal': ((5.0, -0.8, 1.5), (ROOM_X, -0.8, 1.6)), 'front': ((0.5, -3.5, 1.5), (0.5, ROOM_Y_FRONT, 1.8))}
     scene.camera = cam
-    scene.render.resolution_x, scene.render.resolution_y = 960, 600
-    scene.cycles.samples = int(sys.argv[2]) if len(sys.argv) > 2 else 24
+    scene.render.resolution_x, scene.render.resolution_y = 800, 500
+    scene.cycles.samples = int(sys.argv[2]) if len(sys.argv) > 2 else 16
     scene.cycles.use_denoising = True
-    scene.render.filepath = f'{OUT}/preview.png'
-    bpy.ops.render.render(write_still=True)
+    for k, (loc, tgt) in views.items():
+        cam.location = loc; cam.rotation_euler = (Vector(tgt) - Vector(loc)).to_track_quat('-Z', 'Y').to_euler()
+        scene.render.filepath = f'{OUT}/prev_{k}.png'; bpy.ops.render.render(write_still=True)
     print('PREVIEW DONE')
-
-bpy.ops.wm.save_as_mainfile(filepath=f'{OUT}/scene.blend')
+bpy.ops.wm.save_as_mainfile(filepath=f'{OUT}/scene3.blend')
