@@ -227,7 +227,7 @@ async function start3D() {
       if (btn) loadTex(btn.dataset.tex, (t) => {
         o.material.map = t; o.material.needsUpdate = true;
         const w = t.image.width, h = t.image.height, BW = 1.0, BH = 0.9;
-        const s = Math.min(BW / w, BH / h); o.scale.set(w * s, h * s, 1);
+        const s = Math.min(BW / w, BH / h); o.scale.set(w * s, 1, h * s); // plane lies in local X/Z after export
       });
     } else if (/^lamp\d+$/.test(n)) { o.material = basic({ color: new THREE.Color('#ffe2a8').multiplyScalar(0.35) }); lamps[Number(n.slice(4))] = o; }
     else if (/^cart\d+_label$/.test(n)) {
@@ -338,11 +338,11 @@ async function start3D() {
   const CAM = {
     hero: { pos: [-1.75, 1.35, 3.55], tgt: [0.1, 1.1, -0.2], fov: 32, cx: 0.64 },
     about: { pos: [-0.78, 1.5, 1.7], tgt: [0, 1.52, -0.2], fov: 30, cx: 0.36 },
-    skills: { pos: [4.3, 1.85, 2.7], tgt: [4.4, 1.75, 8.2], fov: 40, cx: 0.62 },
-    contact: { pos: [-1.5, 1.7, 3.0], tgt: [-1.5, 1.9, 8.5], fov: 44, cx: 0.33 },
+    skills: { pos: [4.3, 1.9, 3.25], tgt: [4.4, 1.85, 8.2], fov: 40, cx: 0.62 },
+    contact: { pos: [-1.5, 1.7, 3.5], tgt: [-1.55, 1.9, 8.5], fov: 44, cx: 0.33 },
   };
-  projectSections.forEach((s, i) => { CAM[s.id] = { pos: [ROW_X[i] - 0.35, 1.3, -2.05], tgt: [ROW_X[i], 1.02, ROW_Z], fov: 32, cx: 0.36 }; });
-  artSections.forEach((s, i) => { CAM[s.id] = { pos: [3.4, 1.65, ART_Z[i]], tgt: [9, 1.65, ART_Z[i]], fov: 36, cx: 0.64 }; });
+  projectSections.forEach((s, i) => { CAM[s.id] = { pos: [ROW_X[i] - 0.22, 1.42, -3.3], tgt: [ROW_X[i], 1.3, ROW_Z], fov: 34, cx: 0.36 }; });
+  artSections.forEach((s, i) => { CAM[s.id] = { pos: [4.7, 1.65, ART_Z[i]], tgt: [9, 1.65, ART_Z[i]], fov: 36, cx: 0.64 }; });
   const N = sections.length;
   let vw = innerWidth, vh = innerHeight, narrow = vw <= 760 || vw / vh < 0.9;
   let posCurve, tgtCurve, fovs = [], cxs = [], cys = [];
