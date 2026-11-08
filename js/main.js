@@ -385,40 +385,48 @@ async function start3D() {
   };
   let scrollY = 0, exact = 0, smooth = 0, settleT = 0;
   let beat = 0, gliding = false, glideT = 0;
-  const STEP_MS = reduced ? 0 : 1300;
+  const MAX_STEPS = 3, STEP_PX = 110;
   const nearestBeat = (y) => { let b = 0, d = Infinity; beats.forEach((v, k) => { const dd = Math.abs(y - v); if (dd < d) { d = dd; b = k; } }); return b; };
   function glideTo(k, immediate = false) {
-    k = clamp(k, 0, beats.length - 1); beat = k;
+    k = clamp(k, 0, beats.length - 1);
+    const dist = Math.max(1, Math.abs(k - nearestBeat(scrollY)));
+    beat = k;
+    const duration = immediate || reduced ? 0 : Math.min(2.0, 1.1 + 0.25 * (dist - 1));
     clearTimeout(glideT); gliding = true;
-    lenis.scrollTo(beats[k], { force: true, immediate: immediate || reduced, duration: STEP_MS / 1000, lock: true, easing: (t) => 1 - Math.pow(1 - t, 3.2) });
-    glideT = setTimeout(() => { gliding = false; }, immediate || reduced ? 50 : STEP_MS + 120);
+    // a new target mid-glide retargets the running animation from where it is
+    lenis.scrollTo(beats[k], { force: true, immediate: immediate || reduced, duration, easing: (t) => 1 - Math.pow(1 - t, 3) });
+    glideT = setTimeout(() => { gliding = false; }, duration * 1000 + 120);
   }
-  const step = (dir) => { if (gliding || !body.classList.contains('mode-3d') || !viewer.hidden) return; glideTo(beat + dir); };
+  const step = (dir) => { if (!body.classList.contains('mode-3d') || !viewer.hidden) return; glideTo(beat + dir); };
   goTo = (id) => {
     const i = sections.findIndex((x) => x.id === id); if (i < 0) return;
     if (!body.classList.contains('mode-3d')) { lenis.scrollTo(sections[i], { duration: 1.2 }); return; }
     glideTo(nearestBeat(anchors[i] - (sections[i].dataset.beats ? (sections[i].offsetHeight - vh) / 2 : 0)));
   };
-  // wheel: one gesture = one step (trackpad inertia counts as the same gesture)
-  let lastWheel = -1e9, gestureAcc = 0, gestureUsed = false;
+  // wheel: a gesture is a run of events in the same direction; the first 18px is one stop,
+  // every further STEP_PX adds one, up to MAX_STEPS per gesture. Mouse notches chain the same way.
+  let lastWheel = -1e9, gestureAcc = 0, gestureSteps = 0;
   const inScrollableCard = (t) => { const c = t && t.closest && t.closest('.card'); return !!(c && c.scrollHeight > c.clientHeight + 4); };
   addEventListener('wheel', (e) => {
     if (!body.classList.contains('mode-3d') || !viewer.hidden) return;
     if (inScrollableCard(e.target)) return;
     e.preventDefault();
+    const dy = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaMode === 2 ? e.deltaY * vh : e.deltaY;
     const now = performance.now();
-    if (now - lastWheel > 160 || Math.sign(e.deltaY) !== Math.sign(gestureAcc)) { gestureAcc = 0; gestureUsed = false; }
-    lastWheel = now; gestureAcc += e.deltaY;
-    if (!gestureUsed && Math.abs(gestureAcc) > 18) { gestureUsed = true; step(gestureAcc > 0 ? 1 : -1); }
+    if (now - lastWheel > 160 || Math.sign(dy) !== Math.sign(gestureAcc)) { gestureAcc = 0; gestureSteps = 0; }
+    lastWheel = now; gestureAcc += dy;
+    const a = Math.abs(gestureAcc);
+    const want = a > 18 ? Math.min(MAX_STEPS, 1 + Math.floor((a - 18) / STEP_PX)) : 0;
+    while (gestureSteps < want) { gestureSteps++; step(gestureAcc > 0 ? 1 : -1); }
   }, { passive: false });
-  // touch: swipe = step
+  // touch: swipe length decides how many stops (1–3)
   let touchY = null, touchInCard = false;
   addEventListener('touchstart', (e) => { touchY = e.touches[0].clientY; touchInCard = inScrollableCard(e.target); }, { passive: true });
   addEventListener('touchmove', (e) => { if (body.classList.contains('mode-3d') && viewer.hidden && !touchInCard) e.preventDefault(); }, { passive: false });
   addEventListener('touchend', (e) => {
     if (touchY === null || touchInCard || !body.classList.contains('mode-3d')) { touchY = null; return; }
     const dy = touchY - e.changedTouches[0].clientY; touchY = null;
-    if (Math.abs(dy) > 36) step(dy > 0 ? 1 : -1);
+    if (Math.abs(dy) > 36) glideTo(beat + Math.sign(dy) * Math.min(MAX_STEPS, 1 + Math.floor((Math.abs(dy) - 36) / 180)));
   });
   // keys
   addEventListener('keydown', (e) => {
