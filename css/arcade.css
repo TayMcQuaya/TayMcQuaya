@@ -176,3 +176,6 @@ body.mode-3d #loader { display: flex; flex-direction: column; align-items: cente
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .001s !important; transition-duration: .001s !important; }
 }
+
+#diag { display: none; position: fixed; left: 12px; bottom: 10px; z-index: 80; max-width: 70vw; font-family: var(--font-body); font-size: 12px; color: #fbbf24; background: rgba(10,6,7,.85); padding: 6px 10px; border: 1px solid rgba(245,158,11,.4); }
+#diag.on { display: block; }

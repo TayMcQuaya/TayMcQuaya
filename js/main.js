@@ -56,11 +56,15 @@ sections.forEach((s) => { s.style.setProperty('--w', s.dataset.weight || 1); if 
 // ======================================================
 // 3D
 // ======================================================
+const diag = document.createElement('div');
+diag.id = 'diag'; document.body.appendChild(diag);
+const report = (msg) => { console.warn(msg); diag.textContent = msg; diag.classList.add('on'); };
 start3D().catch((err) => {
-  console.warn('3D view unavailable, staying in Quick view:', err);
+  report('3D view unavailable, showing the plain page. ' + (err && err.message ? err.message : err));
   body.classList.remove('mode-3d');
   ScrollTrigger.getAll().forEach((t) => t.kill());
   $$('.card, .reveal').forEach((el) => { el.style.opacity = ''; el.style.transform = ''; });
+  $('#loader').style.display = 'none';
 });
 
 // ---------- canvas texture helpers ----------
@@ -135,7 +139,9 @@ async function start3D() {
   scene.fog = new THREE.Fog('#0a0607', 9, 26);
   const camera = new THREE.PerspectiveCamera(32, innerWidth / innerHeight, 0.05, 60);
 
-  const rt = new THREE.WebGLRenderTarget(1, 1, { type: THREE.HalfFloatType, samples: 4 });
+  const gl = renderer.getContext();
+  const gpu = (() => { try { const x = gl.getExtension('WEBGL_debug_renderer_info'); return x ? gl.getParameter(x.UNMASKED_RENDERER_WEBGL) : 'unknown GPU'; } catch (e) { return 'unknown GPU'; } })();
+  const rt = new THREE.WebGLRenderTarget(1, 1, { samples: renderer.capabilities.isWebGL2 ? 4 : 0 });
   const composer = new EffectComposer(renderer, rt);
   composer.setPixelRatio(DPR);
   composer.addPass(new RenderPass(scene, camera));
@@ -296,7 +302,7 @@ async function start3D() {
         .replace('uniform vec3 color;', 'uniform vec3 color; uniform float uAlpha;')
         .replace('gl_FragColor = vec4( blendOverlay( base.rgb, color ), 1.0 );', 'gl_FragColor = vec4( base.rgb * color * 1.6, uAlpha );');
       m.uniforms.uAlpha = { value: 0.22 }; m.transparent = true; m.depthWrite = false; m.needsUpdate = true;
-      reflector.renderOrder = 1;
+      reflector.renderOrder = 1; reflector.visible = false;
       scene.add(reflector);
     } catch (e) { console.warn('reflection off', e); reflector = null; }
   }
@@ -530,8 +536,20 @@ async function start3D() {
     }
     if (!reduced) driftDust(now);
     finish.uniforms.uTime.value = now % 10;
-    composer.render(dt);
+    frames++;
+    if (reflector && frames === 40 && quality === 2) reflector.visible = true;
+    try {
+      if (quality > 0) composer.render(dt); else renderer.render(scene, camera);
+      const err = gl.getError();
+      if (err !== gl.NO_ERROR || gl.isContextLost()) throw new Error('WebGL error ' + err);
+    } catch (e) {
+      if (quality === 2) { quality = 1; if (reflector) { reflector.visible = false; scene.remove(reflector); reflector = null; } report('Reflection disabled (' + gpu + '): ' + e.message); }
+      else if (quality === 1) { quality = 0; report('Effects disabled (' + gpu + '): ' + e.message); }
+      else report('Rendering failed (' + gpu + '): ' + e.message);
+    }
   }
+  let frames = 0, quality = 2;
+  if (location.hash === '#debug') report('GPU: ' + gpu + ' · WebGL' + (renderer.capabilities.isWebGL2 ? '2' : '1') + ' · DPR ' + DPR);
 
   // ---------- reveal ----------
   ScrollTrigger.refresh(); measure();
