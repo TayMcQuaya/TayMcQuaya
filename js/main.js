@@ -358,8 +358,9 @@ async function start3D() {
   }
 
   // ---------- conductor: native scroll -> exact / smooth chapter progress ----------
-  const lenis = new Lenis({ lerp: reduced ? 1 : 0.1, wheelMultiplier: 0.9 });
+  const lenis = new Lenis({ lerp: reduced ? 1 : 0.1, wheelMultiplier: 0.9, prevent: (node) => !!(node.closest && node.closest('.card, #viewer')) });
   lenis.on('scroll', ScrollTrigger.update);
+  lenis.stop(); // in 3D mode the page only moves by stops; Quick view starts it again
   gsap.ticker.add((t) => lenis.raf(t * 1000));
   gsap.ticker.lagSmoothing(0);
   let anchors = [], beats = [];
@@ -383,19 +384,60 @@ async function start3D() {
     return N - 1;
   };
   let scrollY = 0, exact = 0, smooth = 0, settleT = 0;
-  goTo = (id) => { const i = sections.findIndex((s) => s.id === id); if (i >= 0) lenis.scrollTo(beats.find((b) => b >= anchors[i] - 1) ?? anchors[i], { duration: reduced ? 0 : 1.8 }); };
+  let beat = 0, gliding = false, glideT = 0;
+  const STEP_MS = reduced ? 0 : 1300;
+  const nearestBeat = (y) => { let b = 0, d = Infinity; beats.forEach((v, k) => { const dd = Math.abs(y - v); if (dd < d) { d = dd; b = k; } }); return b; };
+  function glideTo(k, immediate = false) {
+    k = clamp(k, 0, beats.length - 1); beat = k;
+    clearTimeout(glideT); gliding = true;
+    lenis.scrollTo(beats[k], { force: true, immediate: immediate || reduced, duration: STEP_MS / 1000, lock: true, easing: (t) => 1 - Math.pow(1 - t, 3.2) });
+    glideT = setTimeout(() => { gliding = false; }, immediate || reduced ? 50 : STEP_MS + 120);
+  }
+  const step = (dir) => { if (gliding || !body.classList.contains('mode-3d') || !viewer.hidden) return; glideTo(beat + dir); };
+  goTo = (id) => {
+    const i = sections.findIndex((x) => x.id === id); if (i < 0) return;
+    if (!body.classList.contains('mode-3d')) { lenis.scrollTo(sections[i], { duration: 1.2 }); return; }
+    glideTo(nearestBeat(anchors[i] - (sections[i].dataset.beats ? (sections[i].offsetHeight - vh) / 2 : 0)));
+  };
+  // wheel: one gesture = one step (trackpad inertia counts as the same gesture)
+  let lastWheel = -1e9, gestureAcc = 0, gestureUsed = false;
+  const inScrollableCard = (t) => { const c = t && t.closest && t.closest('.card'); return !!(c && c.scrollHeight > c.clientHeight + 4); };
+  addEventListener('wheel', (e) => {
+    if (!body.classList.contains('mode-3d') || !viewer.hidden) return;
+    if (inScrollableCard(e.target)) return;
+    e.preventDefault();
+    const now = performance.now();
+    if (now - lastWheel > 160 || Math.sign(e.deltaY) !== Math.sign(gestureAcc)) { gestureAcc = 0; gestureUsed = false; }
+    lastWheel = now; gestureAcc += e.deltaY;
+    if (!gestureUsed && Math.abs(gestureAcc) > 18) { gestureUsed = true; step(gestureAcc > 0 ? 1 : -1); }
+  }, { passive: false });
+  // touch: swipe = step
+  let touchY = null, touchInCard = false;
+  addEventListener('touchstart', (e) => { touchY = e.touches[0].clientY; touchInCard = inScrollableCard(e.target); }, { passive: true });
+  addEventListener('touchmove', (e) => { if (body.classList.contains('mode-3d') && viewer.hidden && !touchInCard) e.preventDefault(); }, { passive: false });
+  addEventListener('touchend', (e) => {
+    if (touchY === null || touchInCard || !body.classList.contains('mode-3d')) { touchY = null; return; }
+    const dy = touchY - e.changedTouches[0].clientY; touchY = null;
+    if (Math.abs(dy) > 36) step(dy > 0 ? 1 : -1);
+  });
+  // keys
+  addEventListener('keydown', (e) => {
+    if (!body.classList.contains('mode-3d') || !viewer.hidden || e.target.closest('input, textarea')) return;
+    if (['ArrowDown', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); step(1); }
+    else if (['ArrowUp', 'PageUp'].includes(e.key)) { e.preventDefault(); step(-1); }
+    else if (e.key === 'Home') { e.preventDefault(); glideTo(0); }
+    else if (e.key === 'End') { e.preventDefault(); glideTo(beats.length - 1); }
+  });
   lenis.on('scroll', ({ scroll }) => {
     scrollY = scroll; exact = exactFrom(scroll);
     $('#hud-hint').classList.add('gone');
+    // scrollbar drags or browser jumps: snap to the nearest stop once they end
     clearTimeout(settleT);
-    const settle = () => {
-      if (body.classList.contains('mode-doc') || !viewer.hidden) return;
-      if (lenis.isScrolling || Math.abs(lenis.velocity) > 0.3) { settleT = setTimeout(settle, 120); return; }
-      let best = beats[0], bd = Infinity, gap = vh;
-      beats.forEach((b, k) => { const d = Math.abs(scroll - b); if (d < bd) { bd = d; best = b; gap = Math.min(k > 0 ? b - beats[k - 1] : vh, k < beats.length - 1 ? beats[k + 1] - b : vh); } });
-      if (bd > 6 && bd < gap * 0.46) lenis.scrollTo(best, { duration: 1.1 });
-    };
-    settleT = setTimeout(settle, 300);
+    settleT = setTimeout(() => {
+      if (gliding || !body.classList.contains('mode-3d') || !viewer.hidden) return;
+      const k = nearestBeat(scroll); beat = k;
+      if (Math.abs(scroll - beats[k]) > 4) glideTo(k);
+    }, 180);
   });
 
   // ---------- DOM choreography (GSAP ScrollTrigger) ----------
@@ -469,9 +511,9 @@ async function start3D() {
     const toDoc = body.classList.contains('mode-3d');
     body.classList.toggle('mode-3d', !toDoc); body.classList.toggle('mode-doc', toDoc);
     qt.setAttribute('aria-pressed', String(toDoc)); qt.textContent = toDoc ? '3D view' : 'Quick view';
-    if (toDoc) { ScrollTrigger.getAll().forEach((t) => t.disable(false)); $$('.card, .reveal').forEach((el) => { el.style.opacity = ''; el.style.transform = ''; }); videos.forEach((x) => x.v.pause()); }
-    else { ScrollTrigger.getAll().forEach((t) => t.enable()); }
-    requestAnimationFrame(() => { lenis.resize(); ScrollTrigger.refresh(); lenis.scrollTo(0, { immediate: true }); exact = smooth = 0; });
+    if (toDoc) { lenis.start(); ScrollTrigger.getAll().forEach((t) => t.disable(false)); $$('.card, .reveal').forEach((el) => { el.style.opacity = ''; el.style.transform = ''; }); videos.forEach((x) => x.v.pause()); }
+    else { lenis.stop(); ScrollTrigger.getAll().forEach((t) => t.enable()); }
+    requestAnimationFrame(() => { lenis.resize(); ScrollTrigger.refresh(); measure(); lenis.scrollTo(0, { immediate: true, force: true }); exact = smooth = 0; beat = 0; });
   });
 
   // ---------- camera ----------
@@ -501,7 +543,7 @@ async function start3D() {
     requestAnimationFrame(frame);
     const now = clock.getElapsedTime(), dt = Math.min(0.1, now - last); last = now;
     if (!body.classList.contains('mode-3d')) return;
-    smooth = reduced ? exact : damp(smooth, exact, 5.2, dt);
+    smooth = reduced ? exact : damp(smooth, exact, 11, dt);
     if (Math.abs(smooth - exact) < 1e-4) smooth = exact;
     hudFill.style.width = `${(exact / (N - 1)) * 100}%`;
     placeCamera(smooth, now);
@@ -556,11 +598,13 @@ async function start3D() {
   $('#loader').classList.add('done'); setTimeout(() => { $('#loader').style.display = 'none'; }, 900);
   const hashId = location.hash.slice(1);
   if (hashId && sections.some((s) => s.id === hashId)) requestAnimationFrame(() => goTo(hashId));
+  addEventListener('resize', () => { if (body.classList.contains('mode-3d')) glideTo(beat, true); });
   frame();
 
   window.__arcade = {
-    setP: (v) => { const y = anchors[Math.round(v)] ?? 0; lenis.scrollTo(y, { immediate: true }); scrollY = y; exact = smooth = exactFrom(y); ScrollTrigger.update(); },
-    setBeat: (k) => { lenis.scrollTo(beats[k], { immediate: true }); exact = smooth = exactFrom(beats[k]); ScrollTrigger.update(); },
+    setP: (v) => { const y = anchors[Math.round(v)] ?? 0; beat = nearestBeat(y); lenis.scrollTo(y, { immediate: true, force: true }); scrollY = y; exact = smooth = exactFrom(y); ScrollTrigger.update(); },
+    setBeat: (k) => { glideTo(k, true); exact = smooth = exactFrom(beats[k]); ScrollTrigger.update(); },
+    step, beat: () => beat,
     info: () => ({ calls: renderer.info.render.calls, tris: renderer.info.render.triangles, exact, smooth, anchors, beats, reflector: !!reflector, playing: videos.filter((x) => !x.v.paused).length }),
     sync: () => { smooth = exact; },
     artAt: (i) => { const v = artPlanes[i].getWorldPosition(new THREE.Vector3()).project(camera); return [(v.x + 1) / 2 * vw, (1 - v.y) / 2 * vh]; },
