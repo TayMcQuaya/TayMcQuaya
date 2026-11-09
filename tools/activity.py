@@ -18,8 +18,7 @@ for d in sorted(glob.glob(os.path.join(hist, "*.git"))):
         seen.add(h)
         days[ad][0] += 1; days[ad][1][label] += 1
 res = {k: [v[0], ", ".join(n for n, _ in v[1].most_common(3))] for k, v in sorted(days.items())}
-body = json.dumps(res, separators=(",", ":"))
-open(out, "w").write("// Commits per day, public and private repos. Private repos are counted but never named.\n// Rebuilt by tools/activity.py. Format: { 'YYYY-MM-DD': [commits, 'what was touched that day'] }\nexport const ACTIVITY = " + body + ";\n")
+json.dump(res, open(out, "w"), separators=(",", ":"))   # tools/git-activity.json: which repos were touched on which day
 tot = sum(v[0] for v in res.values())
 print("commits", tot, "active days", len(res), "first", min(res), "last", max(res))
 by = collections.Counter()

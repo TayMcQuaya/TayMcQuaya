@@ -44,7 +44,8 @@ h1, h2, h3 { font-family: var(--pixel); font-weight: 700; line-height: 1; }
 h1 { font-size: clamp(42px, 7vw, 108px); letter-spacing: -0.01em; max-width: 11ch; }
 h2 { font-size: clamp(34px, 4.6vw, 64px); }
 h3 { font-size: 28px; }
-.meta { font-family: var(--pixel); font-weight: 500; font-size: 17px; color: var(--ink-2); }
+/* anything with digits uses the body face: in the pixel face a 5 reads like an S */
+.meta { font-weight: 600; font-size: 15.5px; color: var(--ink-2); }
 
 .skip { position: absolute; left: -999px; top: 8px; background: var(--ink); color: var(--bone); padding: 8px 12px; z-index: 100; }
 .skip:focus { left: 8px; }
@@ -82,7 +83,7 @@ main, .foot { position: relative; z-index: 1; }
 .lead { font-size: clamp(19px, 1.9vw, 24px); max-width: 30ch; margin-top: 20px; font-weight: 600; }
 .facts { display: flex; flex-wrap: wrap; gap: 10px 34px; margin-top: 22px; }
 .facts div { display: flex; flex-direction: column-reverse; }
-.facts dd { font-family: var(--pixel); font-weight: 700; font-size: clamp(30px, 3.2vw, 44px); line-height: 1; }
+.facts dd { font-weight: 600; font-size: clamp(30px, 3.2vw, 44px); line-height: 1; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
 .facts dt { font-size: 15px; margin-top: 4px; }
 .stage-sky { position: absolute; left: 44%; right: 0; top: 16%; bottom: 10%; }
 .sky-foot { position: relative; width: 100%; max-width: var(--page); margin: auto auto 0; padding: 28px var(--pad) 26px; display: flex; justify-content: flex-end; transition: opacity .25s; }
@@ -102,11 +103,11 @@ main, .foot { position: relative; z-index: 1; }
 
 .sky-game { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-between; align-items: center; padding: 76px 14px 18px; }
 .sky-score { font-family: var(--pixel); font-weight: 500; font-size: 20px; background: var(--paper); padding: 6px 12px; border: 3px solid var(--ink); box-shadow: 4px 4px 0 var(--shadow); }
-.sky-score b { font-weight: 700; }
+.sky-score b { font-family: var(--body); font-weight: 600; }
 .sky-score span { font-size: 15px; margin-left: 8px; }
 .sky-keys { font-size: 14px; background: var(--paper); border: 2px solid var(--ink); padding: 4px 10px; }
 .sky-over { pointer-events: auto; text-align: center; background: var(--paper); border: 3px solid var(--ink); box-shadow: 6px 6px 0 var(--shadow); padding: 22px 26px; max-width: 420px; }
-.sky-over p:first-child { font-family: var(--pixel); font-size: 22px; line-height: 1.25; margin-bottom: 16px; }
+.sky-over p:first-child { font-weight: 600; font-size: 19px; line-height: 1.35; margin-bottom: 16px; }
 .sky-over p:last-child { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
 .sky-quit { pointer-events: auto; }
 .sky-flat { display: grid; grid-auto-flow: column; grid-template-rows: repeat(7, 1fr); gap: 2px; height: 120px; position: absolute; left: var(--pad); right: var(--pad); bottom: 120px; }
@@ -155,7 +156,7 @@ main, .foot { position: relative; z-index: 1; }
 .h-second { margin-top: clamp(56px, 9vh, 96px); }
 .chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
 .chip { font-family: var(--pixel); font-weight: 500; font-size: 17px; line-height: 1; padding: 9px 12px; border: 3px solid var(--ink); background: var(--paper); display: inline-flex; gap: 8px; align-items: baseline; }
-.chip span { font-size: 14px; }
+.chip span { font-family: var(--body); font-size: 14px; }
 .chip:hover { background: var(--gold); }
 .chip[aria-pressed="true"] { background: var(--ink); color: var(--bone); }
 .wall { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 30px 22px; margin-top: 30px; }
@@ -166,7 +167,7 @@ main, .foot { position: relative; z-index: 1; }
 .tile-name { display: block; font-family: var(--pixel); font-weight: 700; font-size: 19px; line-height: 1.1; margin-top: 14px; }
 .tile-meta { display: block; font-size: 14px; margin-top: 3px; }
 .tile-more { aspect-ratio: 1; display: flex; flex-direction: column; justify-content: center; gap: 6px; padding: 14px; border: 3px dashed var(--ink); font-size: 14.5px; line-height: 1.35; }
-.tile-more b { font-family: var(--pixel); font-size: 44px; line-height: 1; }
+.tile-more b { font-weight: 600; font-size: 40px; line-height: 1; letter-spacing: -0.02em; }
 
 /* pixel art */
 .art-head { display: grid; grid-template-columns: 1fr minmax(240px, 380px); gap: 30px; align-items: center; }
@@ -229,7 +230,7 @@ dialog::backdrop { background: rgba(33, 11, 27, .72); }
   .sky-play { justify-content: flex-start; }
   .sky-game { padding-top: 70px; }
   .sky-over { padding: 16px 18px; }
-  .sky-over p:first-child { font-size: 19px; margin-bottom: 12px; }
+  .sky-over p:first-child { font-size: 17px; margin-bottom: 12px; }
   .stack-label { font-size: 12.5px; width: 52px; margin: -36px 0 0 -26px; }
   .stack-label:nth-child(even) { margin-top: -62px; }
   .stack-label .long { display: none; }

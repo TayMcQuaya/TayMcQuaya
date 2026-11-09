@@ -11,13 +11,14 @@ const smooth = (a, b, x) => { const t = clamp((x - a) / (b - a), 0, 1); return t
 const ease = (x) => 1 - Math.pow(1 - clamp(x, 0, 1), 3);
 const iso = (d) => d.toISOString().slice(0, 10);
 
-const GREEN = ['#1f7a34', '#27a03f', '#35c93c', '#8fe94a', '#e9ff7a'].map((c) => new THREE.Color(c));
+const GREEN = ['#1b6e30', '#239a3b', '#2fc13a', '#5edb48', '#a4ee5c'].map((c) => new THREE.Color(c));
 const GROUND = new THREE.Color('#2f9fd0');
 const RUNNER = new THREE.Color('#f7c948');
 const RUNNER_HEAD = new THREE.Color('#fff6c2');
 const WHITE = new THREE.Color('#ffffff');
-const heightOf = (n) => (n ? 0.5 + Math.sqrt(n) * 0.95 : 0.14);
-const greenOf = (n) => (!n ? GROUND : n < 2 ? GREEN[0] : n < 4 ? GREEN[1] : n < 8 ? GREEN[2] : n < 15 ? GREEN[3] : GREEN[4]);
+const heightOf = (n) => (n ? 0.4 + Math.sqrt(n) * 0.72 : 0.14);
+// five shades, split where a fifth of the active days fall
+const greenOf = (n) => (!n ? GROUND : n < 3 ? GREEN[0] : n < 6 ? GREEN[1] : n < 10 ? GREEN[2] : n < 15 ? GREEN[3] : GREEN[4]);
 
 export function buildDays(activity, today = new Date()) {
   const keys = Object.keys(activity).sort();
@@ -43,7 +44,7 @@ const FONT = {
 };
 
 export function createBlocks(host, cfg) {
-  const { days, stages, cat, cats, sprite, confetti } = cfg;
+  const { days, stages, cat, cats, sprite } = cfg;
   const N = days.length;
   const cols = days[N - 1].col + 1;
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -78,7 +79,9 @@ export function createBlocks(host, cfg) {
   for (let i = 0; i < N * 6; i++) R[i] = rnd();
   const shuffled = [...Array(N).keys()];
   for (let i = N - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]; }
-  const confettiCols = confetti.map((c) => new THREE.Color(c));
+  // loose cubes keep the colour of their day: greens for days with work, white for days off
+  const idle = new THREE.Color(cfg.idle || '#fffaf1');
+  const loose = days.map((d) => (d.n ? greenOf(d.n) : idle));
 
   // ---------- formations ----------
   function formation(rotX, rotY, fit) {
@@ -121,17 +124,22 @@ export function createBlocks(host, cfg) {
   const stacks = formation(0.42, -0.5, 0.92);
   const stackInfo = cats.map((c, k) => ({ ...c, k, days: 0, commits: 0, x: 0, top: 0 }));
   {
-    const gap = 5.2, x0 = -((cats.length - 1) * gap) / 2;
+    // each kind of work gets a 3x3 tower; a kind marked "wide" gets a 10x5 block so it does not dwarf the rest
+    const foot = cats.map((c) => (c.wide ? [10, 5] : [3, 3]));
+    const gap = 2.4, centre = [];
+    let cursor = 0;
+    foot.forEach(([w]) => { centre.push(cursor + w / 2); cursor += w + gap; });
+    const span = cursor - gap;
     const fill = cats.map(() => 0);
     const floor = [];
     days.forEach((d, i) => {
       if (!d.n) { floor.push(i); return; }
-      const k = cat[i], s = stackInfo[k], n = fill[k]++;
+      const k = cat[i], s = stackInfo[k], n = fill[k]++, [w, dp] = foot[k];
       s.days++; s.commits += d.n;
-      stacks.set(i, x0 + k * gap + (n % 3) - 1, Math.floor(n / 9) * 1.02 + 0.2, (Math.floor(n / 3) % 3) - 1, 0.92, 0.92, 0.92, new THREE.Color(s.color));
+      stacks.set(i, centre[k] - span / 2 - w / 2 + 0.5 + (n % w), Math.floor(n / (w * dp)) * 1.02 + 0.2, (Math.floor(n / w) % dp) - (dp - 1) / 2, 0.92, 0.92, 0.92, new THREE.Color(s.color));
     });
-    stackInfo.forEach((s, k) => { s.x = x0 + k * gap; s.top = Math.ceil(fill[k] / 9) * 1.02 + 0.2; });
-    const fw = Math.ceil((cats.length * gap + 4)), fd = Math.max(7, Math.ceil(floor.length / fw));
+    stackInfo.forEach((s, k) => { s.x = centre[k] - span / 2; s.top = Math.ceil(fill[k] / (foot[k][0] * foot[k][1])) * 1.02 + 0.2; });
+    const fw = Math.ceil(span + 4), fd = Math.max(8, Math.ceil(floor.length / fw));
     const tile = new THREE.Color(cfg.floor || '#ffffff');
     floor.forEach((i, n) => { stacks.set(i, (n % fw) - fw / 2 + 0.5, 0, Math.floor(n / fw) - fd / 2 + 0.5, 0.94, 0.16, 0.94, tile); });
     stacks.measure();
@@ -261,15 +269,16 @@ export function createBlocks(host, cfg) {
       // confetti position: fixed to the screen, drifting up as the page scrolls, nearer cubes faster
       const depth = r2, z = 12 - depth * 0.95 * D, hh = (D - z) * TAN;
       // most confetti keeps to the page margins; the few cubes behind the text are small and far away
-      const side = r0 < 0.5 ? -1 : 1, edge = r5 < 0.7, spread = edge ? 0.8 + 0.42 * ((r0 * 2) % 1) : ((r0 * 2) % 1) * 0.8;
+      const side = r0 < 0.5 ? -1 : 1, edge = r5 < 0.62, u = (r0 * 2) % 1;
+      const spread = edge ? (narrow ? 0.98 + 0.3 * u : 0.85 + 0.4 * u) : u * 0.8;      // on a phone they only peek in from the sides
       const Ry = hh * 1.35;
       let y = (r1 * 2 - 1) * Ry + scrollY * wpp * (0.95 - 0.6 * depth) + (reduced ? 0 : Math.sin(time * 0.25 + r3 * 40) * 1.4);
       y = ((((y + Ry) % (2 * Ry)) + 2 * Ry) % (2 * Ry)) - Ry;
       Pc.set(side * spread * hh * cam.aspect, y, z);
-      const cs = edge ? 0.9 + r4 * 1.6 : (r4 < 0.45 ? 0.55 + r4 : 0);
+      const cs = edge ? 0.8 + r4 * 1.4 : (r4 < 0.4 && !narrow ? 0.55 + r4 : 0);
       E.set(time * (0.15 + r3 * 0.3) + r4 * 6, time * (0.1 + r5 * 0.25) + r0 * 6, 0);
       Qc.setFromEuler(E);
-      const cc = confettiCols[Math.floor(r3 * confettiCols.length) % confettiCols.length];
+      const cc = loose[i];
 
       const on = isSky ? 1 : f.on[i];
       const e = on ? ease((wAll - 0.4 * r3) / 0.6) : 0;

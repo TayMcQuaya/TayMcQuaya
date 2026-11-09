@@ -106,7 +106,6 @@ function renderWall() {
   const counts = {};
   ALL.forEach((p) => { counts[p.type] = (counts[p.type] || 0) + 1; });
   $('#fact-repos').textContent = SITE.repos;
-  $('#h-wall').textContent = `All ${ALL.length} projects`;
   $('#fact-art').textContent = ART.length;
 
   const chips = $('#chips');
@@ -195,7 +194,7 @@ const sections = [...document.querySelectorAll('[data-bg]')].map((s) => ({ el: s
 const theme = document.querySelector('meta[name="theme-color"]');
 let lastBg = '';
 function pageColour() {
-  const mid = innerHeight * 0.5, band = innerHeight * 0.4;
+  const mid = innerHeight * 0.5, band = innerHeight * 0.26;
   let c = sections[0].rgb;
   for (let k = 1; k < sections.length; k++) {
     const top = sections[k].el.getBoundingClientRect().top;
@@ -239,7 +238,7 @@ async function startWorld() {
   const commits = Object.values(ACTIVITY).reduce((a, d) => a + d[0], 0);
   const activeDays = Object.keys(ACTIVITY).length;
   $('#fact-commits').textContent = num(commits);
-  $('#all-lead').textContent = `${num(commits)} commits on ${activeDays} days since July 2024. Below, the same blocks sort themselves by what each day went into.`;
+  $('#all-lead').textContent = `${num(commits)} contributions on ${activeDays} days since July 2024, private work included. Here the same blocks sort themselves by what each day went into.`;
 
   let mod;
   try {
@@ -261,9 +260,9 @@ async function startWorld() {
     { key: 'app', name: 'Apps', short: 'Apps', color: '#2fa9d6' },
     { key: 'tool', name: 'Tools', short: 'Tools', color: '#f2b631' },
     { key: 'site', name: 'Websites', short: 'Sites', color: '#9484dd' },
-    { key: 'learn', name: 'Learning', short: 'Learn', color: '#3fc04a' },
+    { key: 'learn', name: 'Learning', short: 'Learn', color: '#1fb8a6' },
     { key: 'team', name: 'Team work', short: 'Team', color: '#ff8fa8' },
-    { key: 'private', name: 'Private and client', short: 'Private', color: '#210b1b' },
+    { key: 'private', name: 'Private and client', short: 'Private', color: '#35c93c', wide: true },
   ];
   const typeOfRepo = new Map([...Object.entries(REPO_TYPES), ...PROJECTS.filter((p) => p.repo).map((p) => [p.repo, p.type])]);
   const catIndex = Object.fromEntries(cats.map((c, i) => [c.key, i]));
@@ -300,24 +299,25 @@ async function startWorld() {
   const world = mod.createBlocks($('#world'), {
     days, cat, cats, sprite: spriteData,
     stages: { sky: $('#stage-sky'), stacks: $('#stage-stacks'), art: $('#stage-art'), hi: $('#stage-hi') },
-    confetti: ['#d95763', '#f7c948', '#5fcff2', '#b9a9f0', '#6fdd6a', '#ff9fb5', '#fffaf1', '#210b1b'],
     floor: '#fffaf1', ink: '#210b1b', hiFront: '#fffaf1', hiFloor: '#f7c948',
     background: pageColour,
     onHover(d, pos) {
       if (!d || !pos) { tip.hidden = true; return; }
       tip.hidden = false;
-      tip.textContent = d.n ? `${fmt.format(new Date(d.date))}: ${d.n} commit${d.n > 1 ? 's' : ''}, ${d.what}` : `${fmt.format(new Date(d.date))}: nothing pushed`;
+      tip.textContent = d.n ? `${fmt.format(new Date(d.date))}: ${d.n} contribution${d.n > 1 ? 's' : ''}, ${d.what}` : `${fmt.format(new Date(d.date))}: a day off`;
       tip.style.left = Math.min(Math.max(pos.x, 130), innerWidth - 130) + 'px';
       tip.style.top = pos.y + 'px';
     },
     onFrame(s) {
       const placed = [];
+      // on a phone the labels stay inside the skyline's own area, clear of the buttons above it
+      const minY = innerWidth < 760 ? $('#stage-sky').getBoundingClientRect().top + 60 : 110;
       marks.forEach((m, i) => {
         const e = markEls[i];
         if (!s.skyOn) { e.style.display = 'none'; return; }
         const p = s.projectDay(m.i, 0.2), lw = e.offsetWidth || 120;
         const clear = placed.every((q) => Math.abs(q.y - p.y) > 30 || p.x > q.x + q.w + 10 || q.x > p.x + lw + 10);
-        const show = p.x > innerWidth * 0.4 && p.x < innerWidth - lw && p.y > 110 && p.y < innerHeight - 40 && clear;
+        const show = p.x > innerWidth * (innerWidth < 760 ? 0.05 : 0.4) && p.x < innerWidth - lw && p.y > minY && p.y < innerHeight - 40 && clear;
         e.style.display = show ? '' : 'none';
         if (show) { e.style.transform = `translate(${Math.round(p.x)}px, ${Math.round(p.y)}px)`; placed.push({ x: p.x, y: p.y, w: lw }); }
       });
@@ -330,12 +330,12 @@ async function startWorld() {
     onGame(g) {
       if (g.state === 'idle') { game.hidden = true; document.body.classList.remove('is-playing'); return; }
       game.hidden = false; tip.hidden = true; document.body.classList.add('is-playing');
-      $('#sky-score').textContent = g.score;
+      $('#sky-score').textContent = num(g.score);
       $('#sky-date').textContent = g.date ? 'at ' + fmt.format(new Date(g.date)) : '';
       over.hidden = g.state !== 'over';
       if (g.state === 'over') {
         const pct = Math.round((g.score / g.total) * 100);
-        $('#sky-over-text').textContent = `You made it back to July 2024 and ate ${num(g.score)} of my ${num(g.total)} commits. That's ${pct}%.`;
+        $('#sky-over-text').textContent = `You made it back to July 2024 and ate ${num(g.score)} of my ${num(g.total)} contributions. That's ${pct}%.`;
         $('#sky-again').focus();
       }
     },
@@ -346,7 +346,7 @@ async function startWorld() {
     stackLabels.append(e);
     return e;
   });
-  $('#stack-note').textContent = 'Each cube is one day with commits. The flat tiles are the days off.';
+  $('#stack-note').textContent = 'Each cube is one day I worked. The flat tiles are the days off.';
 
   $('#sky-start').addEventListener('click', () => { scrollTo({ top: 0, behavior: 'smooth' }); world.play(); });
   $('#sky-again').addEventListener('click', () => world.play());
