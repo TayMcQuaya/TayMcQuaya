@@ -20,12 +20,11 @@ export const SITE = {
 };
 
 // The animated pixel artwork that the cubes rebuild in the Pixel art section: one cube per pixel, frame by frame.
-// Either a picture with all frames side by side on a see-through background (fw/fh = size of one frame,
-// count = how many, ms = time per frame; tools/cutout_schoolgirl.py made this one from images/art10.gif),
-// or an animated GIF on a flat background: { src: 'images/art16.gif', grid: 32, skip: 4 }
-// (grid = drawn pixels across, skip = columns to leave out on the left, for a signature).
+// src is an animated GIF. Best is an export from Aseprite at 100% with a see-through background, like this one.
+// For a GIF that was saved enlarged or on a flat colour, add: grid: 32 (how many drawn pixels it has across)
+// and skip: 4 (columns to leave out on the left, for a signature).
 // After changing this, run: python3 tools/build_media.py
-export const VOXEL_ART = { src: 'assets/voxel/schoolgirl.png', fw: 50, fh: 123, count: 167, ms: 100 };
+export const VOXEL_ART = { src: 'assets/voxel/schoolgirl.gif' };
 
 // Repos that are not on the page but still count in "Where the days went". Anything not listed counts as a tool.
 export const REPO_TYPES = {

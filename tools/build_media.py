@@ -115,27 +115,30 @@ av.resize((96, 96), Image.LANCZOS).save(f"{THUMB}/avatar.webp", 'WEBP', quality=
 m = re.search(r"export const VOXEL_ART = \{(.*?)\};", SRC, re.S)
 cfg = dict(re.findall(r"(\w+):\s*'?([^,'}]+)'?", m.group(1)))
 src = cfg['src'].strip()
-if 'fw' in cfg:
-    # a prepared picture: all frames side by side, already at drawn size, see-through where there is nothing
-    sheet = Image.open(src).convert('RGBA')
-    lw, lh, count = int(cfg['fw']), int(cfg['fh']), int(cfg['count'])
-    per_row = sheet.size[0] // lw
-    cut = [sheet.crop(((k % per_row) * lw, (k // per_row) * lh, (k % per_row + 1) * lw, (k // per_row + 1) * lh)) for k in range(count)]
-    bg, skip, dur = (255, 0, 255), 0, [int(cfg.get('ms', 100))]
-    small = []
-    for f in cut:
+skip = int(cfg.get('skip', 0))
+im = Image.open(src)
+fr, dur = frames_of(im)
+lw = int(cfg.get('grid', im.size[0]))                      # without "grid" the picture is taken as drawn, pixel for pixel
+lh = round(im.size[1] * lw / im.size[0])
+bg = (255, 0, 255)
+clear = any(f.getextrema()[3][0] < 128 for f in fr)        # a see-through background, as Aseprite exports it
+small = []
+for f in fr:
+    f = f.resize((lw, lh), Image.NEAREST)
+    if clear:
         flat = Image.new('RGB', f.size, bg)
         flat.paste(f, (0, 0), f.split()[3].point(lambda v: 255 if v > 127 else 0))
         small.append(flat)
-else:
-    # an animated GIF on a flat background colour
-    skip = int(cfg.get('skip', 0))
-    im = Image.open(src)
-    fr, dur = frames_of(im)
-    lw = int(cfg['grid'])
-    lh = round(im.size[1] * lw / im.size[0])
-    small = [f.convert('RGB').resize((lw, lh), Image.NEAREST) for f in fr]
-    bg = small[0].getpixel((lw - 1, 0))
+    else:
+        small.append(f.convert('RGB'))
+if not clear:
+    bg = small[0].getpixel((lw - 1, 0))                    # otherwise the colour of the top right corner is the background
+# frames can last differently long: the animation is stepped in the largest time unit that fits them all
+from math import gcd
+from functools import reduce
+tick = reduce(gcd, dur)
+small = [f for f, d in zip(small, dur) for _ in range(d // tick)]
+dur = [tick]
 uniq, seq = [], []
 for f in small:
     b = f.tobytes()
