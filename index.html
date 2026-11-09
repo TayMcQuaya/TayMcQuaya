@@ -14,103 +14,101 @@
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@taymcquaya">
-  <meta name="theme-color" content="#210b1b">
+  <meta name="theme-color" content="#5fcff2">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
   <link rel="manifest" href="site.webmanifest">
   <link rel="preload" href="assets/fonts/pixelify-sans-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/site.css?v=4">
+  <link rel="stylesheet" href="css/site.css?v=5">
   <script type="importmap">
   { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }
   </script>
 </head>
 <body>
   <a class="skip" href="#work">Skip to the work</a>
+  <div id="world"></div>
 
   <header class="top">
     <a class="brand" href="#top"><img src="assets/tex/avatar512.jpg" alt="" width="36" height="36">TayMcQuaya</a>
     <nav aria-label="Sections">
       <a href="#now">Now</a>
       <a href="#work">Work</a>
-      <a href="#everything">Everything</a>
+      <a href="#h-wall">All projects</a>
       <a href="#art">Pixel art</a>
       <a href="#about">About</a>
       <a class="nav-cta" href="#contact">Get in touch</a>
     </nav>
   </header>
 
-  <main id="top">
-    <section class="hero" aria-labelledby="h-hero">
+  <main>
+    <section class="hero" id="top" data-bg="#5fcff2" aria-labelledby="h-hero">
       <div class="hero-text">
         <h1 id="h-hero">If I can dream it, I can build it.</h1>
         <p class="lead">I'm Tayfun. I make games, apps, websites and pixel art from Bali.</p>
         <dl class="facts">
           <div><dt>repos since 2024</dt><dd id="fact-repos">94</dd></div>
-          <div><dt>projects on this page</dt><dd id="fact-projects">44</dd></div>
+          <div><dt>commits</dt><dd id="fact-commits">0</dd></div>
           <div><dt>pixel artworks</dt><dd id="fact-art">26</dd></div>
         </dl>
         <p class="actions"><a class="btn btn-main" href="#work">See the work</a><a class="btn" href="#contact">Get in touch</a></p>
       </div>
-
-      <div class="sky" id="sky">
-        <div class="sky-stage" id="sky-stage"></div>
-        <div class="sky-labels" id="sky-labels" aria-hidden="true"></div>
-        <div class="sky-tip" id="sky-tip" hidden></div>
-        <div class="sky-game" id="sky-game" hidden>
-          <p class="sky-score"><b id="sky-score">0</b> commits eaten <span id="sky-date"></span></p>
-          <div class="sky-over" id="sky-over" hidden>
-            <p id="sky-over-text"></p>
-            <p><button type="button" class="btn btn-main" id="sky-again">Play again</button><button type="button" class="btn" id="sky-quit">Back to the page</button></p>
-          </div>
-          <p class="sky-keys">Left and right arrows change lane, or tap either side. Esc stops.</p>
-        </div>
-      </div>
+      <div class="stage stage-sky" id="stage-sky"></div>
       <div class="sky-foot">
         <div class="sky-note">
-          <p id="sky-caption">Every block is a day I pushed code. Taller means more commits.</p>
-          <p class="sky-play"><span class="sky-years"><span>2024 at the back</span><i></i><span>today in front</span></span></p>
-          <p class="sky-play"><button type="button" class="btn btn-small" id="sky-start">Play: eat my commits</button></p>
+          <p id="sky-caption">Every block is a day since July 2024. Taller means more commits.</p>
+          <p class="sky-play"><button type="button" class="btn btn-small btn-main" id="sky-start">Play: eat my commits</button></p>
         </div>
       </div>
     </section>
 
-    <section class="band" id="now" aria-labelledby="h-now">
+    <section class="band" id="now" data-bg="#f7c948" aria-labelledby="h-now">
       <h2 id="h-now">Right now</h2>
       <div class="now" id="now-grid"></div>
     </section>
 
-    <section class="band" id="work" aria-labelledby="h-work">
+    <section class="band" id="work" data-bg="#b9a9f0" aria-labelledby="h-work">
       <h2 id="h-work">Selected work</h2>
       <p class="band-lead">Eight things that show the range: games, desktop apps, a free course and client builds.</p>
       <div class="rows" id="rows"></div>
     </section>
 
-    <section class="band" id="everything" aria-labelledby="h-all">
-      <h2 id="h-all">Everything</h2>
+    <section class="band" id="everything" data-bg="#f7ead9" aria-labelledby="h-all">
+      <h2 id="h-all">Where the days went</h2>
       <p class="band-lead" id="all-lead"></p>
+      <div class="stage stage-stacks" id="stage-stacks"></div>
+      <p class="stage-note" id="stack-note"></p>
+      <h2 class="h-second" id="h-wall">All projects</h2>
       <div class="chips" id="chips" role="group" aria-label="Filter projects"></div>
       <ul class="wall" id="wall"></ul>
     </section>
 
-    <section class="band" id="art" aria-labelledby="h-art">
-      <h2 id="h-art">Pixel art</h2>
-      <p class="band-lead">This is where I started. Every piece is drawn by hand, one pixel at a time.</p>
+    <section class="band" id="art" data-bg="#7fe07c" aria-labelledby="h-art">
+      <div class="art-head">
+        <div>
+          <h2 id="h-art">Pixel art</h2>
+          <p class="band-lead">This is where I started. Every piece is drawn by hand, one pixel at a time. The one on the right is rebuilt from the same blocks, one cube per pixel.</p>
+        </div>
+        <div class="stage stage-art" id="stage-art"></div>
+      </div>
       <ul class="art" id="art-grid"></ul>
     </section>
 
-    <section class="band about" id="about" aria-labelledby="h-about">
-      <img class="about-pic" src="assets/tex/avatar512.jpg" alt="TayMcQuaya's profile picture: a pixel-art character with blond hair and a blue face" width="220" height="220" loading="lazy">
-      <div>
-        <h2 id="h-about">About</h2>
-        <p>I dropped out of college, moved to Bali, and started building. Nothing against theory. I just couldn't ignore what the entire internet was making possible outside the lecture hall.</p>
-        <p>Pixel art and game dev is where I started. In 2024 I went all in on vibe coding as a full time pursuit, learning by doing every single day. Now I build whatever catches my fire: games, SaaS tools, websites, Telegram bots, whatever the idea demands.</p>
-        <p>Six spoken languages, seven countries, all self taught. This site is a snapshot, not the full picture.</p>
+    <section class="band" id="about" data-bg="#ff9fb5" aria-labelledby="h-about">
+      <div class="card about-card">
+        <img class="about-pic" src="assets/tex/avatar512.jpg" alt="TayMcQuaya's profile picture: a pixel-art character with blond hair and a blue face" width="220" height="220" loading="lazy">
+        <div>
+          <h2 id="h-about">About</h2>
+          <p>I dropped out of college, moved to Bali, and started building. Nothing against theory. I just couldn't ignore what the entire internet was making possible outside the lecture hall.</p>
+          <p>Pixel art and game dev is where I started. In 2024 I went all in on vibe coding as a full time pursuit, learning by doing every single day. Now I build whatever catches my fire: games, SaaS tools, websites, Telegram bots, whatever the idea demands.</p>
+          <p>Six spoken languages, seven countries, all self taught. This site is a snapshot, not the full picture.</p>
+        </div>
       </div>
     </section>
 
-    <section class="band contact" id="contact" aria-labelledby="h-contact">
+    <section class="band contact" id="contact" data-bg="#5fcff2" aria-labelledby="h-contact">
+      <div class="stage stage-hi" id="stage-hi"></div>
       <h2 id="h-contact">Get in touch</h2>
       <p class="band-lead">Have a project in mind, want to collaborate, or just want to say hello? I'm available for freelance work and collabs.</p>
       <ul class="links">
@@ -124,8 +122,22 @@
 
   <footer class="foot">
     <p>&copy; 2026 TayMcQuaya. <a href="privacy-policy.html">Privacy Policy</a> <a href="terms-of-service.html">Terms of Service</a></p>
-    <p><a href="arcade.html">Walk the arcade, the 3D version of this site</a></p>
+    <p><a href="arcade.html">Walk the arcade, an earlier 3D version of this site</a></p>
   </footer>
+
+  <div id="overlay">
+    <div id="sky-labels"></div>
+    <div id="stack-labels" aria-hidden="true"></div>
+    <div class="sky-tip" id="sky-tip" hidden></div>
+    <div class="sky-game" id="sky-game" hidden>
+      <p class="sky-score"><b id="sky-score">0</b> commits eaten <span id="sky-date"></span></p>
+      <div class="sky-over" id="sky-over" hidden>
+        <p id="sky-over-text"></p>
+        <p><button type="button" class="btn btn-main" id="sky-again">Play again</button><button type="button" class="btn" id="sky-quit">Back to the page</button></p>
+      </div>
+      <p class="sky-keys">Left and right arrows change lane, or tap either side. Esc stops.</p>
+    </div>
+  </div>
 
   <dialog class="sheet" id="sheet" aria-labelledby="sheet-name">
     <button type="button" class="x" data-close aria-label="Close">&#10005;</button>
@@ -153,6 +165,6 @@
     <p class="viewer-nav"><button type="button" class="btn btn-small" data-step="-1">Previous</button><span id="viewer-count"></span><button type="button" class="btn btn-small" data-step="1">Next</button></p>
   </dialog>
 
-  <script type="module" src="js/site.js?v=4"></script>
+  <script type="module" src="js/site.js?v=5"></script>
 </body>
 </html>

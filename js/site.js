@@ -1,4 +1,4 @@
-import { SITE, NOW, PROJECTS, ART } from '../data/projects.js';
+import { SITE, NOW, PROJECTS, ART, VOXEL_ART, REPO_TYPES } from '../data/projects.js';
 import { ACTIVITY } from '../data/activity.js';
 import { sprite, typeColor } from './sprite.js';
 
@@ -18,9 +18,11 @@ const el = (tag, attrs = {}, kids = []) => {
 
 const TYPE = { game: 'Game', app: 'App', tool: 'Tool', site: 'Website', learn: 'Learning' };
 const TYPES = { game: 'Games', app: 'Apps', tool: 'Tools', site: 'Websites', learn: 'Learning' };
-const ALL = [...PROJECTS, ...NOW.dev.map((d) => ({ ...d, year: 2026, state: 'dev', links: [] }))];
+const SHOWN = PROJECTS.filter((p) => !p.hide);
+const ALL = [...SHOWN, ...NOW.dev.map((d) => ({ ...d, year: 2026, state: 'dev', links: [] }))];
 const stateText = (p) => (p.state === 'dev' ? 'In development' : p.state === 'client' ? 'Client work' : '');
 const metaText = (p) => [TYPE[p.type], p.year, stateText(p)].filter(Boolean).join(', ');
+const num = (n) => n.toLocaleString('en');
 
 // ---------- media: a clip when there is one, otherwise the project's own pixel creature ----------
 function media(p, { big = false } = {}) {
@@ -58,7 +60,7 @@ function linkButtons(p, main = true) {
 function renderNow() {
   const L = NOW.lead;
   const s = sprite(L.id, 'site');
-  const lead = el('article', { class: 'now-lead' }, [
+  const lead = el('article', { class: 'card now-lead' }, [
     el('div', { class: 'now-mark', style: `background:${s.bg}` }, el('img', { src: s.url, alt: '', width: 16, height: 16 })),
     el('div', {}, [
       el('h3', { text: L.name }),
@@ -67,7 +69,7 @@ function renderNow() {
       el('p', { class: 'actions' }, el('a', { class: 'btn btn-main', href: L.link.href, target: '_blank', rel: 'noopener', text: L.link.label })),
     ]),
   ]);
-  const dev = el('div', { class: 'now-dev' }, [
+  const dev = el('div', { class: 'card now-dev' }, [
     el('h3', { text: 'In development' }),
     el('ul', {}, NOW.dev.map((d) => {
       const sp = sprite(d.id, d.type);
@@ -83,8 +85,8 @@ function renderNow() {
 // ---------- Selected work ----------
 function renderRows() {
   const rows = $('#rows');
-  PROJECTS.filter((p) => p.tier === 'front').forEach((p) => {
-    rows.append(el('article', { class: 'row', id: 'p-' + p.id }, [
+  SHOWN.filter((p) => p.tier === 'front').forEach((p) => {
+    rows.append(el('article', { class: 'card row', id: 'p-' + p.id }, [
       media(p, { big: true }),
       el('div', { class: 'row-text' }, [
         el('h3', { text: p.name }),
@@ -98,14 +100,13 @@ function renderRows() {
   watchClips(rows);
 }
 
-// ---------- Everything ----------
+// ---------- the wall ----------
 let filter = 'all';
 function renderWall() {
   const counts = {};
   ALL.forEach((p) => { counts[p.type] = (counts[p.type] || 0) + 1; });
-  $('#all-lead').textContent = `${ALL.length} projects are on this page. I have ${SITE.repos} repos in total; the rest is client and team work that stays private.`;
-  $('#fact-projects').textContent = ALL.length;
   $('#fact-repos').textContent = SITE.repos;
+  $('#h-wall').textContent = `All ${ALL.length} projects`;
   $('#fact-art').textContent = ART.length;
 
   const chips = $('#chips');
@@ -115,7 +116,7 @@ function renderWall() {
 
   const wall = $('#wall');
   ALL.forEach((p) => {
-    const b = el('button', { type: 'button', class: 'tile', 'data-type': p.type, style: `--tc:${typeColor(p.type)}`, onclick: () => openSheet(p) }, [
+    const b = el('button', { type: 'button', class: 'tile', 'data-type': p.type, onclick: () => openSheet(p) }, [
       p.poster ? el('span', { class: 'tile-pic' }, el('img', { src: p.poster, alt: '', loading: 'lazy' }))
         : (() => { const s = sprite(p.id, p.type); return el('span', { class: 'tile-pic is-sprite', style: `background:${s.bg}` }, el('img', { src: s.url, alt: '', width: 16, height: 16 })); })(),
       el('span', { class: 'tile-name', text: p.name }),
@@ -124,8 +125,8 @@ function renderWall() {
     wall.append(el('li', { 'data-type': p.type }, b));
   });
   wall.append(el('li', { class: 'tile-more', 'data-type': 'more' }, [
-    el('b', { text: '+' + (SITE.repos - SITE.publicRepos) }),
-    el('span', { text: 'more repos are private: client builds and team work.' }),
+    el('b', { text: '+' + (SITE.repos - ALL.length) }),
+    el('span', { text: 'more repos: smaller tools, experiments, and client and team work that stays private.' }),
   ]));
 
   function paint() {
@@ -188,67 +189,142 @@ document.querySelectorAll('dialog').forEach((d) => {
   d.addEventListener('close', () => d.querySelectorAll('video').forEach((v) => v.pause()));
 });
 
-// ---------- the skyline ----------
-async function startSky() {
-  const stage = $('#sky-stage'), tip = $('#sky-tip'), labels = $('#sky-labels');
+// ---------- page colour: each section has its own, and they blend as you scroll ----------
+const hex = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+const sections = [...document.querySelectorAll('[data-bg]')].map((s) => ({ el: s, rgb: hex(s.dataset.bg) }));
+const theme = document.querySelector('meta[name="theme-color"]');
+let lastBg = '';
+function pageColour() {
+  const mid = innerHeight * 0.5, band = innerHeight * 0.4;
+  let c = sections[0].rgb;
+  for (let k = 1; k < sections.length; k++) {
+    const top = sections[k].el.getBoundingClientRect().top;
+    let t = (mid + band - top) / (2 * band);
+    t = Math.min(1, Math.max(0, t)); t = t * t * (3 - 2 * t);
+    if (t > 0) c = c.map((v, i) => v + (sections[k].rgb[i] - v) * t);
+  }
+  const css = `rgb(${c.map((v) => Math.round(v)).join(',')})`;
+  if (css !== lastBg) { lastBg = css; document.body.style.backgroundColor = css; if (theme) theme.content = css; }
+  return css;
+}
+
+// ---------- the cubes ----------
+async function loadSprite() {
+  // one cube per pixel of the artwork, background left out
+  try {
+    const img = new Image();
+    img.src = VOXEL_ART.src;
+    await img.decode();
+    const g = VOXEL_ART.grid, c = document.createElement('canvas');
+    c.width = g; c.height = g;
+    const k = c.getContext('2d', { willReadFrequently: true });
+    k.imageSmoothingEnabled = false;
+    k.drawImage(img, 0, 0, g, g);
+    const d = k.getImageData(0, 0, g, g).data;
+    const at = (x, y) => { const i = (y * g + x) * 4; return [d[i], d[i + 1], d[i + 2], d[i + 3]]; };
+    const bg = at(1, 1);
+    const [x0, y0, x1, y1] = VOXEL_ART.crop;
+    const cells = [];
+    for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) {
+      const p = at(x, y);
+      if (p[3] < 128 || (Math.abs(p[0] - bg[0]) + Math.abs(p[1] - bg[1]) + Math.abs(p[2] - bg[2]) < 24)) continue;
+      cells.push({ x: x - x0, y: y - y0, color: `rgb(${p[0]},${p[1]},${p[2]})` });
+    }
+    return { cells, w: x1 - x0 + 1, h: y1 - y0 + 1 };
+  } catch (err) { return { cells: [], w: 1, h: 1 }; }
+}
+
+async function startWorld() {
+  const tip = $('#sky-tip'), labels = $('#sky-labels'), stackLabels = $('#stack-labels');
   const commits = Object.values(ACTIVITY).reduce((a, d) => a + d[0], 0);
   const activeDays = Object.keys(ACTIVITY).length;
-  $('#sky-caption').textContent = `Every block is a day I pushed code. Taller means more commits. ${commits} commits on ${activeDays} days, counting public repos only.`;
+  $('#fact-commits').textContent = num(commits);
+  $('#all-lead').textContent = `${num(commits)} commits on ${activeDays} days since July 2024. Below, the same blocks sort themselves by what each day went into.`;
 
   let mod;
   try {
     const probe = document.createElement('canvas');
     if (!(probe.getContext('webgl2') || probe.getContext('webgl'))) throw new Error('no webgl');
-    mod = await import('./skyline.js');
+    mod = await import('./blocks.js');
   } catch (err) {
-    flatSky(stage);
+    document.body.classList.add('no-3d');
+    flatSky($('#stage-sky'));
     $('#sky-start').hidden = true;
+    addEventListener('scroll', pageColour, { passive: true }); pageColour();
     return;
   }
   const days = mod.buildDays(ACTIVITY);
 
-  // name the busiest day of each project that is on the page
-  const byRepo = new Map(PROJECTS.filter((p) => p.repo).map((p) => [p.repo, p]));
+  // what each active day went into
+  const cats = [
+    { key: 'game', name: 'Games', short: 'Games', color: '#d95763' },
+    { key: 'app', name: 'Apps', short: 'Apps', color: '#2fa9d6' },
+    { key: 'tool', name: 'Tools', short: 'Tools', color: '#f2b631' },
+    { key: 'site', name: 'Websites', short: 'Sites', color: '#9484dd' },
+    { key: 'learn', name: 'Learning', short: 'Learn', color: '#3fc04a' },
+    { key: 'team', name: 'Team work', short: 'Team', color: '#ff8fa8' },
+    { key: 'private', name: 'Private and client', short: 'Private', color: '#210b1b' },
+  ];
+  const typeOfRepo = new Map([...Object.entries(REPO_TYPES), ...PROJECTS.filter((p) => p.repo).map((p) => [p.repo, p.type])]);
+  const catIndex = Object.fromEntries(cats.map((c, i) => [c.key, i]));
+  const cat = days.map((d) => {
+    const top = d.what.split(', ')[0];
+    if (top === 'private work') return catIndex.private;
+    if (top === 'team work') return catIndex.team;
+    return catIndex[typeOfRepo.get(top) || 'tool'];
+  });
+
+  // name the busiest day of the projects that are on the page
+  const byRepo = new Map(SHOWN.filter((p) => p.repo).map((p) => [p.repo, p]));
   const best = new Map();
   days.forEach((d) => {
-    const top = d.what.split(', ')[0];
-    const p = byRepo.get(top);
+    const p = byRepo.get(d.what.split(', ')[0]);
     if (p && (!best.has(p.id) || best.get(p.id).n < d.n)) best.set(p.id, { ...d, name: p.name, pid: p.id });
   });
-  // front-row projects first, then by how busy the day was; keep them apart along the strip
-  const rank = (m) => (PROJECTS.find((p) => p.id === m.pid).tier === 'front' ? 1000 : 0) + m.n;
+  const rank = (m) => (SHOWN.find((p) => p.id === m.pid).tier === 'front' ? 1000 : 0) + m.n;
   const marks = [];
-  [...best.values()].filter((m) => { const p = PROJECTS.find((x) => x.id === m.pid); return p.tier === 'front' || p.video; })
-    .sort((a, b) => rank(b) - rank(a)).forEach((m) => {
-      if (marks.length < 8 && marks.every((o) => Math.abs(o.col - m.col) > 5)) marks.push(m);
-    });
+  [...best.values()].filter((m) => { const p = SHOWN.find((x) => x.id === m.pid); return p.tier === 'front' || p.video; })
+    .sort((a, b) => rank(b) - rank(a)).forEach((m) => { if (marks.length < 8 && marks.every((o) => Math.abs(o.col - m.col) > 4)) marks.push(m); });
   const markEls = marks.map((m) => {
     const a = el('a', { class: 'sky-label', href: '#everything', text: m.name });
     a.addEventListener('click', (ev) => { ev.preventDefault(); const p = ALL.find((x) => x.id === m.pid); if (p) openSheet(p); });
     labels.append(a);
     return a;
   });
-  labels.setAttribute('aria-hidden', 'false');
 
+  const spriteData = await loadSprite();
   const fmt = new Intl.DateTimeFormat('en', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
   const game = $('#sky-game'), over = $('#sky-over');
-  const sky = mod.createSkyline(stage, days, {
+  let stackEls = [];
+
+  const world = mod.createBlocks($('#world'), {
+    days, cat, cats, sprite: spriteData,
+    stages: { sky: $('#stage-sky'), stacks: $('#stage-stacks'), art: $('#stage-art'), hi: $('#stage-hi') },
+    confetti: ['#d95763', '#f7c948', '#5fcff2', '#b9a9f0', '#6fdd6a', '#ff9fb5', '#fffaf1', '#210b1b'],
+    floor: '#fffaf1', ink: '#210b1b', hiFront: '#fffaf1', hiFloor: '#f7c948',
+    background: pageColour,
     onHover(d, pos) {
       if (!d || !pos) { tip.hidden = true; return; }
       tip.hidden = false;
       tip.textContent = d.n ? `${fmt.format(new Date(d.date))}: ${d.n} commit${d.n > 1 ? 's' : ''}, ${d.what}` : `${fmt.format(new Date(d.date))}: nothing pushed`;
-      tip.style.left = Math.min(Math.max(pos.x, 110), stage.clientWidth - 110) + 'px';
+      tip.style.left = Math.min(Math.max(pos.x, 130), innerWidth - 130) + 'px';
       tip.style.top = pos.y + 'px';
     },
-    onFrame(project) {
-      const w = stage.clientWidth, placed = [];
+    onFrame(s) {
+      const placed = [];
       marks.forEach((m, i) => {
-        const p = project(m.i, 0.2), e = markEls[i];
-        const lw = e.offsetWidth || 120;
+        const e = markEls[i];
+        if (!s.skyOn) { e.style.display = 'none'; return; }
+        const p = s.projectDay(m.i, 0.2), lw = e.offsetWidth || 120;
         const clear = placed.every((q) => Math.abs(q.y - p.y) > 30 || p.x > q.x + q.w + 10 || q.x > p.x + lw + 10);
-        const show = !sky.playing && p.z < 1 && p.x > 20 && p.x < w - lw && p.y > 90 && clear;
+        const show = p.x > innerWidth * 0.4 && p.x < innerWidth - lw && p.y > 110 && p.y < innerHeight - 40 && clear;
         e.style.display = show ? '' : 'none';
         if (show) { e.style.transform = `translate(${Math.round(p.x)}px, ${Math.round(p.y)}px)`; placed.push({ x: p.x, y: p.y, w: lw }); }
+      });
+      stackEls.forEach((e, k) => {
+        if (!s.stacksOn) { e.style.display = 'none'; return; }
+        const p = s.projectStack(k);
+        e.style.display = ''; e.style.transform = `translate(${Math.round(p.x)}px, ${Math.round(p.y)}px)`;
       });
     },
     onGame(g) {
@@ -259,31 +335,38 @@ async function startSky() {
       over.hidden = g.state !== 'over';
       if (g.state === 'over') {
         const pct = Math.round((g.score / g.total) * 100);
-        $('#sky-over-text').textContent = `You made it back to July 2024 and ate ${g.score} of my ${g.total} commits. That's ${pct}%.`;
+        $('#sky-over-text').textContent = `You made it back to July 2024 and ate ${num(g.score)} of my ${num(g.total)} commits. That's ${pct}%.`;
         $('#sky-again').focus();
       }
     },
   });
 
-  $('#sky-start').addEventListener('click', () => { sky.play(); stage.scrollIntoView({ block: 'center', behavior: 'smooth' }); });
-  $('#sky-again').addEventListener('click', () => sky.play());
-  $('#sky-quit').addEventListener('click', () => sky.stop());
-  // while playing, the camera looks down the strip, so screen-left is the next weekday lane
+  stackEls = world.stackInfo.map((s) => {
+    const e = el('div', { class: 'stack-label' }, [el('b', { class: 'long', text: s.name }), el('b', { class: 'short', text: s.short }), el('span', { text: `${s.days} days` })]);
+    stackLabels.append(e);
+    return e;
+  });
+  $('#stack-note').textContent = 'Each cube is one day with commits. The flat tiles are the days off.';
+
+  $('#sky-start').addEventListener('click', () => { scrollTo({ top: 0, behavior: 'smooth' }); world.play(); });
+  $('#sky-again').addEventListener('click', () => world.play());
+  $('#sky-quit').addEventListener('click', () => world.stop());
+  // while playing, you look down the strip from behind the runner
   const lanes = { ArrowLeft: 1, ArrowRight: -1, a: 1, d: -1 };
   addEventListener('keydown', (e) => {
-    if (!sky.playing) return;
-    if (e.key === 'Escape') { sky.stop(); return; }
+    if (!world.playing) return;
+    if (e.key === 'Escape') { world.stop(); return; }
     const k = lanes[e.key] || lanes[e.key.toLowerCase()];
-    if (k) { e.preventDefault(); sky.turn(k); }
+    if (k) { e.preventDefault(); world.turn(k); }
     else if (e.key.startsWith('Arrow') || e.key === ' ') e.preventDefault();
   });
-  sky.canvas.addEventListener('pointerdown', (e) => {
-    if (!sky.playing) return;
-    const r = sky.canvas.getBoundingClientRect();
-    sky.turn(e.clientX < r.left + r.width / 2 ? 1 : -1);
+  addEventListener('pointerdown', (e) => {
+    if (!world.playing || (e.target.closest && e.target.closest('a, button, header'))) return;
+    world.turn(e.clientX < innerWidth / 2 ? 1 : -1);
   });
+  addEventListener('scroll', () => { if (world.playing && scrollY > innerHeight * 0.6) world.stop(); }, { passive: true });
 
-  window.__site = { sky, days, marks, openSheet, ALL };
+  window.__site = { world, days, marks, openSheet, ALL };
 }
 
 // plain grid for browsers without WebGL
@@ -303,4 +386,5 @@ renderNow();
 renderRows();
 renderWall();
 renderArt();
-startSky();
+pageColour();
+startWorld();
