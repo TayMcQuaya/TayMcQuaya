@@ -30,7 +30,8 @@ export function typeColor(type) {
   return (BG[type] || BG.tool)[0];
 }
 
-export function sprite(id, type) {
+// clear: true leaves the background see-through, for a creature that stands on something else
+export function sprite(id, type, { clear = false } = {}) {
   const N = 16, W = 10, H = 10, OX = 3, OY = 3;
   const r = rng(hash(id + ':' + type));
   const bgs = BG[type] || BG.tool;
@@ -61,7 +62,7 @@ export function sprite(id, type) {
   const c = document.createElement('canvas');
   c.width = N; c.height = N;
   const k = c.getContext('2d');
-  k.fillStyle = bg; k.fillRect(0, 0, N, N);
+  if (!clear) { k.fillStyle = bg; k.fillRect(0, 0, N, N); }
   // outline first
   k.fillStyle = INK;
   for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {

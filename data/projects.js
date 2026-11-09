@@ -18,7 +18,7 @@ export const SITE = {
   since: 2024,
   github: 'TayMcQuaya',   // the contribution numbers on the page are read live for this account
   // the flags on the skyline in the hero, most important first (ids from this file)
-  flags: ['shaping-luck', 'panel-haus', 'floppytromp'],
+  flags: ['shaping-luck', 'panel-haus', 'javascript-journey'],
 };
 
 // The animated pixel artwork that the cubes rebuild in the Pixel art section: one cube per pixel, frame by frame.
@@ -40,7 +40,9 @@ export const NOW = {
     name: 'Panel Haus',
     role: 'Co-founder',
     when: '2026-10-22',
-    text: 'My main work. A comic studio that runs in the browser: write the beat, pick a layout, place your characters, letter it, export it as a page, a book or a video clip.',
+    text: 'My main work. A comic studio that runs in the browser. It takes you from a rough idea to a finished page, a book or a video clip in four steps:',
+    // the little comic under the text: one panel per step
+    steps: ['Write the beat', 'Pick a layout', 'Place and letter', 'Export it'],
     image: 'assets/tex/panel-haus.jpg',
     link: { label: 'Open panel.haus', href: 'https://panel.haus/' },
   },
@@ -54,8 +56,8 @@ export const NOW = {
 export const PROJECTS = [
   // ---------- Selected work ----------
   { id: 'shaping-luck', poster: 'assets/tex/shaping-luck.jpg', name: 'Shaping Luck', type: 'app', year: 2026, tier: 'front', state: 'client', repo: 'Shaping-Luck', when: '2026-04-28',
-    text: 'Quick 1-on-1 video networking. You join a lobby, get matched with another member for a 4-minute video chat, then rate it and keep in touch. I built the app, plus the landing page with waitlist and Stripe checkout.',
-    tags: ['Video', 'Stripe', 'Client work'],
+    text: 'Quick 1-on-1 video networking. You join a lobby, get matched with another member for a 4-minute video chat, then rate it and keep in touch. I am the only developer on it: I built the app, plus the landing page with waitlist and Stripe checkout.',
+    tags: ['Sole developer', 'Video', 'Stripe'],
     links: [{ label: 'Open the app', href: 'https://app.shapingluck.com/' }] },
 
   { id: 'hopline', name: 'HopLine', type: 'game', year: 2026, tier: 'front', state: 'live', repo: 'HopLine',
@@ -70,8 +72,8 @@ export const PROJECTS = [
     links: [{ label: 'Code', href: gh('Claude-Den') }] },
 
   { id: 'coach-al', poster: 'assets/tex/coach-al.jpg', name: "Coach Al's Wellness Studio", type: 'app', year: 2026, tier: 'front', state: 'client', repo: 'AL_Fitness_Hub',
-    text: 'A wellness app for iOS, Android and the web, built for a coaching client. It starts with an assessment, then tracks daily check-ins and streaks. One React Native codebase, three platforms.',
-    tags: ['React Native', 'Expo', 'Client work'],
+    text: 'A wellness app for iOS, Android and the web, built for a coaching client. It starts with an assessment, then tracks daily check-ins and streaks. One React Native codebase, three platforms, and I am the only developer on it.',
+    tags: ['Sole developer', 'React Native', 'Expo'],
     links: [{ label: 'Visit burntout.app', href: 'https://burntout.app/' }] },
 
   { id: 'descent', name: 'Descent', type: 'site', year: 2026, tier: 'front', state: 'live', repo: 'Hellnight-Website',
@@ -80,7 +82,7 @@ export const PROJECTS = [
     poster: 'assets/tex/decent.jpg',
     links: [{ label: 'Visit', href: 'https://taymcquaya.github.io/Hellnight-Website/' }, { label: 'Code', href: gh('Hellnight-Website') }] },
 
-  { id: 'floppytromp', name: 'Floppy Tromp', type: 'game', year: 2024, tier: 'front', state: 'live', repo: 'FloppyTromp', when: '2024',
+  { id: 'floppytromp', name: 'Floppy Tromp', type: 'game', year: 2024, tier: 'front', state: 'live', repo: 'FloppyTromp',
     text: 'Election season satire built in Unity. Hand drew every character, shipped in a week with Web3 wallet gating baked in. Gates are open now, free for everyone to play.',
     tags: ['Unity', 'Pixel art', 'Web3'],
     video: 'assets/vid/floppytromp.mp4', poster: 'assets/tex/floppytromp.jpg',

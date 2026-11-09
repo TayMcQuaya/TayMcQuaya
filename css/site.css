@@ -75,6 +75,11 @@ main, .foot { position: relative; z-index: 1; }
 .brand img { width: 36px; height: 36px; image-rendering: pixelated; border: 2px solid var(--ink); }
 .top nav { display: flex; align-items: center; gap: clamp(10px, 2vw, 26px); font-family: var(--pixel); font-weight: 500; font-size: 17px; }
 .top nav a { text-decoration: none; }
+.nav-links { display: flex; align-items: center; gap: clamp(10px, 2vw, 26px); }
+.nav-links a { position: relative; }
+/* where you are: a green block standing on the header's bottom line, under the link of the current section */
+.nav-links a[aria-current]::after { content: ''; position: absolute; left: 50%; bottom: -21px; width: 12px; height: 12px; margin-left: -6px; background: #2fc13a; border: 3px solid var(--ink); }
+.nav-toggle { display: none; font-family: var(--pixel); font-weight: 500; font-size: 17px; line-height: 1; padding: 6px 10px; border: 3px solid var(--ink); background: var(--paper); }
 .top nav a:hover { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 4px; }
 .top nav .nav-cta { color: var(--bone); background: var(--ink); padding: 6px 10px; }
 
@@ -134,6 +139,30 @@ main, .foot { position: relative; z-index: 1; }
 .now-text { padding: 22px 26px 26px; }
 .media-sprite img, .tile-pic.is-sprite img { image-rendering: pixelated; }
 .now-lead h3 { font-size: 38px; }
+/* the four-panel comic that explains Panel Haus */
+.strip { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 16px; }
+.strip li { min-width: 0; }
+.strip span { display: block; margin-top: 7px; font-family: var(--pixel); font-weight: 500; font-size: 16px; line-height: 1.05; }
+.strip span b { display: inline-block; min-width: 18px; margin-right: 5px; padding: 1px 4px; text-align: center; color: var(--bone); background: var(--ink); font-weight: 500; }
+.strip .cell { position: relative; aspect-ratio: 1; border: 3px solid var(--ink); overflow: hidden; background-color: var(--gold);
+  background-image: radial-gradient(rgba(33, 11, 27, .16) 1.4px, transparent 1.6px); background-size: 8px 8px; }
+.strip .c2 { background-color: var(--lav); } .strip .c3 { background-color: var(--pink); } .strip .c4 { background-color: var(--green); }
+.strip .cell i { display: block; }
+.strip .ln { height: 9%; margin: 12% 0 0 12%; background: var(--ink); }
+.strip .cur { position: absolute; left: 74%; top: 54%; width: 6%; height: 14%; background: var(--ink); animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.strip .pg { position: absolute; inset: 12% 20%; background: var(--paper); border: 3px solid var(--ink); display: grid !important; grid-template: 1fr 1fr 1fr / 1fr 1fr; gap: 4px; padding: 5px; }
+.strip .pg i { border: 2px solid var(--ink); }
+.strip .pg .hot { background: var(--gold); }
+.strip .who { position: absolute; left: 6%; bottom: 0; width: 46%; image-rendering: pixelated; }
+.strip .who.two { left: auto; right: 6%; transform: scaleX(-1); }
+.strip .say { position: absolute; left: 30%; top: 9%; padding: 2px 8px; background: var(--paper); border: 3px solid var(--ink); border-radius: 12px; font-family: var(--pixel); font-style: normal; font-size: 17px; line-height: 1.1; }
+.strip .out { position: absolute; border: 3px solid var(--ink); background: var(--paper); }
+.strip .pgo { left: 12%; top: 16%; width: 34%; height: 46%; }
+.strip .bk { left: 34%; top: 34%; width: 34%; height: 46%; border-left-width: 8px; }
+.strip .clip { right: 10%; top: 14%; width: 34%; height: 28%; background: var(--ink); }
+.strip .clip::after { content: ''; position: absolute; left: 38%; top: 24%; border-left: 10px solid var(--paper); border-top: 7px solid transparent; border-bottom: 7px solid transparent; }
+.now-lead .actions { margin-top: 18px; }
 .now-lead .meta { margin: 6px 0 10px; }
 .now-dev { padding: 22px 24px; }
 .now-dev h3 { font-size: 24px; }
@@ -262,7 +291,18 @@ dialog::backdrop { background: rgba(33, 11, 27, .72); }
 }
 @media (max-width: 760px) {
   body { font-size: 16px; }
-  .top nav a:not(.nav-cta) { display: none; }
+  .nav-toggle { display: block; }
+  .top { gap: 8px; padding: 8px 14px; }
+  .brand { font-size: 18px; gap: 8px; }
+  .brand img { width: 32px; height: 32px; }
+  .top nav { gap: 7px; font-size: 16px; }
+  .nav-toggle { font-size: 16px; padding: 6px 8px; white-space: nowrap; }
+  .top nav .nav-cta { padding: 9px 9px; white-space: nowrap; }
+  .nav-links { display: none; position: absolute; left: 0; right: 0; top: 100%; flex-direction: column; align-items: stretch; gap: 0; background: var(--paper); border-top: 3px solid var(--ink); border-bottom: 3px solid var(--ink); }
+  .top.open .nav-links { display: flex; }
+  .nav-links a { padding: 14px var(--pad); font-size: 22px; border-bottom: 2px solid var(--bone); }
+  .nav-links a:last-child { border-bottom: 0; }
+  .nav-links a[aria-current]::after { left: auto; right: var(--pad); bottom: 50%; margin: 0 0 -9px; }
   .hero { min-height: 0; }
   .stage-sky { position: relative; left: auto; right: auto; top: auto; bottom: auto; height: 340px; margin-top: 4px; }
   .sky-foot { padding-top: 6px; }
@@ -277,6 +317,7 @@ dialog::backdrop { background: rgba(33, 11, 27, .72); }
   .stack-label span { font-size: 11px; margin-top: 0; }
   .now-text { padding: 16px 18px 20px; }
   .now-lead h3 { font-size: 30px; }
+  .strip { grid-template-columns: repeat(2, 1fr); }
   .dev { grid-template-columns: 96px 1fr; }
   .wall { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 14px; }
   .art { columns: 2; column-gap: 12px; }

@@ -75,6 +75,23 @@ function linkButtons(p, main = true) {
 }
 
 // ---------- Right now ----------
+// Panel Haus explained the way it works: as a four-panel comic, drawn with plain boxes.
+function comicStrip(steps) {
+  const a = sprite('panel-haus-a', 'game', { clear: true }), b = sprite('panel-haus-b', 'app', { clear: true });
+  const art = [
+    // 1 the script: lines of text and a cursor
+    () => [el('i', { class: 'ln', style: 'width:78%' }), el('i', { class: 'ln', style: 'width:92%' }), el('i', { class: 'ln', style: 'width:58%' }), el('i', { class: 'cur' })],
+    // 2 the page: a few panels, one picked
+    () => [el('i', { class: 'pg' }, [el('i', { style: 'grid-column:1/3' }), el('i', { class: 'hot' }), el('i'), el('i', { style: 'grid-column:1/3' })])],
+    // 3 two characters and a speech bubble
+    () => [el('img', { class: 'who', src: a.url, alt: '' }), el('img', { class: 'who two', src: b.url, alt: '' }), el('i', { class: 'say', text: 'Hi!' })],
+    // 4 what comes out: a page, a book, a clip
+    () => [el('i', { class: 'out pgo' }), el('i', { class: 'out bk' }), el('i', { class: 'out clip' })],
+  ];
+  return el('ol', { class: 'strip', 'aria-label': 'How Panel Haus works' }, steps.map((t, k) =>
+    el('li', {}, [el('div', { class: 'cell c' + (k + 1), 'aria-hidden': 'true' }, art[k] ? art[k]() : []), el('span', {}, [el('b', { text: String(k + 1) }), t])])));
+}
+
 function renderNow() {
   const L = NOW.lead;
   const lead = el('article', { class: 'card now-lead' }, [
@@ -83,6 +100,7 @@ function renderNow() {
       el('h3', { text: L.name }),
       el('p', { class: 'meta', text: L.role }),
       el('p', { text: L.text }),
+      L.steps && comicStrip(L.steps),
       el('p', { class: 'actions' }, el('a', { class: 'btn btn-main', href: L.link.href, target: '_blank', rel: 'noopener', text: L.link.label })),
     ]),
   ]);
@@ -455,6 +473,28 @@ function flatSky(stage) {
   stage.append(g);
 }
 
+// ---------- header ----------
+// A small green block sits under the link of the section you are in, and on a phone the links fold into a menu.
+function header() {
+  const links = [...document.querySelectorAll('#nav-links a')].map((a) => ({ a, target: document.querySelector(a.getAttribute('href')) })).filter((l) => l.target);
+  let queued = false;
+  const mark = () => {
+    queued = false;
+    let now = null;
+    for (const l of links) if (l.target.getBoundingClientRect().top < innerHeight * 0.45) now = l;
+    if ($('#contact').getBoundingClientRect().top < innerHeight * 0.45) now = null;      // the last section has the button, not a link
+    links.forEach((l) => { if (l === now) l.a.setAttribute('aria-current', 'true'); else l.a.removeAttribute('aria-current'); });
+  };
+  addEventListener('scroll', () => { if (!queued) { queued = true; requestAnimationFrame(mark); } }, { passive: true });
+  mark();
+
+  const top = $('.top'), toggle = $('#nav-toggle');
+  const set = (open) => { top.classList.toggle('open', open); toggle.setAttribute('aria-expanded', open ? 'true' : 'false'); toggle.textContent = open ? 'Close' : 'Menu'; };
+  toggle.addEventListener('click', () => set(!top.classList.contains('open')));
+  top.querySelectorAll('nav a').forEach((a) => a.addEventListener('click', () => set(false)));
+  addEventListener('keydown', (e) => { if (e.key === 'Escape') set(false); });
+}
+
 // ---------- warm up ----------
 // Once the page itself is up and the browser has a quiet moment, fetch the pictures further down in page order,
 // a few at a time. By the time you scroll there they are already here.
@@ -478,6 +518,7 @@ function warmUp() {
   idle(() => { for (let k = 0; k < 4; k++) next(); });
 }
 
+header();
 renderNow();
 renderRows();
 renderWall();

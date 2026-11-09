@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<!-- Drawn pictures for projects that have no screen to photograph (scripts, command line tools).
+     Open tools/pictures.html?id=cipherlock (or transscript, telegram-bridge, wallet-integration) in a browser
+     window of 1280x800 and save a screenshot as assets/tex/<id>.jpg, then run python3 tools/build_media.py -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<style>
+  @font-face { font-family: 'Jersey Pixel'; font-weight: 700; src: url('../assets/fonts/jersey-25-latin-400-normal.woff2') format('woff2'); }
+  @font-face { font-family: 'Jersey Pixel'; font-weight: 500; src: url('../assets/fonts/jersey-20-latin-400-normal.woff2') format('woff2'); }
+  @font-face { font-family: 'Figtree'; font-weight: 600; src: url('../assets/fonts/figtree-latin-600-normal.woff2') format('woff2'); }
+  :root { --ink: #210b1b; --paper: #fffaf1; --bone: #f7ead9; --gold: #f7c948; --lav: #b9a9f0; --pink: #ff9fb5; --green: #6fdd6a; --coral: #d95763; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { width: 1280px; height: 800px; overflow: hidden; position: relative; color: var(--ink); font: 600 24px/1.3 'Figtree', sans-serif; }
+  .scene { position: absolute; inset: 0; display: none; }
+  .scene.on { display: block; }
+  .abs { position: absolute; }
+  .box { position: absolute; background: var(--paper); border: 6px solid var(--ink); box-shadow: 14px 14px 0 var(--ink); }
+  .pix { font-family: 'Jersey Pixel', sans-serif; font-weight: 700; line-height: .95; }
+  .mono { font-family: ui-monospace, 'DejaVu Sans Mono', Menlo, Consolas, monospace; font-weight: 700; }
+  .tab { background: var(--ink); color: var(--paper); font: 500 30px/1 'Jersey Pixel', sans-serif; padding: 10px 16px; }
+  .chip { display: inline-block; background: var(--paper); border: 5px solid var(--ink); font-size: 26px; padding: 8px 18px; }
+
+  /* ---------- CipherLock: readable file in, padlock made of cipher text, unreadable file out ---------- */
+  #cipherlock { background: #f2b631; }
+  #cipherlock .file { width: 300px; height: 330px; top: 290px; }
+  #cipherlock .file p { padding: 16px 18px 0; font-size: 25px; line-height: 1.45; }
+  #cipherlock .file .mono { font-size: 21px; line-height: 1.62; letter-spacing: 1px; word-break: break-all; }
+  #cipherlock .body { left: 470px; top: 372px; width: 340px; height: 300px; background: var(--ink); overflow: hidden; }
+  #cipherlock .body .mono { color: #f2b631; opacity: .42; font-size: 24px; line-height: 1.3; letter-spacing: 6px; padding: 10px 0 0 14px; word-break: break-all; }
+  #cipherlock .hole { left: 600px; top: 452px; width: 80px; height: 80px; border-radius: 50%; background: #f2b631; }
+  #cipherlock .slot { left: 622px; top: 512px; width: 36px; height: 86px; background: #f2b631; }
+  #cipherlock .flow { top: 437px; font: 700 76px/1 'Jersey Pixel', sans-serif; }
+  #cipherlock .pass { left: 470px; top: 700px; width: 340px; text-align: center; background: var(--paper); border: 6px solid var(--ink); font-size: 34px; letter-spacing: 10px; padding: 6px 0 10px; }
+
+  /* ---------- Transscript: a clip, its sound wave, and the wave turning into written lines ---------- */
+  #transscript { background: var(--lav); }
+  #transscript .player { left: 80px; top: 200px; width: 420px; height: 300px; background: var(--ink); }
+  #transscript .play { left: 248px; top: 300px; border-left: 84px solid var(--paper); border-top: 52px solid transparent; border-bottom: 52px solid transparent; }
+  #transscript .bar { left: 104px; top: 452px; width: 372px; height: 12px; background: #5a4257; }
+  #transscript .bar i { display: block; width: 58%; height: 100%; background: var(--gold); }
+  #transscript .wave { left: 60px; top: 560px; width: 1160px; height: 170px; display: flex; align-items: center; gap: 7px; }
+  #transscript .wave i { flex: 0 0 13px; background: var(--ink); }
+  #transscript .wave b { flex: 0 0 auto; font: 700 54px/1 'Jersey Pixel', sans-serif; padding: 0 1px; }
+  #transscript .page { left: 620px; top: 150px; width: 560px; height: 350px; padding: 22px 26px; }
+  #transscript .page p { font-size: 27px; line-height: 1.3; margin-bottom: 16px; }
+  #transscript .page span { display: inline-block; background: var(--ink); color: var(--paper); font-size: 20px; padding: 2px 8px; margin-right: 10px; vertical-align: 3px; }
+
+  /* ---------- Claude Telegram Bridge: a phone chat, a terminal, and a bridge that carries the messages ---------- */
+  #telegram-bridge { background: var(--pink); }
+  #telegram-bridge .phone { left: 90px; top: 150px; width: 370px; height: 560px; border-radius: 44px; border-width: 12px; padding: 34px 20px 0; }
+  #telegram-bridge .msg { display: block; width: fit-content; max-width: 280px; border: 4px solid var(--ink); padding: 8px 14px; margin-bottom: 14px; font-size: 22px; background: var(--bone); }
+  #telegram-bridge .me { margin-left: auto; background: var(--green); }
+  #telegram-bridge .diff { font-size: 18px; padding: 0; overflow: hidden; }
+  #telegram-bridge .diff div { padding: 5px 12px; }
+  #telegram-bridge .minus { background: #ffc9cf; } #telegram-bridge .plus { background: #c9f2c0; }
+  #telegram-bridge .btns { display: flex; gap: 10px; }
+  #telegram-bridge .btns span { flex: 1; text-align: center; border: 4px solid var(--ink); padding: 8px 0; font-size: 22px; }
+  #telegram-bridge .term { left: 800px; top: 290px; width: 400px; height: 350px; background: var(--ink); color: var(--paper); padding: 0; }
+  #telegram-bridge .term .bar { height: 44px; border-bottom: 5px solid #5a4257; display: flex; align-items: center; gap: 10px; padding-left: 16px; }
+  #telegram-bridge .term .bar i { width: 16px; height: 16px; background: #5a4257; }
+  #telegram-bridge .term .mono { font-size: 20px; line-height: 1.6; padding: 16px 18px; white-space: pre; }
+  #telegram-bridge .term em { font-style: normal; color: var(--gold); } #telegram-bridge .term u { text-decoration: none; color: var(--green); }
+  #telegram-bridge .deck i, #telegram-bridge .pkt { position: absolute; background: var(--ink); }
+  #telegram-bridge .deck .arch { background: var(--pink); border-radius: 43px 43px 0 0; }
+  #telegram-bridge .deck .pkt { width: 30px; height: 30px; background: var(--gold); border: 5px solid var(--ink); }
+
+  /* ---------- Solana Wallet Kit: connect, see the balance, swap one token for another ---------- */
+  #wallet-integration { background: var(--green); }
+  #wallet-integration .card { left: 120px; top: 150px; width: 520px; height: 520px; padding: 30px; }
+  #wallet-integration .addr { display: flex; justify-content: space-between; align-items: center; font-size: 24px; }
+  #wallet-integration .dot { display: inline-block; width: 18px; height: 18px; background: #2fc13a; border: 4px solid var(--ink); margin-right: 10px; }
+  #wallet-integration .bal { font: 700 120px/1 'Jersey Pixel', sans-serif; margin-top: 46px; }
+  #wallet-integration .bal small { font-size: 54px; }
+  #wallet-integration .btn { margin-top: 56px; background: var(--ink); color: var(--paper); text-align: center; font: 500 40px/1 'Jersey Pixel', sans-serif; padding: 20px 0; }
+  #wallet-integration .swap { left: 730px; width: 430px; height: 150px; padding: 18px 24px; background: var(--paper); border: 6px solid var(--ink); box-shadow: 14px 14px 0 var(--ink); display: flex; justify-content: space-between; align-items: center; }
+  #wallet-integration .swap b { font: 700 62px/1 'Jersey Pixel', sans-serif; }
+  #wallet-integration .coin { width: 84px; height: 84px; border-radius: 50%; border: 6px solid var(--ink); display: grid; place-items: center; font: 700 44px/1 'Jersey Pixel', sans-serif; }
+  #wallet-integration .turn { left: 905px; top: 352px; width: 96px; height: 96px; background: var(--gold); border: 6px solid var(--ink); display: grid; place-items: center; font-size: 54px; line-height: 1; z-index: 2; }
+</style>
+</head>
+<body>
+
+<div class="scene" id="cipherlock">
+  <div class="abs pix" style="left:80px;top:50px;font-size:104px">CipherLock</div>
+  <div class="abs" style="left:84px;top:164px"><span class="chip">AES-256</span> <span class="chip">one password</span></div>
+  <div class="box file" style="left:80px"><div class="tab">diary.txt</div><p>Dear diary,<br>today I finally shipped it. Nobody may ever read this.</p></div>
+  <div class="abs flow" style="left:404px">&gt;</div>
+  <svg class="abs" style="left:520px;top:192px" width="240" height="200" viewBox="0 0 240 200"><path d="M30 200 V110 A90 90 0 0 1 210 110 V200" fill="none" stroke="#210b1b" stroke-width="44"/></svg>
+  <div class="abs body"><div class="mono" id="lockText"></div></div>
+  <div class="abs hole"></div><div class="abs slot"></div>
+  <div class="abs pass">&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;</div>
+  <div class="abs flow" style="left:838px">&gt;</div>
+  <div class="box file" style="left:900px"><div class="tab">diary.txt.enc</div><p class="mono" id="encText"></p></div>
+</div>
+
+<div class="scene" id="transscript">
+  <div class="abs pix" style="left:80px;top:50px;font-size:120px">Transscript</div>
+  <div class="box player"></div><div class="abs play"></div><div class="abs bar"><i></i></div>
+  <div class="box page">
+    <p><span>00:00</span>So where do we start?</p>
+    <p><span>00:04</span>At the beginning, I guess.</p>
+    <p><span>00:09</span>It began with a single pixel, and then it got out of hand.</p>
+  </div>
+  <div class="abs wave" id="wave"></div>
+</div>
+
+<div class="scene" id="telegram-bridge">
+  <div class="abs pix" style="left:520px;top:60px;font-size:88px;width:720px">Claude Code,<br>from your phone</div>
+  <div class="box phone">
+    <span class="msg me">/plan add a dark mode</span>
+    <span class="msg">Thinking&hellip;</span>
+    <span class="msg">Plan ready. I want to edit styles.css:</span>
+    <span class="msg diff mono"><div class="minus">- color: #fff;</div><div class="plus">+ color: var(--bg);</div></span>
+    <div class="btns"><span style="background:var(--green)">Approve</span><span style="background:var(--bone)">Deny</span></div>
+  </div>
+  <div class="box term"><div class="bar"><i></i><i></i><i></i></div><div class="mono">$ claude
+<em>&gt; add a dark mode</em>
+&#9679; Read styles.css
+&#9679; Plan: 3 steps
+&#9679; Edit styles.css
+<u>? waiting for the phone</u></div></div>
+  <div class="deck" id="deck"></div>
+</div>
+
+<div class="scene" id="wallet-integration">
+  <div class="abs pix" style="left:724px;top:56px;font-size:104px;width:520px">Solana Wallet Kit</div>
+  <div class="box card">
+    <div class="addr"><span><i class="dot"></i>Connected</span><span class="chip mono" style="font-size:22px">7xKX&hellip;9fQ2</span></div>
+    <div class="bal">12.50 <small>SOL</small></div>
+    <div style="font-size:26px;margin-top:6px">Balance</div>
+    <div class="btn">Swap tokens</div>
+  </div>
+  <div class="abs swap" style="top:290px"><div><div style="font-size:22px">You pay</div><b>1.00</b></div><div class="coin" style="background:var(--lav)">S</div></div>
+  <div class="abs turn">&#8645;</div>
+  <div class="abs swap" style="top:430px"><div><div style="font-size:22px">You get</div><b>148.20</b></div><div class="coin" style="background:var(--gold)">$</div></div>
+  <div class="abs" style="left:730px;top:626px"><span class="chip">Connect</span> <span class="chip">Balance</span> <span class="chip">Swap</span></div>
+</div>
+
+<script>
+  const id = new URLSearchParams(location.search).get('id') || 'cipherlock';
+  document.getElementById(id).classList.add('on');
+  // the same "random" letters every time, so the picture never changes between renders
+  let seed = 7;
+  const rnd = () => { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return seed / 0x7fffffff; };
+  const hex = (n) => Array.from({ length: n }, () => '0123456789abcdef'[Math.floor(rnd() * 16)]).join('');
+  document.getElementById('lockText').textContent = hex(140).toUpperCase();
+  document.getElementById('encText').textContent = Array.from({ length: 20 }, () => hex(4)).join(' ');
+
+  // the sound wave: tall and short bars on the left, and towards the right the bars give way to letters
+  const wave = document.getElementById('wave');
+  const bar = (h) => { const i = document.createElement('i'); i.style.height = h + 'px'; wave.append(i); };
+  for (let k = 0; k < 27; k++) bar(26 + Math.abs(Math.sin(k * 0.55) * Math.cos(k * 0.17)) * 140 * (1 - k / 60));
+  'it got out of hand'.split(' ').forEach((word, n) => {
+    for (const ch of word) { const b = document.createElement('b'); b.textContent = ch; wave.append(b); }
+    bar(54 - n * 9); bar(30 - n * 5);
+  });
+
+  // the bridge between phone and terminal: an arch of blocks, with message blocks crossing it
+  const deck = document.getElementById('deck');
+  const block = (x, y, w, h, cls) => { const i = document.createElement('i'); if (cls) i.className = cls; i.style.cssText = `left:${x}px;top:${y}px;width:${w}px;height:${h}px`; deck.append(i); };
+  block(470, 640, 330, 70);                                           // the bridge: a solid span ...
+  for (let k = 0; k < 3; k++) block(492 + k * 100, 664, 86, 46, 'arch');  // ... with three arches cut out of it
+  [[500, 604], [600, 604], [720, 604]].forEach(([x, y]) => { const p = document.createElement('i'); p.className = 'pkt'; p.style.cssText = `left:${x}px;top:${y}px`; deck.append(p); });
+  document.fonts.ready.then(() => document.body.classList.add('ready'));
+</script>
+</body>
+</html>

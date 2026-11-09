@@ -23,11 +23,11 @@
   <!-- the two fonts the first screen needs, then every script in one go instead of one after the other -->
   <link rel="preload" href="assets/fonts/jersey-25-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/figtree-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/site.css?v=15">
+  <link rel="stylesheet" href="css/site.css?v=17">
   <script type="importmap">
   { "imports": { "three": "./assets/lib/three.module.min.js" } }
   </script>
-  <link rel="modulepreload" href="js/site.js?v=15">
+  <link rel="modulepreload" href="js/site.js?v=17">
   <link rel="modulepreload" href="data/projects.js">
   <link rel="modulepreload" href="data/activity.js">
   <link rel="modulepreload" href="data/media.js">
@@ -43,11 +43,14 @@
   <header class="top">
     <a class="brand" href="#top"><img src="assets/thumb/avatar.webp" alt="" width="36" height="36">TayMcQuaya</a>
     <nav aria-label="Sections">
-      <a href="#now">Now</a>
-      <a href="#work">Work</a>
-      <a href="#h-wall">All projects</a>
-      <a href="#art">Pixel art</a>
-      <a href="#about">About</a>
+      <button type="button" class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="nav-links">Menu</button>
+      <span class="nav-links" id="nav-links">
+        <a href="#now">Now</a>
+        <a href="#work">Work</a>
+        <a href="#h-wall">All projects</a>
+        <a href="#art">Pixel art</a>
+        <a href="#about">About</a>
+      </span>
       <a class="nav-cta" href="#contact">Get in touch</a>
     </nav>
   </header>
@@ -175,6 +178,6 @@
     <p class="viewer-nav"><button type="button" class="btn btn-small" data-step="-1">Previous</button><span id="viewer-count"></span><button type="button" class="btn btn-small" data-step="1">Next</button></p>
   </dialog>
 
-  <script type="module" src="js/site.js?v=15"></script>
+  <script type="module" src="js/site.js?v=17"></script>
 </body>
 </html>
