@@ -30,23 +30,41 @@ export const NOW = {
     name: 'Panel Haus',
     role: 'Co-founder',
     text: 'My main work. A comic studio that runs in the browser: write the beat, pick a layout, place your characters, letter it, export it as a page, a book or a video clip.',
+    image: 'assets/tex/panel-haus.jpg',
     link: { label: 'Open panel.haus', href: 'https://panel.haus/' },
     check: 'You said earlier to keep Panel Haus off the site. Delete this block if that still holds.',
   },
   dev: [
-    { id: 'shuden', name: 'Shūden', type: 'game', text: 'First-person horror maze in a Japanese train station. Story mode, a level editor, 30 achievements and three endings.' },
-    { id: 'girls-rumble', name: 'Girls Rumble', type: 'game', text: '3D fighting game in the browser. Play against the CPU or a friend on the same keyboard.' },
-    { id: 'blackpine', name: 'Blackpine Trail', type: 'game', text: 'Grid-crawler horror in pixel art. A forest at night, then a school.' },
+    { id: 'shuden', name: 'Shūden', type: 'game', poster: 'assets/tex/shuden.jpg', text: 'First-person horror maze in a Japanese train station. Story mode, a level editor, 30 achievements and three endings.' },
+    { id: 'girls-rumble', name: 'Girls Rumble', type: 'game', poster: 'assets/tex/girls-rumble.jpg', text: '3D fighting game in the browser. Play against the CPU or a friend on the same keyboard.' },
+    { id: 'blackpine', name: 'Blackpine Trail', type: 'game', poster: 'assets/tex/blackpine.jpg', text: 'Grid-crawler horror in pixel art. A forest at night, then a school.' },
   ],
 };
 
 export const PROJECTS = [
   // ---------- Selected work ----------
+  { id: 'shaping-luck', poster: 'assets/tex/shaping-luck.jpg', name: 'Shaping Luck', type: 'app', year: 2026, tier: 'front', state: 'client', repo: 'Shaping-Luck',
+    text: 'Quick 1-on-1 video networking. You join a lobby, get matched with another member for a 4-minute video chat, then rate it and keep in touch. I built the app, plus the landing page with waitlist and Stripe checkout.',
+    tags: ['Video', 'Stripe', 'Client work'],
+    links: [{ label: 'Open the app', href: 'https://app.shapingluck.com/' }],
+    check: 'Client work. No names on the page yet. Add them once the people behind it agree.' },
+
   { id: 'hopline', name: 'HopLine', type: 'game', year: 2026, tier: 'front', state: 'live', repo: 'HopLine',
     text: 'Hop a voxel critter across roads, rivers and train tracks. Four biomes, unlockable characters, a day and night cycle, and three chiptune tracks generated in code. The whole game is one HTML file, built for the Orynth game cup.',
     tags: ['Three.js', 'One file', 'Game jam'],
     video: 'assets/vid/hopline.mp4', poster: 'assets/tex/hopline.jpg',
     links: [{ label: 'Play', href: 'https://hopline.xyz/', play: true }, { label: 'Code', href: gh('HopLine') }] },
+
+  { id: 'claude-den', poster: 'assets/tex/claude-den.jpg', name: 'Claude Den', type: 'app', year: 2026, tier: 'front', state: 'live', repo: 'Claude-Den',
+    text: 'A desktop app that turns Claude Code into a little worker in a 3D office. When Claude reads a file or runs a command, the avatar walks to the right desk and gets on with it.',
+    tags: ['Electron', 'Three.js', 'Desktop'],
+    links: [{ label: 'Code', href: gh('Claude-Den') }] },
+
+  { id: 'coach-al', poster: 'assets/tex/coach-al.jpg', name: "Coach Al's Wellness Studio", type: 'app', year: 2026, tier: 'front', state: 'client', repo: 'AL_Fitness_Hub',
+    text: 'A wellness app for iOS, Android and the web, built for a coaching client. It starts with an assessment, then tracks daily check-ins and streaks. One React Native codebase, three platforms.',
+    tags: ['React Native', 'Expo', 'Client work'],
+    links: [{ label: 'Visit burntout.app', href: 'https://burntout.app/' }],
+    check: 'Client work. Confirm the client is fine with being shown.' },
 
   { id: 'floppytromp', name: 'Floppy Tromp', type: 'game', year: 2024, tier: 'front', state: 'live', repo: 'FloppyTromp',
     text: 'Election season satire built in Unity. Hand drew every character, shipped in a week with Web3 wallet gating baked in. Gates are open now, free for everyone to play.',
@@ -54,34 +72,17 @@ export const PROJECTS = [
     video: 'assets/vid/floppytromp.mp4', poster: 'assets/tex/floppytromp.jpg',
     links: [{ label: 'Play', href: 'https://taymcquaya.github.io/FloppyTromp/', play: true }, { label: 'Watch on YouTube', href: 'https://www.youtube.com/watch?v=2KdoXTuNmQY' }] },
 
-  { id: 'claude-den', name: 'Claude Den', type: 'app', year: 2026, tier: 'front', state: 'live', repo: 'Claude-Den',
-    text: 'A desktop app that turns Claude Code into a little worker in a 3D office. When Claude reads a file or runs a command, the avatar walks to the right desk and gets on with it.',
-    tags: ['Electron', 'Three.js', 'Desktop'],
-    links: [{ label: 'Code', href: gh('Claude-Den') }] },
-
   { id: 'whatsnote', name: 'WhatsNote', type: 'app', year: 2026, tier: 'front', state: 'live', repo: 'WhatsNote',
     text: 'Got tired of abusing WhatsApp groups for to do lists, so I built my own. Each chat is a project, each message is a task. Portable .exe, no install, no account, no internet needed.',
     tags: ['Electron', 'Windows', 'Productivity'],
     video: 'assets/vid/whatsnote.mp4', poster: 'assets/tex/whatsnote.jpg',
     links: [{ label: 'Download', href: 'https://github.com/TayMcQuaya/WhatsNote/releases' }, { label: 'Code', href: gh('WhatsNote') }] },
 
-  { id: 'coach-al', name: "Coach Al's Wellness Studio", type: 'app', year: 2026, tier: 'front', state: 'client', repo: 'AL_Fitness_Hub',
-    text: 'A wellness app for iOS, Android and the web, built for a coaching client. It starts with an assessment, then tracks daily check-ins and streaks. One React Native codebase, three platforms.',
-    tags: ['React Native', 'Expo', 'Client work'],
-    links: [{ label: 'Visit burntout.app', href: 'https://burntout.app/' }],
-    check: 'Client work. Confirm the client is fine with being shown.' },
-
   { id: 'javascript-journey', name: 'JavaScript Journey', type: 'learn', year: 2025, tier: 'front', state: 'live', repo: 'Javascript-Journey',
     text: 'Built for beginners who want to learn JavaScript without paying for another course. 10 modules, 47 lessons, and the code runs right in the page. Completely free.',
     tags: ['JavaScript', 'Course', 'Free'],
     video: 'assets/vid/javascript.mp4', poster: 'assets/tex/javascript.jpg',
     links: [{ label: 'Open the course', href: 'https://taymcquaya.github.io/Javascript-Journey/' }] },
-
-  { id: 'shaping-luck', name: 'Shaping Luck', type: 'app', year: 2026, tier: 'front', state: 'client', repo: 'Shaping-Luck',
-    text: 'Speed networking over short video sessions, plus the landing page with waitlist and Stripe checkout that sells it.',
-    tags: ['Video', 'Stripe', 'Client work'],
-    links: [{ label: 'Open the app', href: 'https://app.shapingluck.com/' }],
-    check: 'Client work. No names on the page yet. Add them once the people behind it agree.' },
 
   { id: 'zombieshooter', name: 'Zombieshooter 3D', type: 'game', year: 2025, tier: 'front', state: 'live', repo: 'Zombieshooter3D',
     text: 'A browser based 3D zombie shooter. Point, click, survive. Built for speed, runs right in your tab, no install needed.',
@@ -114,9 +115,9 @@ export const PROJECTS = [
     text: 'A quiz game for the browser.', links: [{ label: 'Code', href: gh('Country-Alphabet-Challenge') }] },
 
   // ---------- Learning ----------
-  { id: 'ippo', hide: true, name: 'Ippo Japanese', type: 'learn', year: 2026,
-    text: 'A phone web app for learning Japanese in short sessions.', links: [] },
-  { id: 'csharp-pocket', hide: true, name: 'C# Pocket Course', type: 'learn', year: 2026,
+  { id: 'ippo', poster: 'assets/tex/ippo.jpg', name: 'Ippo Japanese', type: 'learn', year: 2026,
+    text: 'A phone web app for learning Japanese in short sessions: 30 lessons and review cards that bring back the words you forget.', links: [] },
+  { id: 'csharp-pocket', poster: 'assets/tex/csharp-pocket.jpg', name: 'C# Pocket Course', type: 'learn', year: 2026,
     text: 'A 46-lesson beginner C# course for the phone, with review cards.', links: [] },
 
   // ---------- Apps ----------
@@ -130,15 +131,15 @@ export const PROJECTS = [
     text: 'Control Claude Code from your phone through Telegram.', links: [{ label: 'Code', href: gh('Claude-Telegram-Bridge') }] },
 
   // ---------- Tools ----------
-  { id: 'pic2gif', name: 'Pic2GIF', type: 'tool', year: 2025, repo: 'pic2gif-converter',
+  { id: 'pic2gif', poster: 'assets/tex/pic2gif.jpg', name: 'Pic2GIF', type: 'tool', year: 2025, repo: 'pic2gif-converter',
     text: 'Turns a set of images into an animated GIF, right in the browser.',
     links: [{ label: 'Open', href: 'https://taymcquaya.github.io/pic2gif-converter/' }] },
   { id: 'image-scaler', hide: true, name: 'Image Scaler', type: 'tool', year: 2025, repo: 'Image-Upscaler',
     text: 'Upscales images in the browser.', links: [{ label: 'Code', href: gh('Image-Upscaler') }] },
-  { id: 'hardware-test', name: 'Computer Hardware Test', type: 'tool', year: 2025, repo: 'Computer-Hardware-Test',
+  { id: 'hardware-test', poster: 'assets/tex/hardware-test.jpg', name: 'Computer Hardware Test', type: 'tool', year: 2025, repo: 'Computer-Hardware-Test',
     text: "A web page that tests a computer's basic hardware.",
     links: [{ label: 'Open', href: 'https://taymcquaya.github.io/Computer-Hardware-Test/' }] },
-  { id: 'animation-library', name: 'Animation Library', type: 'tool', year: 2024, repo: 'AnimationLibrary',
+  { id: 'animation-library', poster: 'assets/tex/animation-library.jpg', name: 'Animation Library', type: 'tool', year: 2024, repo: 'AnimationLibrary',
     text: 'A CSS animation library with a demo page.',
     links: [{ label: 'Open', href: 'https://taymcquaya.github.io/AnimationLibrary/' }] },
   { id: 'cipherlock', name: 'CipherLock', type: 'tool', year: 2025, repo: 'CipherLock',
@@ -159,11 +160,11 @@ export const PROJECTS = [
     text: 'A login template in Next.js and Firebase.', links: [{ label: 'Code', href: gh('Auth-LogIn') }] },
 
   // ---------- Sites ----------
-  { id: 'tradebychat', name: 'Trade by Chat', type: 'site', year: 2025, repo: 'TGBOT-Website',
+  { id: 'tradebychat', poster: 'assets/tex/tradebychat.jpg', name: 'Trade by Chat', type: 'site', year: 2025, repo: 'TGBOT-Website',
     text: 'Waitlist site with its own backend for a Telegram trading bot.', links: [{ label: 'Code', href: gh('TGBOT-Website') }] },
-  { id: 'firecats', name: 'FireCats AI', type: 'site', year: 2024, repo: 'FireCats-Website',
+  { id: 'firecats', poster: 'assets/tex/firecats.jpg', name: 'FireCats AI', type: 'site', year: 2024, repo: 'FireCats-Website',
     text: 'A Web3 site with an AI assistant and an NFT gallery.', links: [{ label: 'Code', href: gh('FireCats-Website') }] },
-  { id: 'bali-bliss', name: 'Bali Bliss Travels', type: 'site', year: 2025, repo: 'BaliBlissTravels',
+  { id: 'bali-bliss', poster: 'assets/tex/bali-bliss.jpg', name: 'Bali Bliss Travels', type: 'site', year: 2025, repo: 'BaliBlissTravels',
     text: 'A travel agency site with booking.', links: [{ label: 'Code', href: gh('BaliBlissTravels') }] },
   { id: 'dr-omon', hide: true, name: 'Dr. Omon', type: 'site', year: 2024, repo: 'Dr.Omon-Website',
     text: 'A multi-page site with research, team and donation pages.', links: [{ label: 'Code', href: gh('Dr.Omon-Website') }] },

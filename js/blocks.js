@@ -13,8 +13,8 @@ const iso = (d) => d.toISOString().slice(0, 10);
 
 const GREEN = ['#1b6e30', '#239a3b', '#2fc13a', '#5edb48', '#a4ee5c'].map((c) => new THREE.Color(c));
 const GROUND = new THREE.Color('#2f9fd0');
-const RUNNER = new THREE.Color('#f7c948');
-const RUNNER_HEAD = new THREE.Color('#fff6c2');
+const RUNNER = new THREE.Color('#ff3b5c');          // red on green, so the player is easy to find
+const RUNNER_HEAD = new THREE.Color('#ffffff');
 const WHITE = new THREE.Color('#ffffff');
 const heightOf = (n) => (n ? 0.4 + Math.sqrt(n) * 0.72 : 0.14);
 // five shades, split where a fifth of the active days fall
@@ -208,11 +208,16 @@ export function createBlocks(host, cfg) {
     while (run.cells.length > 9) run.cells.pop();
     trail.clear(); run.cells.forEach((c) => trail.add(c));
     if (days[i].n && !eaten[i]) { eaten[i] = 1; run.score += days[i].n; run.days++; }
-    cfg.onGame && cfg.onGame({ state: 'play', score: run.score, total, date: days[i].date });
+    tell(days[i].date);
+  }
+  function tell(date) {
+    cfg.onGame && cfg.onGame({ state: run.count > 0 ? 'count' : 'play', n: Math.ceil(run.count), score: run.score, total, date });
   }
   function play() {
     eaten.fill(0); stepAcc = 0;
-    run = { cells: [], col: cols - 2, row: 3, camCol: cols - 2, score: 0, days: 0, over: false };
+    // three seconds to find yourself and try the lanes before the run starts
+    run = { cells: [], col: cols - 2, row: 3, camCol: cols - 2, score: 0, days: 0, over: false, count: 3 };
+    if (idx(cols - 1, 3) < N) run.cells.push(idx(cols - 1, 3));
     enter(run.col, run.row);
   }
   function stop() { run = null; trail.clear(); eaten.fill(0); cfg.onGame && cfg.onGame({ state: 'idle' }); }
@@ -220,6 +225,24 @@ export function createBlocks(host, cfg) {
   function step() {
     if (run.col - 1 < 0) { run.over = true; cfg.onGame && cfg.onGame({ state: 'over', score: run.score, total, days: run.days }); return; }
     enter(run.col - 1, run.row);
+  }
+
+  // an arrow that hovers over the runner
+  const marker = new THREE.Mesh(new THREE.ConeGeometry(0.75, 1.5, 4), new THREE.MeshLambertMaterial({ color: 0xff3b5c }));
+  marker.visible = false;
+  scene.add(marker);
+  const flip = new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.PI, 0, 0)), spin = new THREE.Quaternion(), up = new THREE.Vector3();
+  function placeMarker() {
+    marker.visible = !!run && runMix > 0.6 && !run.over;
+    if (!marker.visible) return;
+    const hh0 = D * TAN, sRun = ((narrow ? 0.7 : 0.27) * 2 * hh0 * cam.aspect) / 7;
+    const bob = 2.9 + Math.sin(time * 5) * 0.35;
+    marker.position.set(3 - run.row, 0, run.col - run.camCol).applyQuaternion(qRun).multiplyScalar(sRun);
+    marker.position.y -= hh0 * 0.42; marker.position.z += 6;
+    marker.position.add(up.set(0, bob * sRun, 0).applyQuaternion(qRun));
+    spin.setFromEuler(new THREE.Euler(0, time * 2.2, 0));
+    marker.quaternion.copy(qRun).multiply(flip).multiply(spin);
+    marker.scale.setScalar(sRun);
   }
 
   // ---------- frame ----------
@@ -293,7 +316,7 @@ export function createBlocks(host, cfg) {
       if (src === sky) {
         if (eaten[i]) { sy = 0.14; C.copy(GROUND); }
         if (run && d.col > run.col) sy = Math.min(sy, 0.3);
-        if (trail.has(i)) { sy = 1.3; C.copy(i === run.cells[0] ? RUNNER_HEAD : RUNNER); }
+        if (trail.has(i)) { sy = 1.5; C.copy(i === run.cells[0] ? RUNNER_HEAD : RUNNER); }
         else if (i === hover) C.copy(WHITE);
       }
       tmp.set(src.pos[i * 3], src.pos[i * 3 + 1], src.pos[i * 3 + 2]).applyQuaternion(fq);
@@ -363,14 +386,21 @@ export function createBlocks(host, cfg) {
     pointer.x += (pointer.tx - pointer.x) * Math.min(1, dt * 4); pointer.y += (pointer.ty - pointer.y) * Math.min(1, dt * 4);
     runMix = clamp(runMix + (run ? dt : -dt) / 0.7, 0, 1);
     if (run && !run.over) {
-      stepAcc += dt;
-      const every = 0.13 - 0.05 * (1 - run.col / cols);
-      while (stepAcc > every && !run.over) { stepAcc -= every; step(); }
+      if (run.count > 0) {
+        const was = Math.ceil(run.count);
+        run.count -= dt;
+        if (Math.ceil(Math.max(run.count, 0)) !== was) tell(days[run.cells[0]].date);
+      } else {
+        stepAcc += dt;
+        const every = 0.13 - 0.05 * (1 - run.col / cols);
+        while (stepAcc > every && !run.over) { stepAcc -= every; step(); }
+      }
     }
     if (run) run.camCol += (run.col - run.camCol) * Math.min(1, dt * 7);
     measureStages();
     if (cfg.background) { bg.set(cfg.background()); scene.fog.color.copy(bg); }
     frameCubes();
+    placeMarker();
     renderer.render(scene, cam);
     cfg.onFrame && cfg.onFrame({ skyOn: FORMS[active].f === sky && activeW > 0.9 && !run, stacksOn: FORMS[active].f === stacks && activeW > 0.85, projectDay, projectStack });
     requestAnimationFrame(frame);

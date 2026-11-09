@@ -105,6 +105,7 @@ main, .foot { position: relative; z-index: 1; }
 .sky-score { font-family: var(--pixel); font-weight: 500; font-size: 20px; background: var(--paper); padding: 6px 12px; border: 3px solid var(--ink); box-shadow: 4px 4px 0 var(--shadow); }
 .sky-score b { font-family: var(--body); font-weight: 600; }
 .sky-score span { font-size: 15px; margin-left: 8px; }
+.sky-count { font-weight: 600; font-size: clamp(90px, 16vw, 180px); line-height: 1; color: var(--paper); -webkit-text-stroke: 6px var(--ink); paint-order: stroke fill; margin: 4vh 0 auto; }
 .sky-keys { font-size: 14px; background: var(--paper); border: 2px solid var(--ink); padding: 4px 10px; }
 .sky-over { pointer-events: auto; text-align: center; background: var(--paper); border: 3px solid var(--ink); box-shadow: 6px 6px 0 var(--shadow); padding: 22px 26px; max-width: 420px; }
 .sky-over p:first-child { font-weight: 600; font-size: 19px; line-height: 1.35; margin-bottom: 16px; }
@@ -122,18 +123,22 @@ main, .foot { position: relative; z-index: 1; }
 
 /* right now */
 .now { display: grid; grid-template-columns: 1.25fr 1fr; gap: 28px; margin-top: 34px; align-items: start; }
-.now-lead { display: grid; grid-template-columns: 132px 1fr; gap: 24px; padding: 26px; }
-.now-mark { width: 132px; height: 132px; border: 3px solid var(--ink); }
-.now-mark img, .mini img, .media-sprite img, .tile-pic.is-sprite img { width: 100%; height: 100%; image-rendering: pixelated; }
+.now-lead { overflow: hidden; }
+.now-shot { aspect-ratio: 16 / 9; border-bottom: 3px solid var(--ink); background: #000; }
+.now-shot img { width: 100%; height: 100%; object-fit: cover; object-position: left top; }
+.now-text { padding: 22px 26px 26px; }
+.media-sprite img, .tile-pic.is-sprite img { width: 100%; height: 100%; image-rendering: pixelated; }
 .now-lead h3 { font-size: 38px; }
 .now-lead .meta { margin: 6px 0 10px; }
 .now-dev { padding: 22px 24px; }
 .now-dev h3 { font-size: 24px; }
 .now-dev ul { margin-top: 14px; display: grid; gap: 14px; }
-.now-dev li { display: grid; grid-template-columns: 56px 1fr; gap: 14px; align-items: start; }
-.mini { width: 56px; height: 56px; border: 2px solid var(--ink); }
-.now-dev b { font-family: var(--pixel); font-weight: 700; font-size: 21px; }
-.now-dev p { font-size: 15.5px; line-height: 1.45; margin-top: 2px; }
+.dev { display: grid; grid-template-columns: 128px 1fr; gap: 14px; align-items: start; width: 100%; text-align: left; }
+.mini { display: block; aspect-ratio: 16 / 10; border: 2px solid var(--ink); overflow: hidden; background: #000; }
+.mini img { width: 100%; height: 100%; object-fit: cover; }
+.dev:hover .mini, .dev:focus-visible .mini { outline: 3px solid var(--ink); }
+.now-dev b { display: block; font-family: var(--pixel); font-weight: 700; font-size: 21px; }
+.dev-text { display: block; font-size: 15.5px; line-height: 1.45; margin-top: 2px; }
 
 /* selected work */
 .rows { margin-top: 44px; display: grid; gap: clamp(36px, 6vh, 60px); }
@@ -146,7 +151,7 @@ main, .foot { position: relative; z-index: 1; }
 .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
 .tags li { font-size: 14px; padding: 2px 9px; border: 2px solid var(--ink); background: var(--bone); }
 .media { position: relative; aspect-ratio: 16 / 10; background: #000; border-right: 3px solid var(--ink); overflow: hidden; }
-.media video { width: 100%; height: 100%; object-fit: cover; }
+.media video, .media-shot img { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
 .media-sprite { display: grid; place-items: center; }
 .media-sprite img { width: auto; height: 78%; aspect-ratio: 1; }
 
@@ -236,9 +241,9 @@ dialog::backdrop { background: rgba(33, 11, 27, .72); }
   .stack-label .long { display: none; }
   .stack-label .short { display: block; }
   .stack-label span { font-size: 11px; margin-top: 0; }
-  .now-lead { grid-template-columns: 72px 1fr; gap: 16px; padding: 18px; }
-  .now-mark { width: 72px; height: 72px; }
+  .now-text { padding: 16px 18px 20px; }
   .now-lead h3 { font-size: 30px; }
+  .dev { grid-template-columns: 96px 1fr; }
   .wall { grid-template-columns: repeat(2, 1fr); gap: 24px 16px; }
   .art { columns: 2; column-gap: 12px; }
   .art li { margin-bottom: 12px; }

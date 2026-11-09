@@ -21,7 +21,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
   <link rel="manifest" href="site.webmanifest">
   <link rel="preload" href="assets/fonts/pixelify-sans-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/site.css?v=6">
+  <link rel="stylesheet" href="css/site.css?v=7">
   <script type="importmap">
   { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }
   </script>
@@ -70,7 +70,7 @@
 
     <section class="band" id="work" data-bg="#5fcff2" aria-labelledby="h-work">
       <h2 id="h-work">Selected work</h2>
-      <p class="band-lead">Eight things that show the range: games, desktop apps, a free course and client builds.</p>
+      <p class="band-lead">Eight things that show the range: client builds, games, desktop apps and a free course.</p>
       <div class="rows" id="rows"></div>
     </section>
 
@@ -135,7 +135,8 @@
         <p id="sky-over-text"></p>
         <p><button type="button" class="btn btn-main" id="sky-again">Play again</button><button type="button" class="btn" id="sky-quit">Back to the page</button></p>
       </div>
-      <p class="sky-keys">Left and right arrows change lane, or tap either side. Esc stops.</p>
+      <p class="sky-count" id="sky-count" hidden>3</p>
+      <p class="sky-keys">You are the red runner under the arrow. Left and right arrows change lane, or tap either side. Esc stops.</p>
     </div>
   </div>
 
@@ -165,6 +166,6 @@
     <p class="viewer-nav"><button type="button" class="btn btn-small" data-step="-1">Previous</button><span id="viewer-count"></span><button type="button" class="btn btn-small" data-step="1">Next</button></p>
   </dialog>
 
-  <script type="module" src="js/site.js?v=6"></script>
+  <script type="module" src="js/site.js?v=7"></script>
 </body>
 </html>

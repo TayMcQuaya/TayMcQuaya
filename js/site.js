@@ -32,6 +32,7 @@ function media(p, { big = false } = {}) {
     v.dataset.src = p.video;
     return el('div', { class: 'media media-clip' }, v);
   }
+  if (p.poster) return el('div', { class: 'media media-shot' }, el('img', { src: p.poster, alt: `${p.name} screenshot`, loading: 'lazy' }));
   const s = sprite(p.id, p.type);
   return el('div', { class: 'media media-sprite' + (big ? ' is-big' : ''), style: `background:${s.bg}` },
     el('img', { src: s.url, alt: '', width: 16, height: 16 }));
@@ -59,10 +60,9 @@ function linkButtons(p, main = true) {
 // ---------- Right now ----------
 function renderNow() {
   const L = NOW.lead;
-  const s = sprite(L.id, 'site');
   const lead = el('article', { class: 'card now-lead' }, [
-    el('div', { class: 'now-mark', style: `background:${s.bg}` }, el('img', { src: s.url, alt: '', width: 16, height: 16 })),
-    el('div', {}, [
+    el('div', { class: 'now-shot' }, el('img', { src: L.image, alt: `${L.name} screenshot`, loading: 'lazy' })),
+    el('div', { class: 'now-text' }, [
       el('h3', { text: L.name }),
       el('p', { class: 'meta', text: L.role }),
       el('p', { text: L.text }),
@@ -72,11 +72,11 @@ function renderNow() {
   const dev = el('div', { class: 'card now-dev' }, [
     el('h3', { text: 'In development' }),
     el('ul', {}, NOW.dev.map((d) => {
-      const sp = sprite(d.id, d.type);
-      return el('li', {}, [
-        el('span', { class: 'mini', style: `background:${sp.bg}` }, el('img', { src: sp.url, alt: '', width: 16, height: 16 })),
-        el('div', {}, [el('b', { text: d.name }), el('p', { text: d.text })]),
-      ]);
+      const full = ALL.find((p) => p.id === d.id);
+      return el('li', {}, el('button', { type: 'button', class: 'dev', onclick: () => openSheet(full) }, [
+        el('span', { class: 'mini' }, el('img', { src: d.poster, alt: '', loading: 'lazy' })),
+        el('span', {}, [el('b', { text: d.name }), el('span', { class: 'dev-text', text: d.text })]),
+      ]));
     })),
   ]);
   $('#now-grid').append(lead, dev);
@@ -259,8 +259,7 @@ async function startWorld() {
     { key: 'game', name: 'Games', short: 'Games', color: '#d95763' },
     { key: 'app', name: 'Apps', short: 'Apps', color: '#2fa9d6' },
     { key: 'tool', name: 'Tools', short: 'Tools', color: '#f2b631' },
-    { key: 'site', name: 'Websites', short: 'Sites', color: '#9484dd' },
-    { key: 'learn', name: 'Learning', short: 'Learn', color: '#1fb8a6' },
+    { key: 'site', name: 'Websites and courses', short: 'Sites', color: '#9484dd' },
     { key: 'team', name: 'Team work', short: 'Team', color: '#ff8fa8' },
     { key: 'private', name: 'Private and client', short: 'Private', color: '#35c93c', wide: true },
   ];
@@ -270,7 +269,8 @@ async function startWorld() {
     const top = d.what.split(', ')[0];
     if (top === 'private work') return catIndex.private;
     if (top === 'team work') return catIndex.team;
-    return catIndex[typeOfRepo.get(top) || 'tool'];
+    const type = typeOfRepo.get(top) || 'tool';
+    return catIndex[type === 'learn' ? 'site' : type];
   });
 
   // name the busiest day of the projects that are on the page
@@ -293,7 +293,7 @@ async function startWorld() {
 
   const spriteData = await loadSprite();
   const fmt = new Intl.DateTimeFormat('en', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
-  const game = $('#sky-game'), over = $('#sky-over');
+  const game = $('#sky-game'), over = $('#sky-over'), count = $('#sky-count');
   let stackEls = [];
 
   const world = mod.createBlocks($('#world'), {
@@ -330,6 +330,8 @@ async function startWorld() {
     onGame(g) {
       if (g.state === 'idle') { game.hidden = true; document.body.classList.remove('is-playing'); return; }
       game.hidden = false; tip.hidden = true; document.body.classList.add('is-playing');
+      count.hidden = g.state !== 'count';
+      if (g.state === 'count') count.textContent = g.n;
       $('#sky-score').textContent = num(g.score);
       $('#sky-date').textContent = g.date ? 'at ' + fmt.format(new Date(g.date)) : '';
       over.hidden = g.state !== 'over';
