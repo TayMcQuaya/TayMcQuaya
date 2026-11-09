@@ -191,7 +191,9 @@ export function createBlocks(host, cfg) {
 
   // ---------- state ----------
   let W = 1, Hpx = 1, wpp = 1, narrow = false;
-  let intro = reduced ? 1 : 0;
+  // which formation the cubes are in (or on their way out of), and how far they are into it
+  let cur = 0, mix = 0, skip = false, first = true;
+  const IN = 3.4, OUT = 2.4;                // seconds to come together and to drift apart, however fast the page is scrolled
   let hover = -1;
   let scrollY = scrollY0();
   const pointer = { x: 0, y: 0, tx: 0, ty: 0 };
@@ -232,6 +234,7 @@ export function createBlocks(host, cfg) {
   }
   function play() {
     eaten.fill(0); stepAcc = 0;
+    cur = FORMS.findIndex((s) => s.f === sky); mix = 1;
     // three seconds to find yourself and try the lanes before the run starts
     run = { cells: [], col: cols - 2, row: 3, camCol: cols - 2, score: 0, days: 0, over: false, count: 3 };
     if (idx(cols - 1, 3) < N) run.cells.push(idx(cols - 1, 3));
@@ -269,7 +272,7 @@ export function createBlocks(host, cfg) {
   const live = FORMS.map(() => ({ w: 0, ax: 0, ay: 0, az: 0, s: 1 }));
   let active = 0, activeW = 0, time = 0;
 
-  function measureStages() {
+  function measureStages(dt) {
     active = 0; activeW = 0;
     FORMS.forEach((st, k) => {
       const r = st.el.getBoundingClientRect(), L = live[k];
@@ -288,7 +291,18 @@ export function createBlocks(host, cfg) {
       }
       if (L.w > activeW) { activeW = L.w; active = k; }
     });
-    if (FORMS[active].f === sky) activeW *= ease(intro);
+    // Scrolling only says where the cubes should be. They get there in their own time: a formation that is no
+    // longer wanted drifts apart first (quickly once it is off screen), then the next one comes together.
+    if (reduced || skip) { cur = active; mix = activeW; }
+    else if (active === cur) mix += clamp(activeW - mix, -dt / OUT, dt / (first ? 2.2 : IN));      // the very first build is brisk
+    else {
+      const r = FORMS[cur].el.getBoundingClientRect();
+      mix -= dt / (r.bottom < 0 || r.top > Hpx ? 0.6 : OUT);
+      if (mix <= 0) { mix = 0; cur = active; }
+      first = false;
+    }
+    if (mix >= 1) first = false;
+    active = cur; activeW = mix;
   }
 
   function frameCubes() {
@@ -359,7 +373,9 @@ export function createBlocks(host, cfg) {
         S.set(THREE.MathUtils.lerp(S.x, 0.84 * sRun * vis, g), THREE.MathUtils.lerp(S.y, sy * sRun * vis, g), THREE.MathUtils.lerp(S.z, 0.84 * sRun * vis, g));
       }
       if (e < 1) {
-        P.lerpVectors(Pc, P, e); S.set(THREE.MathUtils.lerp(cs, S.x, e), THREE.MathUtils.lerp(cs, S.y, e), THREE.MathUtils.lerp(cs, S.z, e));
+        // on the way between loose and placed a cube shrinks, so the slow crossing does not clutter the text it passes
+        const k = 1 - 0.6 * Math.sin(Math.PI * e);
+        P.lerpVectors(Pc, P, e); S.set(THREE.MathUtils.lerp(cs, S.x, e) * k, THREE.MathUtils.lerp(cs, S.y, e) * k, THREE.MathUtils.lerp(cs, S.z, e) * k);
         Q.copy(Qc).slerp(fq, e); C.copy(tmpC.copy(cc).lerp(C, e));
         m4.compose(P, Q, S);
       } else m4.compose(P, fq, S);
@@ -408,7 +424,6 @@ export function createBlocks(host, cfg) {
   function frame(now) {
     if (!visible) return;
     const dt = Math.min(0.05, (now - last) / 1000); last = now; time += dt;
-    if (intro < 1) intro = Math.min(1, intro + dt / 2.4);
     scrollY = scrollY0();
     pointer.x += (pointer.tx - pointer.x) * Math.min(1, dt * 4); pointer.y += (pointer.ty - pointer.y) * Math.min(1, dt * 4);
     runMix = clamp(runMix + (run ? dt : -dt) / 0.7, 0, 1);
@@ -424,7 +439,7 @@ export function createBlocks(host, cfg) {
       }
     }
     if (run) run.camCol += (run.col - run.camCol) * Math.min(1, dt * 7);
-    measureStages();
+    measureStages(dt);
     if (cfg.background) { bg.set(cfg.background()); scene.fog.color.copy(bg); }
     frameCubes();
     placeMarker();
@@ -438,6 +453,6 @@ export function createBlocks(host, cfg) {
     play, stop, turn, setArt,
     get playing() { return !!run; },
     stackInfo, projectDay, projectStack, cols, total,
-    _skipIntro() { intro = 1; },
+    _skipIntro() { skip = true; },
   };
 }

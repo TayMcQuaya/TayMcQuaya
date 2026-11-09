@@ -7,7 +7,6 @@
 // poster: the picture (assets/tex/...). video: a short clip that plays over it. After adding or changing a picture,
 //         python3 tools/build_media.py makes the small copies. On GitHub that happens by itself after a push.
 // hide:   true keeps the entry in this file but off the page. Delete the word to show it again.
-// check:  a note for you, never shown on the page (things to confirm before going live)
 // when:   'YYYY-MM-DD' puts the project's flag on the skyline at that day. Without it the flag sits on the
 //         busiest day of the public repo, which is wrong when the real work happened in a private one.
 
@@ -40,7 +39,6 @@ export const NOW = {
     text: 'My main work. A comic studio that runs in the browser: write the beat, pick a layout, place your characters, letter it, export it as a page, a book or a video clip.',
     image: 'assets/tex/panel-haus.jpg',
     link: { label: 'Open panel.haus', href: 'https://panel.haus/' },
-    check: 'You said earlier to keep Panel Haus off the site. Delete this block if that still holds.',
   },
   dev: [
     { id: 'shuden', name: 'Shūden', type: 'game', poster: 'assets/tex/shuden.jpg', text: 'First-person horror maze in a Japanese train station. Story mode, a level editor, 30 achievements and three endings.' },
@@ -54,8 +52,7 @@ export const PROJECTS = [
   { id: 'shaping-luck', poster: 'assets/tex/shaping-luck.jpg', name: 'Shaping Luck', type: 'app', year: 2026, tier: 'front', state: 'client', repo: 'Shaping-Luck', when: '2026-04-28',
     text: 'Quick 1-on-1 video networking. You join a lobby, get matched with another member for a 4-minute video chat, then rate it and keep in touch. I built the app, plus the landing page with waitlist and Stripe checkout.',
     tags: ['Video', 'Stripe', 'Client work'],
-    links: [{ label: 'Open the app', href: 'https://app.shapingluck.com/' }],
-    check: 'Client work. No names on the page yet. Add them once the people behind it agree.' },
+    links: [{ label: 'Open the app', href: 'https://app.shapingluck.com/' }] },
 
   { id: 'hopline', name: 'HopLine', type: 'game', year: 2026, tier: 'front', state: 'live', repo: 'HopLine',
     text: 'Hop a voxel critter across roads, rivers and train tracks. Four biomes, unlockable characters, a day and night cycle, and three chiptune tracks generated in code. The whole game is one HTML file, built for the Orynth game cup.',
@@ -71,8 +68,7 @@ export const PROJECTS = [
   { id: 'coach-al', poster: 'assets/tex/coach-al.jpg', name: "Coach Al's Wellness Studio", type: 'app', year: 2026, tier: 'front', state: 'client', repo: 'AL_Fitness_Hub',
     text: 'A wellness app for iOS, Android and the web, built for a coaching client. It starts with an assessment, then tracks daily check-ins and streaks. One React Native codebase, three platforms.',
     tags: ['React Native', 'Expo', 'Client work'],
-    links: [{ label: 'Visit burntout.app', href: 'https://burntout.app/' }],
-    check: 'Client work. Confirm the client is fine with being shown.' },
+    links: [{ label: 'Visit burntout.app', href: 'https://burntout.app/' }] },
 
   { id: 'descent', name: 'Descent', type: 'site', year: 2026, tier: 'front', state: 'live', repo: 'Hellnight-Website',
     text: "A 3D horror website built with Three.js. Pure showcase, just for fun. Step into the dark, find what's hidden, and try not to lose your nerve.",
@@ -179,12 +175,10 @@ export const PROJECTS = [
     text: 'A travel agency site with booking.', links: [{ label: 'Open', href: 'https://taymcquaya.github.io/BaliBlissTravels/' }, { label: 'Code', href: gh('BaliBlissTravels') }] },
   { id: 'dr-omon', hide: true, poster: 'assets/tex/mycobridge.jpg', name: 'MycoBridge Network', type: 'site', year: 2024, repo: 'Dr.Omon-Website',
     text: 'A multi-page site for a mushroom research network, with research, team and donation pages.',
-    links: [{ label: 'Open', href: 'https://taymcquaya.github.io/Dr.Omon-Website/' }, { label: 'Code', href: gh('Dr.Omon-Website') }],
-    check: 'Looks like it was made for someone. Hide it again if they would rather not be shown.' },
+    links: [{ label: 'Open', href: 'https://taymcquaya.github.io/Dr.Omon-Website/' }, { label: 'Code', href: gh('Dr.Omon-Website') }] },
   { id: 'exoworks', hide: true, poster: 'assets/tex/exoworks.jpg', name: 'ExoWorks', type: 'site', year: 2025, repo: 'Exo-Works',
     text: 'Landing page for an AI education platform aimed at schools, students and resellers.',
-    links: [{ label: 'Open', href: 'https://taymcquaya.github.io/Exo-Works/' }, { label: 'Code', href: gh('Exo-Works') }],
-    check: 'Looks like it was made for someone. Hide it again if they would rather not be shown.' },
+    links: [{ label: 'Open', href: 'https://taymcquaya.github.io/Exo-Works/' }, { label: 'Code', href: gh('Exo-Works') }] },
   { id: 'banksy', hide: true, poster: 'assets/tex/banksy.jpg', name: 'Banksy to the Moon', type: 'site', year: 2024, repo: 'banksy-website',
     text: 'One-page site for a token with one plan: send a Banksy into deep space.',
     links: [{ label: 'Open', href: 'https://taymcquaya.github.io/banksy-website/' }, { label: 'Code', href: gh('banksy-website') }] },

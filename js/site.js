@@ -210,6 +210,7 @@ function renderArt() {
     }
     grid.append(el('li', {}, b));
   });
+  grid.append(el('li', { class: 'art-more' }, [el('b', { text: '+ more' }), el('span', { text: 'These are the published ones. Plenty more are not online yet. Ask me if you want to see them.' })]));
   viewer.querySelectorAll('[data-step]').forEach((b) => b.addEventListener('click', () => showArt(artAt + Number(b.dataset.step))));
   viewer.addEventListener('keydown', (e) => { if (e.key === 'ArrowRight') showArt(artAt + 1); if (e.key === 'ArrowLeft') showArt(artAt - 1); });
 }
@@ -356,7 +357,7 @@ async function startWorld() {
     onHover(d, pos) {
       if (!d || !pos) { tip.hidden = true; return; }
       tip.hidden = false;
-      tip.textContent = d.n ? `${fmt.format(new Date(d.date))}: ${d.n} contribution${d.n > 1 ? 's' : ''}${d.what ? ', ' + d.what : ''}` : `${fmt.format(new Date(d.date))}: a day off`;
+      tip.textContent = d.n ? `${fmt.format(new Date(d.date))}: ${d.n} contribution${d.n > 1 ? 's' : ''}${d.what ? ', ' + d.what : ''}` : `${fmt.format(new Date(d.date))}: nothing on GitHub`;
       tip.style.left = Math.min(Math.max(pos.x, 130), innerWidth - 130) + 'px';
       tip.style.top = pos.y + 'px';
     },
@@ -418,7 +419,6 @@ async function startWorld() {
     stackLabels.append(e);
     return e;
   });
-  $('#stack-note').textContent = 'Each cube is one day I worked. The flat tiles are the days off.';
 
   $('#sky-start').addEventListener('click', () => { scrollTo({ top: 0, behavior: 'smooth' }); world.play(); });
   $('#sky-again').addEventListener('click', () => world.play());

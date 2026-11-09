@@ -21,13 +21,13 @@
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
   <link rel="manifest" href="site.webmanifest">
   <!-- the two fonts the first screen needs, then every script in one go instead of one after the other -->
-  <link rel="preload" href="assets/fonts/pixelify-sans-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/jersey-25-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/figtree-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/site.css?v=12">
+  <link rel="stylesheet" href="css/site.css?v=13">
   <script type="importmap">
   { "imports": { "three": "./assets/lib/three.module.min.js" } }
   </script>
-  <link rel="modulepreload" href="js/site.js?v=12">
+  <link rel="modulepreload" href="js/site.js?v=13">
   <link rel="modulepreload" href="data/projects.js">
   <link rel="modulepreload" href="data/activity.js">
   <link rel="modulepreload" href="data/media.js">
@@ -60,7 +60,7 @@
         <dl class="facts">
           <div><dt>repos since 2024</dt><dd id="fact-repos">94</dd></div>
           <div><dt>contributions on GitHub</dt><dd id="fact-commits">0</dd></div>
-          <div><dt>pixel artworks</dt><dd id="fact-art">26</dd></div>
+          <div><dt>published pixel artworks</dt><dd id="fact-art">26</dd></div>
         </dl>
         <p class="actions"><a class="btn btn-main" href="#work">See the work</a><a class="btn" href="#contact">Get in touch</a></p>
       </div>
@@ -88,7 +88,6 @@
       <h2 id="h-all">Where the days went</h2>
       <p class="band-lead" id="all-lead"></p>
       <div class="stage stage-stacks" id="stage-stacks"></div>
-      <p class="stage-note" id="stack-note"></p>
       <h2 class="h-second" id="h-wall">All projects</h2>
       <div class="chips" id="chips" role="group" aria-label="Filter projects"></div>
       <ul class="wall" id="wall"></ul>
@@ -98,7 +97,8 @@
       <div class="art-head">
         <div>
           <h2 id="h-art">Pixel art</h2>
-          <p class="band-lead">This is where I started. Every piece is drawn by hand, one pixel at a time. The girl next to this is one of them, rebuilt in cubes: one per pixel, and she moves like the drawing does. She needs more cubes than I have days, so the rest are borrowed.</p>
+          <p class="band-lead">This is where I started. Every piece is drawn by hand, one pixel at a time. What you see here is only the part I have published. There is a lot more that I haven't shown anywhere yet.</p>
+          <p class="art-note">The girl next to this is one of them, rebuilt in cubes: one per pixel, and she moves like the drawing does. She needs more cubes than I have days, so the rest are borrowed.</p>
         </div>
         <div class="stage stage-art" id="stage-art"></div>
       </div>
@@ -132,7 +132,6 @@
 
   <footer class="foot">
     <p>&copy; 2026 TayMcQuaya. <a href="privacy-policy.html">Privacy Policy</a> <a href="terms-of-service.html">Terms of Service</a></p>
-    <p><a href="arcade.html">Walk the arcade, an earlier 3D version of this site</a></p>
   </footer>
 
   <div id="overlay">
@@ -176,6 +175,6 @@
     <p class="viewer-nav"><button type="button" class="btn btn-small" data-step="-1">Previous</button><span id="viewer-count"></span><button type="button" class="btn btn-small" data-step="1">Next</button></p>
   </dialog>
 
-  <script type="module" src="js/site.js?v=12"></script>
+  <script type="module" src="js/site.js?v=13"></script>
 </body>
 </html>
