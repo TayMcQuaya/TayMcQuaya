@@ -17,7 +17,7 @@
   --ink-2: #4a2f45;
   --bone: #f7ead9;
   --paper: #fffaf1;
-  --sky: #5fcff2;
+  --sand: #efdcc0;
   --gold: #f7c948;
   --lav: #b9a9f0;
   --pink: #ff9fb5;
@@ -32,7 +32,7 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; scroll-padding-top: 72px; }
-body { margin: 0; background: var(--sky); color: var(--ink); font: 400 17px/1.55 var(--body); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+body { margin: 0; background: var(--bone); color: var(--ink); font: 400 17px/1.55 var(--body); -webkit-font-smoothing: antialiased; overflow-x: hidden; }
 img, video { display: block; max-width: 100%; }
 h1, h2, h3, p, ul, dl, dd { margin: 0; }
 ul { padding: 0; list-style: none; }
@@ -117,7 +117,7 @@ main, .foot { position: relative; z-index: 1; }
 .sky-over p:last-child { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
 .sky-quit { pointer-events: auto; }
 .sky-flat { display: grid; grid-auto-flow: column; grid-template-rows: repeat(7, 1fr); gap: 2px; height: 120px; position: absolute; left: var(--pad); right: var(--pad); bottom: 120px; }
-.sky-flat i { background: #2f9fd0; }
+.sky-flat i { background: #d9c3a0; }
 .sky-flat i[data-l="1"] { background: #1f7a34; } .sky-flat i[data-l="2"] { background: #27a03f; } .sky-flat i[data-l="3"] { background: #35c93c; } .sky-flat i[data-l="4"] { background: #e9ff7a; }
 .no-3d .stage:not(.stage-sky) { display: none; }
 

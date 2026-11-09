@@ -12,7 +12,7 @@ const ease = (x) => 1 - Math.pow(1 - clamp(x, 0, 1), 3);
 const iso = (d) => d.toISOString().slice(0, 10);
 
 const GREEN = ['#1b6e30', '#239a3b', '#2fc13a', '#5edb48', '#a4ee5c'].map((c) => new THREE.Color(c));
-const GROUND = new THREE.Color('#2f9fd0');
+const GROUND = new THREE.Color('#d9c3a0');          // days without anything: flat tiles in the colour of dry ground
 const RUNNER = new THREE.Color('#ff3b5c');          // red on green, so the player is easy to find
 const RUNNER_HEAD = new THREE.Color('#ffffff');
 const WHITE = new THREE.Color('#ffffff');
@@ -60,7 +60,7 @@ export function createBlocks(host, cfg) {
   host.appendChild(canvas);
 
   const scene = new THREE.Scene();
-  scene.fog = new THREE.Fog(0x5fcff2, D * 1.1, D * 3.4);
+  scene.fog = new THREE.Fog(0xf7ead9, D * 1.1, D * 3.4);
   const cam = new THREE.PerspectiveCamera(FOV, 1, 1, 600);
   cam.position.set(0, 0, D);
   scene.add(new THREE.HemisphereLight(0xffffff, 0x9a7f95, 1.25));
@@ -83,7 +83,7 @@ export function createBlocks(host, cfg) {
   const shuffled = [...Array(N).keys()];
   for (let i = N - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]; }
   // loose cubes keep the colour of their day: greens for days with work, white for days off
-  const idle = new THREE.Color(cfg.idle || '#fffaf1');
+  const idle = new THREE.Color(cfg.idle || '#dcc8a6');
   const loose = days.map((d) => (d.n ? greenOf(d.n) : idle));
   for (let i = N; i < M; i++) loose.push(idle);
 
@@ -195,7 +195,7 @@ export function createBlocks(host, cfg) {
   let hover = -1;
   let scrollY = scrollY0();
   const pointer = { x: 0, y: 0, tx: 0, ty: 0 };
-  const bg = new THREE.Color('#5fcff2');
+  const bg = new THREE.Color('#f7ead9');
   function scrollY0() { return window.scrollY || 0; }
 
   function resize() {
