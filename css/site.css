@@ -98,8 +98,9 @@ main, .foot { position: relative; z-index: 1; }
 .sky-label.flip::after { left: auto; right: 7px; }
 .sky-label:hover { background: var(--coral); }
 .sky-tip { position: absolute; left: 0; top: 0; transform: translate(-50%, -150%); white-space: nowrap; font-size: 14px; line-height: 1.2; font-weight: 600; color: var(--ink); background: var(--paper); border: 2px solid var(--ink); padding: 5px 8px; }
-.stack-label { position: absolute; left: 0; top: 0; text-align: center; white-space: nowrap; font-family: var(--pixel); font-weight: 700; font-size: 17px; line-height: 1.05; margin: -44px 0 0 -70px; width: 140px; }
+.stack-label { position: absolute; left: 0; top: 0; text-align: center; white-space: nowrap; font-family: var(--pixel); font-weight: 700; font-size: 17px; line-height: 1.05; margin: -6px 0 0 -70px; width: 140px; }
 .stack-label b { font-weight: 700; }
+.stack-label .long { display: block; white-space: pre-line; }
 .stack-label .short { display: none; }
 .stack-label span { display: block; font-family: var(--body); font-weight: 400; font-size: 13.5px; margin-top: 2px; }
 
@@ -250,8 +251,8 @@ dialog::backdrop { background: rgba(33, 11, 27, .72); }
   .sky-game { padding-top: 70px; }
   .sky-over { padding: 16px 18px; }
   .sky-over p:first-child { font-size: 17px; margin-bottom: 12px; }
-  .stack-label { font-size: 12.5px; width: 52px; margin: -36px 0 0 -26px; }
-  .stack-label:nth-child(even) { margin-top: -62px; }
+  .stack-label { font-size: 12.5px; width: 52px; margin: -6px 0 0 -26px; }
+  .stack-label:nth-child(even) { margin-top: -32px; }
   .stack-label .long { display: none; }
   .stack-label .short { display: block; }
   .stack-label span { font-size: 11px; margin-top: 0; }

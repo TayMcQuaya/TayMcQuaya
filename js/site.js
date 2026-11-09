@@ -305,9 +305,9 @@ async function startWorld() {
     { key: 'game', name: 'Games', short: 'Games', color: '#d95763' },
     { key: 'app', name: 'Apps', short: 'Apps', color: '#2fa9d6' },
     { key: 'tool', name: 'Tools', short: 'Tools', color: '#f2b631' },
-    { key: 'site', name: 'Websites and courses', short: 'Sites', color: '#9484dd' },
+    { key: 'site', name: 'Websites\nand courses', short: 'Sites', color: '#9484dd' },
     { key: 'team', name: 'Team work', short: 'Team', color: '#ff8fa8' },
-    { key: 'private', name: 'Private and client', short: 'Private', color: '#35c93c', wide: true },
+    { key: 'private', name: 'Private\nand client', short: 'Private', color: '#35c93c', wide: true },
   ];
   const typeOfRepo = new Map([...Object.entries(REPO_TYPES), ...PROJECTS.filter((p) => p.repo).map((p) => [p.repo, p.type])]);
   const catIndex = Object.fromEntries(cats.map((c, i) => [c.key, i]));
@@ -391,7 +391,7 @@ async function startWorld() {
       stackEls.forEach((e, k) => {
         if (!s.stacksOn) { e.style.display = 'none'; return; }
         const p = s.projectStack(k);
-        e.style.display = ''; e.style.transform = `translate(${Math.round(p.x)}px, ${Math.round(p.y)}px)`;
+        e.style.display = ''; e.style.transform = `translate(${Math.round(p.x)}px, ${Math.round(p.y)}px) translateY(-100%)`;      // the label sits on top of its stack, however many lines it has
       });
     },
     onGame(g) {
