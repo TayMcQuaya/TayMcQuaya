@@ -207,6 +207,36 @@ function pageColour() {
   return css;
 }
 
+// ---------- live numbers ----------
+// The day counts shipped in data/activity.js are a snapshot. On each visit the page also asks for today's
+// counts for the GitHub account, keeps them for a few hours, and falls back to the snapshot if that fails.
+async function freshActivity() {
+  const base = ACTIVITY, first = Object.keys(base).sort()[0], KEY = 'tay-contributions-v1';
+  const baseTotal = Object.values(base).reduce((a, d) => a + d[0], 0);
+  const merge = (list) => {
+    if (!Array.isArray(list)) return null;
+    const out = {};
+    let total = 0;
+    for (const c of list) if (c[1] > 0 && c[0] >= first) { out[c[0]] = [c[1], (base[c[0]] || [])[1] || '']; total += c[1]; }
+    return total >= baseTotal * 0.9 ? out : null;            // a much lower total means the source lost the private days
+  };
+  let cached = null;
+  try { cached = JSON.parse(localStorage.getItem(KEY)); } catch (err) { /* no storage, no cache */ }
+  if (cached && Date.now() - cached.t < 6 * 3600e3) return merge(cached.list) || base;
+  const years = [];
+  for (let y = Number(first.slice(0, 4)); y <= new Date().getFullYear(); y++) years.push('y=' + y);
+  const pull = fetch(`https://github-contributions-api.jogruber.de/v4/${SITE.github}?${years.join('&')}`)
+    .then((r) => (r.ok ? r.json() : Promise.reject(new Error('status ' + r.status))))
+    .then((j) => {
+      const list = j.contributions.filter((c) => c.count > 0).map((c) => [c.date, c.count]);
+      try { localStorage.setItem(KEY, JSON.stringify({ t: Date.now(), list })); } catch (err) { /* fine */ }
+      return list;
+    })
+    .catch(() => null);
+  const quick = await Promise.race([pull, new Promise((r) => setTimeout(() => r(null), 1500))]);
+  return (quick && merge(quick)) || (cached && merge(cached.list)) || base;
+}
+
 // ---------- the cubes ----------
 async function loadSprite() {
   // one cube per pixel of the artwork, background left out
@@ -235,8 +265,9 @@ async function loadSprite() {
 
 async function startWorld() {
   const tip = $('#sky-tip'), labels = $('#sky-labels'), stackLabels = $('#stack-labels');
-  const commits = Object.values(ACTIVITY).reduce((a, d) => a + d[0], 0);
-  const activeDays = Object.keys(ACTIVITY).length;
+  const activity = await freshActivity();
+  const commits = Object.values(activity).reduce((a, d) => a + d[0], 0);
+  const activeDays = Object.keys(activity).length;
   $('#fact-commits').textContent = num(commits);
   $('#all-lead').textContent = `${num(commits)} contributions on ${activeDays} days since July 2024, private work included. Here the same blocks sort themselves by what each day went into.`;
 
@@ -252,7 +283,7 @@ async function startWorld() {
     addEventListener('scroll', pageColour, { passive: true }); pageColour();
     return;
   }
-  const days = mod.buildDays(ACTIVITY);
+  const days = mod.buildDays(activity);
 
   // what each active day went into
   const cats = [
@@ -267,7 +298,7 @@ async function startWorld() {
   const catIndex = Object.fromEntries(cats.map((c, i) => [c.key, i]));
   const cat = days.map((d) => {
     const top = d.what.split(', ')[0];
-    if (top === 'private work') return catIndex.private;
+    if (top === 'private work' || !top) return catIndex.private;
     if (top === 'team work') return catIndex.team;
     const type = typeOfRepo.get(top) || 'tool';
     return catIndex[type === 'learn' ? 'site' : type];
@@ -304,7 +335,7 @@ async function startWorld() {
     onHover(d, pos) {
       if (!d || !pos) { tip.hidden = true; return; }
       tip.hidden = false;
-      tip.textContent = d.n ? `${fmt.format(new Date(d.date))}: ${d.n} contribution${d.n > 1 ? 's' : ''}, ${d.what}` : `${fmt.format(new Date(d.date))}: a day off`;
+      tip.textContent = d.n ? `${fmt.format(new Date(d.date))}: ${d.n} contribution${d.n > 1 ? 's' : ''}${d.what ? ', ' + d.what : ''}` : `${fmt.format(new Date(d.date))}: a day off`;
       tip.style.left = Math.min(Math.max(pos.x, 130), innerWidth - 130) + 'px';
       tip.style.top = pos.y + 'px';
     },

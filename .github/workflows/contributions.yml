@@ -1,0 +1,37 @@
+name: Refresh contribution data
+
+# Keeps data/activity.js (the blocks on the home page) in step with the GitHub profile.
+# The timer only runs from the repository's default branch. On other branches it runs when started by hand
+# (Actions tab, "Run workflow") or when the tools change.
+on:
+  schedule:
+    - cron: '23 */6 * * *'
+  workflow_dispatch:
+  push:
+    paths:
+      - 'tools/update_contributions.py'
+      - 'tools/build_activity.py'
+      - '.github/workflows/contributions.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: contributions-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Read the calendar and rebuild the data
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python3 tools/update_contributions.py
+      - name: Commit if something changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/activity.js tools/github-contributions.txt
+          git diff --cached --quiet || (git commit -m "Refresh contribution data" && git push)

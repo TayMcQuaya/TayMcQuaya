@@ -10,8 +10,9 @@
 const gh = (repo) => `https://github.com/TayMcQuaya/${repo}`;
 
 export const SITE = {
-  repos: 94,           // your number, 10 Nov 2026
+  repos: 94,           // your number, 10 Nov 2026. GitHub can't tell me this one, so change it by hand
   since: 2024,
+  github: 'TayMcQuaya',   // the contribution numbers on the page are read live for this account
 };
 
 // The pixel artwork that the cubes rebuild in the Pixel art section: one cube per pixel.
@@ -94,7 +95,7 @@ export const PROJECTS = [
   { id: 'road-fighter', name: 'Road Fighter', type: 'game', year: 2026, repo: 'Road-Racer',
     text: "A tribute to Konami's 1984 arcade racer, written in plain JavaScript on a canvas.",
     video: 'assets/vid/roadfighter.mp4', poster: 'assets/tex/roadfighter.jpg',
-    links: [{ label: 'Code', href: gh('Road-Racer') }] },
+    links: [{ label: 'Play', href: 'https://taymcquaya.github.io/Road-Racer/', play: true }, { label: 'Code', href: gh('Road-Racer') }] },
   { id: 'pixel-overworld', hide: true, name: 'Pixel Overworld', type: 'game', year: 2026,
     text: 'A Pokémon-style overworld that plays inside a Game Boy drawn in CSS. One HTML file.', links: [] },
   { id: 'kagero', hide: true, name: 'Kagerō', type: 'game', year: 2026, state: 'dev',
@@ -104,7 +105,7 @@ export const PROJECTS = [
   { id: 'descent', name: 'Descent', type: 'game', year: 2026, repo: 'Hellnight-Website',
     text: "A 3D horror website built with Three.js. Pure showcase, just for fun. Step into the dark, find what's hidden, and try not to lose your nerve.",
     video: 'assets/vid/decent.mp4', poster: 'assets/tex/decent.jpg',
-    links: [{ label: 'Code', href: gh('Hellnight-Website') }] },
+    links: [{ label: 'Visit', href: 'https://taymcquaya.github.io/Hellnight-Website/' }, { label: 'Code', href: gh('Hellnight-Website') }] },
   { id: 'mad-scientist', hide: true, name: '2D Mad Scientist', type: 'game', year: 2024, repo: 'UnityExoGame',
     text: 'A Unity game from 2024 that runs in the browser.', links: [{ label: 'Code', href: gh('UnityExoGame') }] },
   { id: 'fun-speak', hide: true, name: 'Fun Speak', type: 'game', year: 2025, repo: 'Fun-Speak',
@@ -163,9 +164,9 @@ export const PROJECTS = [
   { id: 'tradebychat', poster: 'assets/tex/tradebychat.jpg', name: 'Trade by Chat', type: 'site', year: 2025, repo: 'TGBOT-Website',
     text: 'Waitlist site with its own backend for a Telegram trading bot.', links: [{ label: 'Code', href: gh('TGBOT-Website') }] },
   { id: 'firecats', poster: 'assets/tex/firecats.jpg', name: 'FireCats AI', type: 'site', year: 2024, repo: 'FireCats-Website',
-    text: 'A Web3 site with an AI assistant and an NFT gallery.', links: [{ label: 'Code', href: gh('FireCats-Website') }] },
+    text: 'A Web3 site with an AI assistant and an NFT gallery.', links: [{ label: 'Open', href: 'https://taymcquaya.github.io/FireCats-Website/' }, { label: 'Code', href: gh('FireCats-Website') }] },
   { id: 'bali-bliss', poster: 'assets/tex/bali-bliss.jpg', name: 'Bali Bliss Travels', type: 'site', year: 2025, repo: 'BaliBlissTravels',
-    text: 'A travel agency site with booking.', links: [{ label: 'Code', href: gh('BaliBlissTravels') }] },
+    text: 'A travel agency site with booking.', links: [{ label: 'Open', href: 'https://taymcquaya.github.io/BaliBlissTravels/' }, { label: 'Code', href: gh('BaliBlissTravels') }] },
   { id: 'dr-omon', hide: true, name: 'Dr. Omon', type: 'site', year: 2024, repo: 'Dr.Omon-Website',
     text: 'A multi-page site with research, team and donation pages.', links: [{ label: 'Code', href: gh('Dr.Omon-Website') }] },
   { id: 'exoworks', hide: true, name: 'ExoWorks', type: 'site', year: 2025, repo: 'Exo-Works',
