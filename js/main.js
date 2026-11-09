@@ -358,9 +358,8 @@ async function start3D() {
   }
 
   // ---------- conductor: native scroll -> exact / smooth chapter progress ----------
-  const lenis = new Lenis({ lerp: reduced ? 1 : 0.1, wheelMultiplier: 0.9, prevent: (node) => !!(node.closest && node.closest('.card, #viewer')) });
+  const lenis = new Lenis({ lerp: reduced ? 1 : 0.085, wheelMultiplier: 0.85, prevent: (node) => !!(node.closest && node.closest('.card, #viewer')) });
   lenis.on('scroll', ScrollTrigger.update);
-  lenis.stop(); // in 3D mode the page only moves by stops; Quick view starts it again
   gsap.ticker.add((t) => lenis.raf(t * 1000));
   gsap.ticker.lagSmoothing(0);
   let anchors = [], beats = [];
@@ -383,73 +382,35 @@ async function start3D() {
     for (let i = 0; i < N - 1; i++) if (y < anchors[i + 1]) return i + (y - anchors[i]) / (anchors[i + 1] - anchors[i]);
     return N - 1;
   };
-  let scrollY = 0, exact = 0, smooth = 0, settleT = 0;
-  let beat = 0, gliding = false, glideT = 0;
-  const MAX_STEPS = 3, STEP_PX = 110;
-  const nearestBeat = (y) => { let b = 0, d = Infinity; beats.forEach((v, k) => { const dd = Math.abs(y - v); if (dd < d) { d = dd; b = k; } }); return b; };
-  function glideTo(k, immediate = false) {
-    k = clamp(k, 0, beats.length - 1);
-    const dist = Math.max(1, Math.abs(k - nearestBeat(scrollY)));
-    beat = k;
-    const duration = immediate || reduced ? 0 : Math.min(2.0, 1.1 + 0.25 * (dist - 1));
-    clearTimeout(glideT); gliding = true;
-    // a new target mid-glide retargets the running animation from where it is
-    lenis.scrollTo(beats[k], { force: true, immediate: immediate || reduced, duration, easing: (t) => 1 - Math.pow(1 - t, 3) });
-    glideT = setTimeout(() => { gliding = false; }, duration * 1000 + 120);
-  }
-  const step = (dir) => { if (!body.classList.contains('mode-3d') || !viewer.hidden) return; glideTo(beat + dir); };
-  goTo = (id) => {
+  let scrollY = 0, exact = 0, smooth = 0;
+  // dwell: the camera holds each composed shot for 60% of a chapter's scroll range and
+  // travels during the middle 40% between two anchors, so any scroll position looks composed
+  const dwell = (x) => { const i = Math.floor(x), f = x - i; return i + smoothstep(0.3, 0.7, f); };
+  goTo = (id, immediate = false) => {
     const i = sections.findIndex((x) => x.id === id); if (i < 0) return;
     if (!body.classList.contains('mode-3d')) { lenis.scrollTo(sections[i], { duration: 1.2 }); return; }
-    glideTo(nearestBeat(anchors[i] - (sections[i].dataset.beats ? (sections[i].offsetHeight - vh) / 2 : 0)));
+    const sec = sections[i];
+    const y = sec.dataset.beats ? sec.offsetTop + 0.08 * (sec.offsetHeight - vh) : anchors[i];
+    lenis.scrollTo(y, { duration: immediate || reduced ? 0 : 1.6, immediate: immediate || reduced, easing: (t) => 1 - Math.pow(1 - t, 3) });
   };
-  // wheel: a gesture is a run of events in the same direction; the first 18px is one stop,
-  // every further STEP_PX adds one, up to MAX_STEPS per gesture. Mouse notches chain the same way.
-  let lastWheel = -1e9, gestureAcc = 0, gestureSteps = 0;
-  const inScrollableCard = (t) => { const c = t && t.closest && t.closest('.card'); return !!(c && c.scrollHeight > c.clientHeight + 4); };
-  addEventListener('wheel', (e) => {
-    if (!body.classList.contains('mode-3d') || !viewer.hidden) return;
-    if (inScrollableCard(e.target)) return;
-    e.preventDefault();
-    const dy = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaMode === 2 ? e.deltaY * vh : e.deltaY;
-    const now = performance.now();
-    if (now - lastWheel > 160 || Math.sign(dy) !== Math.sign(gestureAcc)) { gestureAcc = 0; gestureSteps = 0; }
-    lastWheel = now; gestureAcc += dy;
-    const a = Math.abs(gestureAcc);
-    const want = a > 18 ? Math.min(MAX_STEPS, 1 + Math.floor((a - 18) / STEP_PX)) : 0;
-    while (gestureSteps < want) { gestureSteps++; step(gestureAcc > 0 ? 1 : -1); }
-  }, { passive: false });
-  // touch: swipe length decides how many stops (1–3)
-  let touchY = null, touchInCard = false;
-  addEventListener('touchstart', (e) => { touchY = e.touches[0].clientY; touchInCard = inScrollableCard(e.target); }, { passive: true });
-  addEventListener('touchmove', (e) => { if (body.classList.contains('mode-3d') && viewer.hidden && !touchInCard) e.preventDefault(); }, { passive: false });
-  addEventListener('touchend', (e) => {
-    if (touchY === null || touchInCard || !body.classList.contains('mode-3d')) { touchY = null; return; }
-    const dy = touchY - e.changedTouches[0].clientY; touchY = null;
-    if (Math.abs(dy) > 36) glideTo(beat + Math.sign(dy) * Math.min(MAX_STEPS, 1 + Math.floor((Math.abs(dy) - 36) / 180)));
-  });
-  // keys
+  const stepChapter = (dir) => {
+    const cur = Math.round(exact); const next = clamp(cur + dir, 0, N - 1);
+    if (next !== cur || Math.abs(exact - cur) > 0.05) goTo(sections[next].id);
+  };
   addEventListener('keydown', (e) => {
     if (!body.classList.contains('mode-3d') || !viewer.hidden || e.target.closest('input, textarea')) return;
-    if (['ArrowDown', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); step(1); }
-    else if (['ArrowUp', 'PageUp'].includes(e.key)) { e.preventDefault(); step(-1); }
-    else if (e.key === 'Home') { e.preventDefault(); glideTo(0); }
-    else if (e.key === 'End') { e.preventDefault(); glideTo(beats.length - 1); }
+    if (e.key === 'ArrowDown') { e.preventDefault(); stepChapter(1); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); stepChapter(-1); }
   });
-  lenis.on('scroll', ({ scroll }) => {
-    scrollY = scroll; exact = exactFrom(scroll);
-    $('#hud-hint').classList.add('gone');
-    // scrollbar drags or browser jumps: snap to the nearest stop once they end
-    clearTimeout(settleT);
-    settleT = setTimeout(() => {
-      if (gliding || !body.classList.contains('mode-3d') || !viewer.hidden) return;
-      const k = nearestBeat(scroll); beat = k;
-      if (Math.abs(scroll - beats[k]) > 4) glideTo(k);
-    }, 180);
-  });
+  lenis.on('scroll', ({ scroll }) => { scrollY = scroll; exact = exactFrom(scroll); $('#hud-hint').classList.add('gone'); });
 
   // ---------- DOM choreography (GSAP ScrollTrigger) ----------
-  const hudLabel = $('#hud-label'), hudFill = $('#hud-fill');
+  const hudLabel = $('#hud-label');
+  const rail = $('#hud-rail');
+  const dots = sections.map((sec) => {
+    const b = document.createElement('button'); b.type = 'button'; b.title = sec.dataset.label; b.setAttribute('aria-label', sec.dataset.label);
+    b.addEventListener('click', () => goTo(sec.id)); rail.appendChild(b); return b;
+  });
   const navLinks = $$('#topbar nav a');
   const groupOf = (s) => s.classList.contains('project') ? 'p-floppytromp' : s.classList.contains('art') ? 'art-1' : s.id;
   sections.forEach((sec, i) => {
@@ -467,7 +428,7 @@ async function start3D() {
     if (i < N - 1) gsap.fromTo(card, { opacity: 1, y: 0 }, { opacity: 0, y: -22, ease: 'none', immediateRender: false, scrollTrigger: { trigger: sec, start: 'bottom 82%', end: 'bottom 42%', scrub: 0.5 } });
     ScrollTrigger.create({
       trigger: sec, start: 'top 50%', end: 'bottom 50%',
-      onToggle: (self) => { if (self.isActive) { hudLabel.textContent = sec.dataset.label; navLinks.forEach((a) => a.classList.toggle('is-active', a.dataset.go === groupOf(sec))); try { history.replaceState(null, '', `#${sec.id}`); } catch (e) { /* sandboxed */ } } },
+      onToggle: (self) => { if (self.isActive) { hudLabel.textContent = sec.dataset.label; dots.forEach((d, k) => d.classList.toggle('on', k === i)); navLinks.forEach((a) => a.classList.toggle('is-active', a.dataset.go === groupOf(sec))); try { history.replaceState(null, '', `#${sec.id}`); } catch (e) { /* sandboxed */ } } },
     });
   });
   // lore pages advance with scroll
@@ -519,9 +480,9 @@ async function start3D() {
     const toDoc = body.classList.contains('mode-3d');
     body.classList.toggle('mode-3d', !toDoc); body.classList.toggle('mode-doc', toDoc);
     qt.setAttribute('aria-pressed', String(toDoc)); qt.textContent = toDoc ? '3D view' : 'Quick view';
-    if (toDoc) { lenis.start(); ScrollTrigger.getAll().forEach((t) => t.disable(false)); $$('.card, .reveal').forEach((el) => { el.style.opacity = ''; el.style.transform = ''; }); videos.forEach((x) => x.v.pause()); }
-    else { lenis.stop(); ScrollTrigger.getAll().forEach((t) => t.enable()); }
-    requestAnimationFrame(() => { lenis.resize(); ScrollTrigger.refresh(); measure(); lenis.scrollTo(0, { immediate: true, force: true }); exact = smooth = 0; beat = 0; });
+    if (toDoc) { ScrollTrigger.getAll().forEach((t) => t.disable(false)); $$('.card, .reveal').forEach((el) => { el.style.opacity = ''; el.style.transform = ''; }); videos.forEach((x) => x.v.pause()); }
+    else { ScrollTrigger.getAll().forEach((t) => t.enable()); }
+    requestAnimationFrame(() => { lenis.resize(); ScrollTrigger.refresh(); measure(); lenis.scrollTo(0, { immediate: true }); exact = smooth = 0; });
   });
 
   // ---------- camera ----------
@@ -551,20 +512,19 @@ async function start3D() {
     requestAnimationFrame(frame);
     const now = clock.getElapsedTime(), dt = Math.min(0.1, now - last); last = now;
     if (!body.classList.contains('mode-3d')) return;
-    smooth = reduced ? exact : damp(smooth, exact, 11, dt);
+    smooth = reduced ? exact : damp(smooth, exact, 7, dt);
     if (Math.abs(smooth - exact) < 1e-4) smooth = exact;
-    hudFill.style.width = `${(exact / (N - 1)) * 100}%`;
-    placeCamera(smooth, now);
+    placeCamera(dwell(smooth), now);
 
     // animated screens ~12fps
     if (now - lastAnim > 1 / 12) { lastAnim = now; drawHero(now); if (soonScreen) drawSoon(now); }
     // videos near the camera
     if (now - lastVid > 0.3) {
       lastVid = now;
-      for (const x of videos) { const want = Math.abs(smooth - x.chapter) < 1.3; if (want && x.v.paused) x.v.play().catch(() => {}); else if (!want && !x.v.paused) x.v.pause(); }
+      for (const x of videos) { const want = Math.abs(dwell(smooth) - x.chapter) < 1.3; if (want && x.v.paused) x.v.play().catch(() => {}); else if (!want && !x.v.paused) x.v.pause(); }
     }
     // gallery: frames light up as the camera passes
-    const camZ = camera.position.z, inArt = smooth > sections.indexOf(artSections[0]) - 0.6 && smooth < sections.indexOf(artSections[2]) + 0.6;
+    const dp = dwell(smooth), camZ = camera.position.z, inArt = dp > sections.indexOf(artSections[0]) - 0.6 && dp < sections.indexOf(artSections[2]) + 0.6;
     artPlanes.forEach((m, i) => {
       if (!m) return;
       const k = inArt ? smoothstep(2.6, 0.9, Math.abs(artZs[i] - camZ)) : 0;
@@ -572,7 +532,7 @@ async function start3D() {
       if (lamps[i]) lamps[i].material.color.set('#ffe2a8').multiplyScalar(lerp(0.3, 2.2, k));
     });
     // inventory: cartridges light one by one
-    const sp = clamp((smooth - (skillsIdx - 0.55)) / 0.9, 0, 1);
+    const sp = clamp((dp - (skillsIdx - 0.6)) / 0.7, 0, 1);
     const lit = Math.round(sp * cartLabels.length);
     if (lit !== litCount) {
       litCount = lit;
@@ -606,13 +566,10 @@ async function start3D() {
   $('#loader').classList.add('done'); setTimeout(() => { $('#loader').style.display = 'none'; }, 900);
   const hashId = location.hash.slice(1);
   if (hashId && sections.some((s) => s.id === hashId)) requestAnimationFrame(() => goTo(hashId));
-  addEventListener('resize', () => { if (body.classList.contains('mode-3d')) glideTo(beat, true); });
   frame();
 
   window.__arcade = {
-    setP: (v) => { const y = anchors[Math.round(v)] ?? 0; beat = nearestBeat(y); lenis.scrollTo(y, { immediate: true, force: true }); scrollY = y; exact = smooth = exactFrom(y); ScrollTrigger.update(); },
-    setBeat: (k) => { glideTo(k, true); exact = smooth = exactFrom(beats[k]); ScrollTrigger.update(); },
-    step, beat: () => beat,
+    setP: (v) => { const y = anchors[Math.round(v)] ?? 0; lenis.scrollTo(y, { immediate: true }); scrollY = y; exact = smooth = exactFrom(y); ScrollTrigger.update(); },
     info: () => ({ calls: renderer.info.render.calls, tris: renderer.info.render.triangles, exact, smooth, anchors, beats, reflector: !!reflector, playing: videos.filter((x) => !x.v.paused).length }),
     sync: () => { smooth = exact; },
     artAt: (i) => { const v = artPlanes[i].getWorldPosition(new THREE.Vector3()).project(camera); return [(v.x + 1) / 2 * vw, (1 - v.y) / 2 * vh]; },

@@ -54,7 +54,7 @@
       <a href="#about" data-go="about">About</a>
       <a href="#p-floppytromp" data-go="p-floppytromp">Projects</a>
       <a href="#art-1" data-go="art-1">Art</a>
-      <a href="#skills" data-go="skills">Skills</a>
+      <a href="#skills" data-go="skills">Build</a>
       <a href="#contact" data-go="contact">Contact</a>
     </nav>
     <button id="quick-toggle" type="button" aria-pressed="false">Quick view</button>
@@ -62,7 +62,7 @@
 
   <div id="hud" aria-hidden="true">
     <span id="hud-label">HOME</span>
-    <div class="hud-rail"><span id="hud-fill"></span></div>
+    <div class="hud-rail" id="hud-rail"></div>
     <span class="hud-hint" id="hud-hint">Scroll &#8595;</span>
   </div>
 
@@ -232,16 +232,23 @@
       </div></div>
     </section>
 
-    <section class="chapter" id="skills" data-weight="1.4" data-side="left" data-label="INVENTORY">
+    <section class="chapter" id="skills" data-weight="1.4" data-side="left" data-label="WHAT I BUILD">
       <div class="pin"><div class="card">
         <p class="eyebrow">~ The Inventory ~</p>
-        <h2>Character Sheet</h2>
-        <p class="sheet-meta"><span>LVL ??</span> TayMcQuaya &middot; Developer / Pixel Artist / Creator</p>
-        <ul class="inventory">
+        <h2>What I Build</h2>
+        <ul class="builds">
+          <li><b data-emoji="🎮">Games</b><p>2D and 3D games for browser and desktop, in Unity or Three.js, with my own pixel art.</p><p class="eg">Floppy Tromp, Zombieshooter 3D</p></li>
+          <li><b data-emoji="🌐">Websites &amp; web apps</b><p>From a landing page to a full app. React and Next.js in front, Node or Python behind.</p><p class="eg">JavaScript Journey, Descent</p></li>
+          <li><b data-emoji="🤖">Bots &amp; tools</b><p>Telegram bots, desktop utilities, small automations that remove a daily chore.</p><p class="eg">WhatsNote, Claude-Telegram-Bridge</p></li>
+          <li><b data-emoji="🎨">Pixel art &amp; animation</b><p>Characters, scenes, GIF loops and game assets, drawn by hand.</p><p class="eg">See the gallery</p></li>
+          <li><b data-emoji="✨">AI features</b><p>Language-model and image-generation pipelines built into real products.</p></li>
+        </ul>
+        <p class="stack">Stack: <span>C# · Java · JavaScript · TypeScript · React · Next.js · Node.js · Python · Three.js · Unity · Web3 · Electron</span></p>
+        <ul class="inventory" aria-hidden="true">
           <li data-emoji="💻">C#</li><li data-emoji="☕">Java</li><li data-emoji="⚡">JavaScript</li><li data-emoji="🔷">TypeScript</li>
           <li data-emoji="⚛️">React</li><li data-emoji="▲">Next.js</li><li data-emoji="🟢">Node.js</li><li data-emoji="🐍">Python</li>
-          <li data-emoji="🌐">HTML/CSS</li><li data-emoji="🎨">Pixel Art</li><li data-emoji="🔗">Web3</li><li data-emoji="🤖">AI</li>
-          <li data-emoji="🎮">Game Dev</li><li data-emoji="🚀">Hustle</li><li data-emoji="🤝">Soft Skills</li><li data-emoji="💩">Shitposting</li>
+          <li data-emoji="🧊">Three.js</li><li data-emoji="🎮">Unity</li><li data-emoji="🔗">Web3</li><li data-emoji="🎨">Pixel Art</li>
+          <li data-emoji="✨">AI</li><li data-emoji="🌀">GSAP</li><li data-emoji="🧱">Blender</li><li data-emoji="🖥️">Electron</li>
         </ul>
       </div></div>
     </section>

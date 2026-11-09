@@ -60,6 +60,16 @@ h2 { font-family: var(--font-display); font-weight: 400; font-size: 19px; line-h
 .art-btn:hover, .art-btn.is-hot { border-color: var(--gold); transform: translateY(-2px); }
 .art-btn img { width: 100%; height: 100%; object-fit: contain; image-rendering: pixelated; }
 
+/* what I build */
+.builds { list-style: none; display: grid; gap: 6px; }
+.builds li { padding: 7px 10px; border-left: 3px solid var(--amber); background: rgba(245,158,11,.07); }
+.builds b { display: block; font-family: var(--font-ui); font-size: 15px; color: var(--gold); margin-bottom: 1px; }
+.builds b::before { content: attr(data-emoji) '  '; }
+.builds p { font-size: 13px; line-height: 1.5; }
+.builds .eg { color: var(--muted); font-size: 12px; margin-top: 2px; }
+.stack { margin-top: 10px; font-family: var(--font-ui); font-size: 12px; color: var(--muted); line-height: 1.8; }
+.stack span { color: var(--text); }
+body.mode-3d #skills .inventory { display: none; }
 /* inventory */
 .sheet-meta { font-family: var(--font-ui); color: var(--muted); margin-bottom: 12px; font-size: 15px; }
 .sheet-meta span { color: var(--gold); margin-right: 8px; }
@@ -142,8 +152,10 @@ body.mode-3d .reveal { opacity: 0; transform: translateY(14px); }
 /* HUD */
 body.mode-3d #hud { display: flex; position: fixed; right: 26px; bottom: 22px; z-index: 20; align-items: center; gap: 12px; pointer-events: none; }
 #hud-label { font-family: var(--font-display); font-size: 10px; color: var(--gold); text-shadow: 2px 2px 0 var(--bg); }
-.hud-rail { width: 120px; height: 3px; background: rgba(253,232,200,.18); }
-.hud-rail span { display: block; height: 100%; width: 0; background: var(--amber); }
+.hud-rail { display: flex; gap: 7px; pointer-events: auto; }
+.hud-rail button { width: 9px; height: 9px; padding: 0; background: rgba(253,232,200,.22); transition: background .2s, transform .2s; }
+.hud-rail button:hover { background: var(--text); transform: scale(1.3); }
+.hud-rail button.on { background: var(--amber); transform: scale(1.3); }
 .hud-hint { font-family: var(--font-ui); font-size: 13px; color: var(--text); animation: blink 1.4s steps(2) infinite; }
 .hud-hint.gone { opacity: 0; animation: none; transition: opacity .4s; }
 @keyframes blink { 50% { opacity: .3; } }
@@ -166,7 +178,8 @@ body.mode-3d #loader { display: flex; flex-direction: column; align-items: cente
   body.mode-3d .card-hero h1.title { font-size: 26px; }
   body.mode-3d .card-art .thumbs { grid-template-columns: repeat(4, 1fr); }
   body.mode-3d #hud { right: 12px; bottom: auto; top: 54px; }
-  .hud-rail { width: 70px; }
+  .hud-rail { gap: 5px; }
+  .hud-rail button { width: 7px; height: 7px; }
   .hud-hint { display: none; }
   .stats { gap: 18px; }
   .inventory { grid-template-columns: 1fr 1fr; }
