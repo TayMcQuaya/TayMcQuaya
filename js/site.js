@@ -320,27 +320,28 @@ async function startWorld() {
     return catIndex[type === 'learn' ? 'site' : type];
   });
 
-  // a flag for the projects that are on the page: on the day set with "when" in data/projects.js,
-  // otherwise on the busiest day of the project's public repo
-  const byRepo = new Map(SHOWN.filter((p) => p.repo && !p.when).map((p) => [p.repo, p]));
-  const best = new Map();
-  days.forEach((d) => {
-    const p = byRepo.get(d.what.split(', ')[0]);
-    if (p && (!best.has(p.id) || best.get(p.id).n < d.n)) best.set(p.id, { ...d, name: p.name, pid: p.id });
-  });
-  SHOWN.filter((p) => p.when).forEach((p) => {
-    const d = days.find((x) => x.date >= p.when);
-    if (d) best.set(p.id, { ...d, name: p.name, pid: p.id });
-  });
+  // Flags on the skyline: the projects named in SITE.flags, in that order. Each sits on its "when" from
+  // data/projects.js (a day, or just a year), or else on the busiest day of its public repo.
   const monthYear = new Intl.DateTimeFormat('en', { month: 'short', year: 'numeric', timeZone: 'UTC' });
-  // the order in data/projects.js decides who gets a flag first when two would sit on top of each other
-  const rank = (m) => { const k = SHOWN.findIndex((p) => p.id === m.pid); return SHOWN[k].tier === 'front' ? 1000 - k : m.n; };
   const marks = [];
-  [...best.values()].filter((m) => { const p = SHOWN.find((x) => x.id === m.pid); return p.tier === 'front' || p.video; })
-    .sort((a, b) => rank(b) - rank(a)).forEach((m) => { if (marks.length < 8 && marks.every((o) => Math.abs(o.col - m.col) > 4)) marks.push(m); });
+  (SITE.flags || []).forEach((id) => {
+    const p = [NOW.lead, ...SHOWN].find((x) => x.id === id);
+    if (!p) return;
+    let d = null, label = '';
+    if (p.when && String(p.when).length === 4) {
+      const inYear = days.filter((x) => x.date.startsWith(p.when));
+      d = inYear[Math.floor(inYear.length / 2)]; label = String(p.when);
+    } else if (p.when) d = days.find((x) => x.date >= p.when);
+    else if (p.repo) days.forEach((x) => { if (x.what.split(', ')[0] === p.repo && (!d || d.n < x.n)) d = x; });
+    if (d) marks.push({ ...d, name: p.name, pid: p.id, label: label || monthYear.format(new Date(d.date)) });
+  });
   const markEls = marks.map((m) => {
-    const a = el('a', { class: 'sky-label', href: '#everything' }, [m.name, el('span', { text: monthYear.format(new Date(m.date)) })]);
-    a.addEventListener('click', (ev) => { ev.preventDefault(); const p = ALL.find((x) => x.id === m.pid); if (p) openSheet(p); });
+    const a = el('a', { class: 'sky-label', href: '#everything' }, [m.name, el('span', { text: m.label })]);
+    a.addEventListener('click', (ev) => {
+      ev.preventDefault();
+      const p = ALL.find((x) => x.id === m.pid);
+      if (p) openSheet(p); else $('#now').scrollIntoView({ behavior: 'smooth' });
+    });
     labels.append(a);
     return a;
   });
@@ -369,7 +370,7 @@ async function startWorld() {
       // tries the left side, and the ones higher up in data/projects.js get to choose first.
       const cross = (f, n) => f.px > n.x - 4 && f.px < n.x + n.w + 4 && f.y > n.y - 68 && f.y < n.y + 2;      // f's pole through n's label
       const hit = (a, b) => (Math.abs(a.y - b.y) < 42 && a.x < b.x + b.w + 10 && b.x < a.x + a.w + 10) || cross(a, b) || cross(b, a);
-      const minX = innerWidth * (innerWidth < 760 ? 0.03 : 0.5);
+      const minX = innerWidth * (innerWidth < 760 ? 0.03 : 0.46);
       marks.forEach((m, i) => {
         const e = markEls[i];
         let at = null;

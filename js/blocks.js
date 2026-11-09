@@ -191,9 +191,7 @@ export function createBlocks(host, cfg) {
 
   // ---------- state ----------
   let W = 1, Hpx = 1, wpp = 1, narrow = false;
-  // which formation the cubes are in (or on their way out of), and how far they are into it
-  let cur = 0, mix = 0, skip = false, first = true;
-  const IN = 3.4, OUT = 2.4;                // seconds to come together and to drift apart, however fast the page is scrolled
+  let intro = reduced ? 1 : 0;
   let hover = -1;
   let scrollY = scrollY0();
   const pointer = { x: 0, y: 0, tx: 0, ty: 0 };
@@ -234,7 +232,6 @@ export function createBlocks(host, cfg) {
   }
   function play() {
     eaten.fill(0); stepAcc = 0;
-    cur = FORMS.findIndex((s) => s.f === sky); mix = 1;
     // three seconds to find yourself and try the lanes before the run starts
     run = { cells: [], col: cols - 2, row: 3, camCol: cols - 2, score: 0, days: 0, over: false, count: 3 };
     if (idx(cols - 1, 3) < N) run.cells.push(idx(cols - 1, 3));
@@ -272,7 +269,7 @@ export function createBlocks(host, cfg) {
   const live = FORMS.map(() => ({ w: 0, ax: 0, ay: 0, az: 0, s: 1 }));
   let active = 0, activeW = 0, time = 0;
 
-  function measureStages(dt) {
+  function measureStages() {
     active = 0; activeW = 0;
     FORMS.forEach((st, k) => {
       const r = st.el.getBoundingClientRect(), L = live[k];
@@ -291,18 +288,7 @@ export function createBlocks(host, cfg) {
       }
       if (L.w > activeW) { activeW = L.w; active = k; }
     });
-    // Scrolling only says where the cubes should be. They get there in their own time: a formation that is no
-    // longer wanted drifts apart first (quickly once it is off screen), then the next one comes together.
-    if (reduced || skip) { cur = active; mix = activeW; }
-    else if (active === cur) mix += clamp(activeW - mix, -dt / OUT, dt / (first ? 2.2 : IN));      // the very first build is brisk
-    else {
-      const r = FORMS[cur].el.getBoundingClientRect();
-      mix -= dt / (r.bottom < 0 || r.top > Hpx ? 0.6 : OUT);
-      if (mix <= 0) { mix = 0; cur = active; }
-      first = false;
-    }
-    if (mix >= 1) first = false;
-    active = cur; activeW = mix;
+    if (FORMS[active].f === sky) activeW *= ease(intro);
   }
 
   function frameCubes() {
@@ -373,9 +359,7 @@ export function createBlocks(host, cfg) {
         S.set(THREE.MathUtils.lerp(S.x, 0.84 * sRun * vis, g), THREE.MathUtils.lerp(S.y, sy * sRun * vis, g), THREE.MathUtils.lerp(S.z, 0.84 * sRun * vis, g));
       }
       if (e < 1) {
-        // on the way between loose and placed a cube shrinks, so the slow crossing does not clutter the text it passes
-        const k = 1 - 0.6 * Math.sin(Math.PI * e);
-        P.lerpVectors(Pc, P, e); S.set(THREE.MathUtils.lerp(cs, S.x, e) * k, THREE.MathUtils.lerp(cs, S.y, e) * k, THREE.MathUtils.lerp(cs, S.z, e) * k);
+        P.lerpVectors(Pc, P, e); S.set(THREE.MathUtils.lerp(cs, S.x, e), THREE.MathUtils.lerp(cs, S.y, e), THREE.MathUtils.lerp(cs, S.z, e));
         Q.copy(Qc).slerp(fq, e); C.copy(tmpC.copy(cc).lerp(C, e));
         m4.compose(P, Q, S);
       } else m4.compose(P, fq, S);
@@ -439,7 +423,8 @@ export function createBlocks(host, cfg) {
       }
     }
     if (run) run.camCol += (run.col - run.camCol) * Math.min(1, dt * 7);
-    measureStages(dt);
+    if (intro < 1) intro = Math.min(1, intro + dt / 2.4);
+    measureStages();
     if (cfg.background) { bg.set(cfg.background()); scene.fog.color.copy(bg); }
     frameCubes();
     placeMarker();
@@ -453,6 +438,6 @@ export function createBlocks(host, cfg) {
     play, stop, turn, setArt,
     get playing() { return !!run; },
     stackInfo, projectDay, projectStack, cols, total,
-    _skipIntro() { skip = true; },
+    _skipIntro() { intro = 1; },
   };
 }

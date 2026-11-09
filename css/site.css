@@ -80,6 +80,7 @@ main, .foot { position: relative; z-index: 1; }
 
 /* ---------- hero ---------- */
 .hero { position: relative; display: flex; flex-direction: column; min-height: max(660px, calc(100svh - 60px)); padding-top: clamp(28px, 6vh, 72px); }
+.hero h1 { max-width: none; font-size: clamp(38px, 6.1vw, 92px); }
 .hero-text { position: relative; width: 100%; max-width: var(--page); margin: 0 auto; padding: 0 var(--pad); transition: opacity .25s; }
 .lead { font-size: clamp(19px, 1.9vw, 24px); max-width: 30ch; margin-top: 20px; font-weight: 600; }
 .facts { display: flex; flex-wrap: wrap; gap: 10px 34px; margin-top: 22px; }

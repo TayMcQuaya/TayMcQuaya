@@ -7,8 +7,9 @@
 // poster: the picture (assets/tex/...). video: a short clip that plays over it. After adding or changing a picture,
 //         python3 tools/build_media.py makes the small copies. On GitHub that happens by itself after a push.
 // hide:   true keeps the entry in this file but off the page. Delete the word to show it again.
-// when:   'YYYY-MM-DD' puts the project's flag on the skyline at that day. Without it the flag sits on the
-//         busiest day of the public repo, which is wrong when the real work happened in a private one.
+// when:   'YYYY-MM-DD' puts the project's flag on the skyline at that day, 'YYYY' puts it in the middle of that
+//         year and shows only the year. Without it the flag sits on the busiest day of the public repo, which
+//         is wrong when the real work happened in a private one.
 
 const gh = (repo) => `https://github.com/TayMcQuaya/${repo}`;
 
@@ -16,6 +17,8 @@ export const SITE = {
   repos: 94,           // your number, 10 Nov 2026. GitHub can't tell me this one, so change it by hand
   since: 2024,
   github: 'TayMcQuaya',   // the contribution numbers on the page are read live for this account
+  // the flags on the skyline in the hero, most important first (ids from this file)
+  flags: ['shaping-luck', 'panel-haus', 'floppytromp'],
 };
 
 // The animated pixel artwork that the cubes rebuild in the Pixel art section: one cube per pixel, frame by frame.
@@ -36,6 +39,7 @@ export const NOW = {
     id: 'panel-haus',
     name: 'Panel Haus',
     role: 'Co-founder',
+    when: '2026-10-22',
     text: 'My main work. A comic studio that runs in the browser: write the beat, pick a layout, place your characters, letter it, export it as a page, a book or a video clip.',
     image: 'assets/tex/panel-haus.jpg',
     link: { label: 'Open panel.haus', href: 'https://panel.haus/' },
@@ -76,7 +80,7 @@ export const PROJECTS = [
     poster: 'assets/tex/decent.jpg',
     links: [{ label: 'Visit', href: 'https://taymcquaya.github.io/Hellnight-Website/' }, { label: 'Code', href: gh('Hellnight-Website') }] },
 
-  { id: 'floppytromp', name: 'Floppy Tromp', type: 'game', year: 2024, tier: 'front', state: 'live', repo: 'FloppyTromp',
+  { id: 'floppytromp', name: 'Floppy Tromp', type: 'game', year: 2024, tier: 'front', state: 'live', repo: 'FloppyTromp', when: '2024',
     text: 'Election season satire built in Unity. Hand drew every character, shipped in a week with Web3 wallet gating baked in. Gates are open now, free for everyone to play.',
     tags: ['Unity', 'Pixel art', 'Web3'],
     video: 'assets/vid/floppytromp.mp4', poster: 'assets/tex/floppytromp.jpg',
