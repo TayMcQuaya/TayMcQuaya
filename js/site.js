@@ -1,5 +1,7 @@
-import { SITE, NOW, PROJECTS, ART, VOXEL_ART, REPO_TYPES } from '../data/projects.js';
+import { SITE, NOW, PROJECTS, ART, REPO_TYPES } from '../data/projects.js';
 import { ACTIVITY } from '../data/activity.js';
+import { MEDIA } from '../data/media.js';
+import { VOXEL } from '../data/voxel.js';
 import { sprite, typeColor } from './sprite.js';
 
 const $ = (s, el = document) => el.querySelector(s);
@@ -24,15 +26,31 @@ const stateText = (p) => (p.state === 'dev' ? 'In development' : p.state === 'cl
 const metaText = (p) => [TYPE[p.type], p.year, stateText(p)].filter(Boolean).join(', ');
 const num = (n) => n.toLocaleString('en');
 
-// ---------- media: a clip when there is one, otherwise the project's own pixel creature ----------
+// ---------- pictures ----------
+// Every picture is given its real size and its average colour before it loads, so the page never jumps and
+// never shows an empty hole. Small places (tiles, the art grid) load a small copy made by tools/build_media.py.
+function pic(src, { alt = '', small = false } = {}) {
+  const m = MEDIA[src] || {};
+  const img = el('img', { alt, width: m.w, height: m.h, loading: 'lazy', decoding: 'async', class: 'pic' + (m.px ? ' px' : '') });
+  img.addEventListener('load', () => img.classList.add('in'), { once: true });
+  img.addEventListener('error', () => img.classList.add('in'), { once: true });
+  img.src = (small && m.t) || src;
+  if (img.complete && img.naturalWidth) img.classList.add('in');
+  return img;
+}
+const tint = (src) => (MEDIA[src] ? `background-color:${MEDIA[src].c}` : null);
+
+// ---------- media: a clip when there is one, otherwise a screenshot, otherwise the project's own pixel creature ----------
 function media(p, { big = false } = {}) {
   if (p.video) {
-    const v = el('video', { muted: true, loop: true, playsinline: true, preload: 'none', poster: p.poster, 'aria-label': `${p.name} clip` });
+    // the still picture shows first; the clip is only fetched when its row scrolls into view, and fades in once it plays
+    const v = el('video', { muted: true, loop: true, playsinline: true, preload: 'none', 'aria-label': `${p.name} clip` });
     v.muted = true;
     v.dataset.src = p.video;
-    return el('div', { class: 'media media-clip' }, v);
+    v.addEventListener('playing', () => v.classList.add('on'), { once: true });
+    return el('div', { class: 'media media-clip', style: tint(p.poster) }, [p.poster && pic(p.poster), v]);
   }
-  if (p.poster) return el('div', { class: 'media media-shot' }, el('img', { src: p.poster, alt: `${p.name} screenshot`, loading: 'lazy' }));
+  if (p.poster) return el('div', { class: 'media media-shot', style: tint(p.poster) }, pic(p.poster, { alt: `${p.name} screenshot` }));
   const s = sprite(p.id, p.type);
   return el('div', { class: 'media media-sprite' + (big ? ' is-big' : ''), style: `background:${s.bg}` },
     el('img', { src: s.url, alt: '', width: 16, height: 16 }));
@@ -46,7 +64,7 @@ const clips = new IntersectionObserver((entries) => {
       v.play().catch(() => {});
     } else v.pause();
   }
-}, { threshold: 0.35 });
+}, { threshold: 0.2, rootMargin: '200px 0px' });
 const watchClips = (root) => root.querySelectorAll('video[data-src]').forEach((v) => clips.observe(v));
 
 function linkButtons(p, main = true) {
@@ -61,7 +79,7 @@ function linkButtons(p, main = true) {
 function renderNow() {
   const L = NOW.lead;
   const lead = el('article', { class: 'card now-lead' }, [
-    el('div', { class: 'now-shot' }, el('img', { src: L.image, alt: `${L.name} screenshot`, loading: 'lazy' })),
+    el('div', { class: 'now-shot' }, pic(L.image, { alt: `${L.name} logo`, small: true })),
     el('div', { class: 'now-text' }, [
       el('h3', { text: L.name }),
       el('p', { class: 'meta', text: L.role }),
@@ -74,7 +92,7 @@ function renderNow() {
     el('ul', {}, NOW.dev.map((d) => {
       const full = ALL.find((p) => p.id === d.id);
       return el('li', {}, el('button', { type: 'button', class: 'dev', onclick: () => openSheet(full) }, [
-        el('span', { class: 'mini' }, el('img', { src: d.poster, alt: '', loading: 'lazy' })),
+        el('span', { class: 'mini', style: tint(d.poster) }, pic(d.poster, { small: true })),
         el('span', {}, [el('b', { text: d.name }), el('span', { class: 'dev-text', text: d.text })]),
       ]));
     })),
@@ -116,7 +134,7 @@ function renderWall() {
   const wall = $('#wall');
   ALL.forEach((p) => {
     const b = el('button', { type: 'button', class: 'tile', 'data-type': p.type, onclick: () => openSheet(p) }, [
-      p.poster ? el('span', { class: 'tile-pic' }, el('img', { src: p.poster, alt: '', loading: 'lazy' }))
+      p.poster ? el('span', { class: 'tile-pic', style: tint(p.poster) }, pic(p.poster, { small: true }))
         : (() => { const s = sprite(p.id, p.type); return el('span', { class: 'tile-pic is-sprite', style: `background:${s.bg}` }, el('img', { src: s.url, alt: '', width: 16, height: 16 })); })(),
       el('span', { class: 'tile-name', text: p.name }),
       el('span', { class: 'tile-meta', text: [TYPE[p.type], p.year].join(', ') }),
@@ -167,15 +185,31 @@ const viewer = $('#viewer');
 let artAt = 0;
 function showArt(i) {
   artAt = (i + ART.length) % ART.length;
-  $('#viewer-img').src = 'images/' + ART[artAt];
-  $('#viewer-img').alt = `Pixel art ${artAt + 1} of ${ART.length}`;
-  $('#viewer-count').textContent = `${artAt + 1} / ${ART.length}`;
+  const at = artAt, src = 'images/' + ART[at], m = MEDIA[src], img = $('#viewer-img');
+  img.alt = `Pixel art ${at + 1} of ${ART.length}`;
+  $('#viewer-count').textContent = `${at + 1} / ${ART.length}`;
+  if (!m) { img.src = src; return; }
+  // the small copy is on screen at once, at the size of the real one, and the real one takes over when it has arrived
+  img.style.aspectRatio = `${m.w} / ${m.h}`;
+  img.style.width = `min(92vw, 1100px, ${m.w}px, calc(78dvh * ${(m.w / m.h).toFixed(4)}))`;
+  img.src = m.t;
+  const full = new Image();
+  const swap = () => { if (artAt === at && viewer.open) img.src = src; };
+  full.src = src;
+  full.decode().then(swap, swap);
 }
 function renderArt() {
   const grid = $('#art-grid');
   ART.forEach((f, i) => {
-    grid.append(el('li', {}, el('button', { type: 'button', 'aria-label': `Open pixel art ${i + 1}`, onclick: () => { showArt(i); viewer.showModal(); } },
-      el('img', { src: 'images/' + f, alt: '', loading: 'lazy', decoding: 'async' }))));
+    const src = 'images/' + f, m = MEDIA[src] || {};
+    const img = pic(src, { small: true });
+    const b = el('button', { type: 'button', 'aria-label': `Open pixel art ${i + 1}`, style: tint(src), onclick: () => { showArt(i); viewer.showModal(); } }, img);
+    if (m.a === 2) {
+      // too heavy to animate in the grid: it starts moving when you point at it
+      b.append(el('span', { class: 'gif-tag', text: 'GIF' }));
+      b.addEventListener('pointerenter', () => { img.src = src; }, { once: true });
+    }
+    grid.append(el('li', {}, b));
   });
   viewer.querySelectorAll('[data-step]').forEach((b) => b.addEventListener('click', () => showArt(artAt + Number(b.dataset.step))));
   viewer.addEventListener('keydown', (e) => { if (e.key === 'ArrowRight') showArt(artAt + 1); if (e.key === 'ArrowLeft') showArt(artAt - 1); });
@@ -208,68 +242,50 @@ function pageColour() {
 }
 
 // ---------- live numbers ----------
-// The day counts shipped in data/activity.js are a snapshot. On each visit the page also asks for today's
-// counts for the GitHub account, keeps them for a few hours, and falls back to the snapshot if that fails.
-async function freshActivity() {
-  const base = ACTIVITY, first = Object.keys(base).sort()[0], KEY = 'tay-contributions-v1';
-  const baseTotal = Object.values(base).reduce((a, d) => a + d[0], 0);
-  const merge = (list) => {
-    if (!Array.isArray(list)) return null;
-    const out = {};
-    let total = 0;
-    for (const c of list) if (c[1] > 0 && c[0] >= first) { out[c[0]] = [c[1], (base[c[0]] || [])[1] || '']; total += c[1]; }
-    return total >= baseTotal * 0.9 ? out : null;            // a much lower total means the source lost the private days
-  };
+// The day counts shipped in data/activity.js are a snapshot. The page starts at once with the newest counts it
+// already has (the snapshot, or what an earlier visit saved), and asks GitHub for today's counts in the background.
+// When they arrive the numbers in the text update, and the next visit builds its cubes from them.
+const KEY = 'tay-contributions-v1';
+const firstDay = Object.keys(ACTIVITY).sort()[0];
+const baseTotal = Object.values(ACTIVITY).reduce((a, d) => a + d[0], 0);
+function mergeActivity(list) {
+  if (!Array.isArray(list)) return null;
+  const out = {};
+  let total = 0;
+  for (const c of list) if (c[1] > 0 && c[0] >= firstDay) { out[c[0]] = [c[1], (ACTIVITY[c[0]] || [])[1] || '']; total += c[1]; }
+  return total >= baseTotal * 0.9 ? out : null;            // a much lower total means the source lost the private days
+}
+function showNumbers(activity) {
+  const commits = Object.values(activity).reduce((a, d) => a + d[0], 0);
+  $('#fact-commits').textContent = num(commits);
+  $('#all-lead').textContent = `${num(commits)} contributions on ${Object.keys(activity).length} days since July 2024, private work included. Here the same blocks sort themselves by what each day went into.`;
+}
+function activityNow() {
   let cached = null;
   try { cached = JSON.parse(localStorage.getItem(KEY)); } catch (err) { /* no storage, no cache */ }
-  if (cached && Date.now() - cached.t < 6 * 3600e3) return merge(cached.list) || base;
-  const years = [];
-  for (let y = Number(first.slice(0, 4)); y <= new Date().getFullYear(); y++) years.push('y=' + y);
-  const pull = fetch(`https://github-contributions-api.jogruber.de/v4/${SITE.github}?${years.join('&')}`)
-    .then((r) => (r.ok ? r.json() : Promise.reject(new Error('status ' + r.status))))
-    .then((j) => {
-      const list = j.contributions.filter((c) => c.count > 0).map((c) => [c.date, c.count]);
-      try { localStorage.setItem(KEY, JSON.stringify({ t: Date.now(), list })); } catch (err) { /* fine */ }
-      return list;
-    })
-    .catch(() => null);
-  const quick = await Promise.race([pull, new Promise((r) => setTimeout(() => r(null), 1500))]);
-  return (quick && merge(quick)) || (cached && merge(cached.list)) || base;
+  const have = (cached && mergeActivity(cached.list)) || ACTIVITY;
+  if (!cached || Date.now() - cached.t > 3 * 3600e3) {
+    const years = [];
+    for (let y = Number(firstDay.slice(0, 4)); y <= new Date().getFullYear(); y++) years.push('y=' + y);
+    fetch(`https://github-contributions-api.jogruber.de/v4/${SITE.github}?${years.join('&')}`)
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error('status ' + r.status))))
+      .then((j) => {
+        const list = j.contributions.filter((c) => c.count > 0).map((c) => [c.date, c.count]);
+        const fresh = mergeActivity(list);
+        if (!fresh) return;
+        try { localStorage.setItem(KEY, JSON.stringify({ t: Date.now(), list })); } catch (err) { /* fine */ }
+        showNumbers(fresh);
+      })
+      .catch(() => {});
+  }
+  return have;
 }
 
 // ---------- the cubes ----------
-async function loadSprite() {
-  // one cube per pixel of the artwork, background left out
-  try {
-    const img = new Image();
-    img.src = VOXEL_ART.src;
-    await img.decode();
-    const g = VOXEL_ART.grid, c = document.createElement('canvas');
-    c.width = g; c.height = g;
-    const k = c.getContext('2d', { willReadFrequently: true });
-    k.imageSmoothingEnabled = false;
-    k.drawImage(img, 0, 0, g, g);
-    const d = k.getImageData(0, 0, g, g).data;
-    const at = (x, y) => { const i = (y * g + x) * 4; return [d[i], d[i + 1], d[i + 2], d[i + 3]]; };
-    const bg = at(1, 1);
-    const [x0, y0, x1, y1] = VOXEL_ART.crop;
-    const cells = [];
-    for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) {
-      const p = at(x, y);
-      if (p[3] < 128 || (Math.abs(p[0] - bg[0]) + Math.abs(p[1] - bg[1]) + Math.abs(p[2] - bg[2]) < 24)) continue;
-      cells.push({ x: x - x0, y: y - y0, color: `rgb(${p[0]},${p[1]},${p[2]})` });
-    }
-    return { cells, w: x1 - x0 + 1, h: y1 - y0 + 1 };
-  } catch (err) { return { cells: [], w: 1, h: 1 }; }
-}
-
 async function startWorld() {
   const tip = $('#sky-tip'), labels = $('#sky-labels'), stackLabels = $('#stack-labels');
-  const activity = await freshActivity();
-  const commits = Object.values(activity).reduce((a, d) => a + d[0], 0);
-  const activeDays = Object.keys(activity).length;
-  $('#fact-commits').textContent = num(commits);
-  $('#all-lead').textContent = `${num(commits)} contributions on ${activeDays} days since July 2024, private work included. Here the same blocks sort themselves by what each day went into.`;
+  const activity = activityNow();
+  showNumbers(activity);
 
   let mod;
   try {
@@ -304,31 +320,37 @@ async function startWorld() {
     return catIndex[type === 'learn' ? 'site' : type];
   });
 
-  // name the busiest day of the projects that are on the page
-  const byRepo = new Map(SHOWN.filter((p) => p.repo).map((p) => [p.repo, p]));
+  // a flag for the projects that are on the page: on the day set with "when" in data/projects.js,
+  // otherwise on the busiest day of the project's public repo
+  const byRepo = new Map(SHOWN.filter((p) => p.repo && !p.when).map((p) => [p.repo, p]));
   const best = new Map();
   days.forEach((d) => {
     const p = byRepo.get(d.what.split(', ')[0]);
     if (p && (!best.has(p.id) || best.get(p.id).n < d.n)) best.set(p.id, { ...d, name: p.name, pid: p.id });
   });
-  const rank = (m) => (SHOWN.find((p) => p.id === m.pid).tier === 'front' ? 1000 : 0) + m.n;
+  SHOWN.filter((p) => p.when).forEach((p) => {
+    const d = days.find((x) => x.date >= p.when);
+    if (d) best.set(p.id, { ...d, name: p.name, pid: p.id });
+  });
+  const monthYear = new Intl.DateTimeFormat('en', { month: 'short', year: 'numeric', timeZone: 'UTC' });
+  // the order in data/projects.js decides who gets a flag first when two would sit on top of each other
+  const rank = (m) => { const k = SHOWN.findIndex((p) => p.id === m.pid); return SHOWN[k].tier === 'front' ? 1000 - k : m.n; };
   const marks = [];
   [...best.values()].filter((m) => { const p = SHOWN.find((x) => x.id === m.pid); return p.tier === 'front' || p.video; })
     .sort((a, b) => rank(b) - rank(a)).forEach((m) => { if (marks.length < 8 && marks.every((o) => Math.abs(o.col - m.col) > 4)) marks.push(m); });
   const markEls = marks.map((m) => {
-    const a = el('a', { class: 'sky-label', href: '#everything', text: m.name });
+    const a = el('a', { class: 'sky-label', href: '#everything' }, [m.name, el('span', { text: monthYear.format(new Date(m.date)) })]);
     a.addEventListener('click', (ev) => { ev.preventDefault(); const p = ALL.find((x) => x.id === m.pid); if (p) openSheet(p); });
     labels.append(a);
     return a;
   });
 
-  const spriteData = await loadSprite();
   const fmt = new Intl.DateTimeFormat('en', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
   const game = $('#sky-game'), over = $('#sky-over'), count = $('#sky-count');
   let stackEls = [];
 
   const world = mod.createBlocks($('#world'), {
-    days, cat, cats, sprite: spriteData,
+    days, cat, cats, sprite: VOXEL,
     stages: { sky: $('#stage-sky'), stacks: $('#stage-stacks'), art: $('#stage-art'), hi: $('#stage-hi') },
     floor: '#fffaf1', ink: '#210b1b', hiFront: '#fffaf1', hiFloor: '#f7c948',
     background: pageColour,
@@ -343,14 +365,29 @@ async function startWorld() {
       const placed = [];
       // on a phone the labels stay inside the skyline's own area, clear of the buttons above it
       const minY = innerWidth < 760 ? $('#stage-sky').getBoundingClientRect().top + 60 : 110;
+      // No flag may sit on another flag or on its pole. A flag that has no room to the right of its pole
+      // tries the left side, and the ones higher up in data/projects.js get to choose first.
+      const cross = (f, n) => f.px > n.x - 4 && f.px < n.x + n.w + 4 && f.y > n.y - 68 && f.y < n.y + 2;      // f's pole through n's label
+      const hit = (a, b) => (Math.abs(a.y - b.y) < 42 && a.x < b.x + b.w + 10 && b.x < a.x + a.w + 10) || cross(a, b) || cross(b, a);
+      const minX = innerWidth * (innerWidth < 760 ? 0.03 : 0.5);
       marks.forEach((m, i) => {
         const e = markEls[i];
-        if (!s.skyOn) { e.style.display = 'none'; return; }
-        const p = s.projectDay(m.i, 0.2), lw = e.offsetWidth || 120;
-        const clear = placed.every((q) => Math.abs(q.y - p.y) > 30 || p.x > q.x + q.w + 10 || q.x > p.x + lw + 10);
-        const show = p.x > innerWidth * (innerWidth < 760 ? 0.05 : 0.4) && p.x < innerWidth - lw && p.y > minY && p.y < innerHeight - 40 && clear;
-        e.style.display = show ? '' : 'none';
-        if (show) { e.style.transform = `translate(${Math.round(p.x)}px, ${Math.round(p.y)}px)`; placed.push({ x: p.x, y: p.y, w: lw }); }
+        let at = null;
+        if (s.skyOn) {
+          const p = s.projectDay(m.i, 0.2), w = e.offsetWidth;
+          if (p.y > minY && p.y < innerHeight - 40) {
+            for (const flip of [false, true]) {
+              const me = { x: flip ? p.x - w + 8 : p.x - 8, y: p.y, w, px: p.x, flip };
+              if (me.x > minX && me.x + w < innerWidth - 6 && placed.every((q) => !hit(me, q))) { at = me; break; }
+            }
+          }
+        }
+        if (at) {
+          e.classList.toggle('flip', at.flip);
+          e.style.transform = `translate(${Math.round(at.x)}px, ${Math.round(at.y)}px)`;
+          placed.push(at);
+        }
+        e.style.visibility = at ? '' : 'hidden';        // hidden, not removed, so its width can still be measured
       });
       stackEls.forEach((e, k) => {
         if (!s.stacksOn) { e.style.display = 'none'; return; }
@@ -415,9 +452,33 @@ function flatSky(stage) {
   stage.append(g);
 }
 
+// ---------- warm up ----------
+// Once the page itself is up and the browser has a quiet moment, fetch the pictures further down in page order,
+// a few at a time. By the time you scroll there they are already here.
+function warmUp() {
+  const c = navigator.connection;
+  if (c && (c.saveData || /2g/.test(c.effectiveType || ''))) return;
+  const list = [
+    ...SHOWN.filter((p) => p.tier === 'front' && p.poster).map((p) => p.poster),
+    MEDIA[NOW.lead.image] && MEDIA[NOW.lead.image].t,
+    ...ALL.filter((p) => p.poster && MEDIA[p.poster]).map((p) => MEDIA[p.poster].t),
+    ...ART.map((f) => MEDIA['images/' + f] && MEDIA['images/' + f].t),
+  ].filter(Boolean);
+  const idle = (f) => (window.requestIdleCallback ? requestIdleCallback(f, { timeout: 1200 }) : setTimeout(f, 200));
+  let at = 0;
+  const next = () => {
+    if (at >= list.length) return;
+    const img = new Image();
+    img.onload = img.onerror = () => idle(next);
+    img.src = list[at++];
+  };
+  idle(() => { for (let k = 0; k < 4; k++) next(); });
+}
+
 renderNow();
 renderRows();
 renderWall();
 renderArt();
 pageColour();
 startWorld();
+if (document.readyState === 'complete') warmUp(); else addEventListener('load', warmUp, { once: true });

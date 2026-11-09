@@ -4,8 +4,12 @@
 // type:   game | app | tool | site | learn
 // tier:   'front' shows as a big row under "Selected work", anything else goes on the wall
 // state:  'live' | 'dev' (in development) | 'client'
+// poster: the picture (assets/tex/...). video: a short clip that plays over it. After adding or changing a picture,
+//         python3 tools/build_media.py makes the small copies. On GitHub that happens by itself after a push.
 // hide:   true keeps the entry in this file but off the page. Delete the word to show it again.
 // check:  a note for you, never shown on the page (things to confirm before going live)
+// when:   'YYYY-MM-DD' puts the project's flag on the skyline at that day. Without it the flag sits on the
+//         busiest day of the public repo, which is wrong when the real work happened in a private one.
 
 const gh = (repo) => `https://github.com/TayMcQuaya/${repo}`;
 
@@ -15,9 +19,10 @@ export const SITE = {
   github: 'TayMcQuaya',   // the contribution numbers on the page are read live for this account
 };
 
-// The pixel artwork that the cubes rebuild in the Pixel art section: one cube per pixel.
-// grid = how many real pixels the drawing has across; crop = the part to use, in those pixels [left, top, right, bottom].
-export const VOXEL_ART = { src: 'images/art18.png', grid: 64, crop: [20, 16, 40, 49] };
+// The animated pixel artwork that the cubes rebuild in the Pixel art section: one cube per pixel, frame by frame.
+// grid = how many drawn pixels the picture has across; skip = columns to leave out on the left (the signature).
+// After changing this, run: python3 tools/build_media.py
+export const VOXEL_ART = { src: 'images/art16.gif', grid: 32, skip: 4 };
 
 // Repos that are not on the page but still count in "Where the days went". Anything not listed counts as a tool.
 export const REPO_TYPES = {
@@ -44,7 +49,7 @@ export const NOW = {
 
 export const PROJECTS = [
   // ---------- Selected work ----------
-  { id: 'shaping-luck', poster: 'assets/tex/shaping-luck.jpg', name: 'Shaping Luck', type: 'app', year: 2026, tier: 'front', state: 'client', repo: 'Shaping-Luck',
+  { id: 'shaping-luck', poster: 'assets/tex/shaping-luck.jpg', name: 'Shaping Luck', type: 'app', year: 2026, tier: 'front', state: 'client', repo: 'Shaping-Luck', when: '2026-04-28',
     text: 'Quick 1-on-1 video networking. You join a lobby, get matched with another member for a 4-minute video chat, then rate it and keep in touch. I built the app, plus the landing page with waitlist and Stripe checkout.',
     tags: ['Video', 'Stripe', 'Client work'],
     links: [{ label: 'Open the app', href: 'https://app.shapingluck.com/' }],
@@ -66,6 +71,12 @@ export const PROJECTS = [
     tags: ['React Native', 'Expo', 'Client work'],
     links: [{ label: 'Visit burntout.app', href: 'https://burntout.app/' }],
     check: 'Client work. Confirm the client is fine with being shown.' },
+
+  { id: 'descent', name: 'Descent', type: 'site', year: 2026, tier: 'front', state: 'live', repo: 'Hellnight-Website',
+    text: "A 3D horror website built with Three.js. Pure showcase, just for fun. Step into the dark, find what's hidden, and try not to lose your nerve.",
+    tags: ['Three.js', 'Horror', 'Showcase'],
+    poster: 'assets/tex/decent.jpg',
+    links: [{ label: 'Visit', href: 'https://taymcquaya.github.io/Hellnight-Website/' }, { label: 'Code', href: gh('Hellnight-Website') }] },
 
   { id: 'floppytromp', name: 'Floppy Tromp', type: 'game', year: 2024, tier: 'front', state: 'live', repo: 'FloppyTromp',
     text: 'Election season satire built in Unity. Hand drew every character, shipped in a week with Web3 wallet gating baked in. Gates are open now, free for everyone to play.',
@@ -102,12 +113,9 @@ export const PROJECTS = [
     text: 'One-room prototype of an anime horror puzzle game in the look of an old PC-98.', links: [] },
   { id: 'lunar-walk', hide: true, name: 'Lunar Surface Walk', type: 'game', year: 2026,
     text: 'A first-person walk on the moon with real lunar gravity and a jetpack.', links: [] },
-  { id: 'descent', name: 'Descent', type: 'game', year: 2026, repo: 'Hellnight-Website',
-    text: "A 3D horror website built with Three.js. Pure showcase, just for fun. Step into the dark, find what's hidden, and try not to lose your nerve.",
-    video: 'assets/vid/decent.mp4', poster: 'assets/tex/decent.jpg',
-    links: [{ label: 'Visit', href: 'https://taymcquaya.github.io/Hellnight-Website/' }, { label: 'Code', href: gh('Hellnight-Website') }] },
-  { id: 'mad-scientist', hide: true, name: '2D Mad Scientist', type: 'game', year: 2024, repo: 'UnityExoGame',
-    text: 'A Unity game from 2024 that runs in the browser.', links: [{ label: 'Code', href: gh('UnityExoGame') }] },
+  { id: 'mad-scientist', poster: 'assets/tex/mad-scientist.jpg', name: '2D Mad Scientist', type: 'game', year: 2024, repo: 'UnityExoGame',
+    text: 'A pixel art side-scroller made in Unity in July 2024. The oldest project on this page, and it still plays in the browser.',
+    links: [{ label: 'Play', href: 'https://taymcquaya.github.io/UnityExoGame/', play: true }, { label: 'Code', href: gh('UnityExoGame') }] },
   { id: 'fun-speak', hide: true, name: 'Fun Speak', type: 'game', year: 2025, repo: 'Fun-Speak',
     text: 'A Unity build for the browser.', links: [{ label: 'Code', href: gh('Fun-Speak') }] },
   { id: 'color-match', hide: true, name: 'Color Match', type: 'game', year: 2024, repo: 'Color-Match-HTML-Game',
@@ -126,9 +134,9 @@ export const PROJECTS = [
     text: 'A fully functional text editor built from scratch in my early vibe coding days, a personal stress test to see how far I could push the limits. Works just fine.',
     video: 'assets/vid/openopen.mp4', poster: 'assets/tex/openopen.jpg',
     links: [{ label: 'Download', href: 'https://github.com/TayMcQuaya/OpenOPen/tree/executable' }] },
-  { id: 'transscript', name: 'Transscript', type: 'app', year: 2026, repo: 'Transscript',
+  { id: 'transscript', poster: 'assets/tex/transscript.jpg', name: 'Transscript', type: 'app', year: 2026, repo: 'Transscript',
     text: 'A Windows app that turns video or audio into text with Whisper.', links: [{ label: 'Code', href: gh('Transscript') }] },
-  { id: 'telegram-bridge', name: 'Claude Telegram Bridge', type: 'app', year: 2025, repo: 'Claude-Telegram-Bridge',
+  { id: 'telegram-bridge', poster: 'assets/tex/telegram-bridge.jpg', name: 'Claude Telegram Bridge', type: 'app', year: 2025, repo: 'Claude-Telegram-Bridge',
     text: 'Control Claude Code from your phone through Telegram.', links: [{ label: 'Code', href: gh('Claude-Telegram-Bridge') }] },
 
   // ---------- Tools ----------
@@ -143,7 +151,7 @@ export const PROJECTS = [
   { id: 'animation-library', poster: 'assets/tex/animation-library.jpg', name: 'Animation Library', type: 'tool', year: 2024, repo: 'AnimationLibrary',
     text: 'A CSS animation library with a demo page.',
     links: [{ label: 'Open', href: 'https://taymcquaya.github.io/AnimationLibrary/' }] },
-  { id: 'cipherlock', name: 'CipherLock', type: 'tool', year: 2025, repo: 'CipherLock',
+  { id: 'cipherlock', poster: 'assets/tex/cipherlock.jpg', name: 'CipherLock', type: 'tool', year: 2025, repo: 'CipherLock',
     text: 'AES-256 file encryption with a password, as a Windows .exe.', links: [{ label: 'Code', href: gh('CipherLock') }] },
   { id: 'clipboard-manager', hide: true, name: 'Clipboard Manager', type: 'tool', year: 2025, repo: 'Clipboard-Manager',
     text: 'Clipboard history for Windows.', links: [{ label: 'Code', href: gh('Clipboard-Manager') }] },
@@ -155,7 +163,7 @@ export const PROJECTS = [
     text: 'Right-click a folder to upload it to Google Drive.', links: [{ label: 'Code', href: gh('G-Drive-Uploader') }] },
   { id: 'tv-static', hide: true, name: 'TV Static', type: 'tool', year: 2024, repo: 'TV-Static',
     text: 'A retro TV static effect for the web.', links: [{ label: 'Code', href: gh('TV-Static') }] },
-  { id: 'wallet-integration', name: 'Solana Wallet Kit', type: 'tool', year: 2025, repo: 'wallet-integration',
+  { id: 'wallet-integration', poster: 'assets/tex/wallet-integration.jpg', name: 'Solana Wallet Kit', type: 'tool', year: 2025, repo: 'wallet-integration',
     text: 'Guide and code for wallet connect, balances and token swaps on Solana.', links: [{ label: 'Code', href: gh('wallet-integration') }] },
   { id: 'google-signin', hide: true, name: 'Google Sign-in Template', type: 'tool', year: 2025, repo: 'Auth-LogIn',
     text: 'A login template in Next.js and Firebase.', links: [{ label: 'Code', href: gh('Auth-LogIn') }] },
@@ -167,12 +175,17 @@ export const PROJECTS = [
     text: 'A Web3 site with an AI assistant and an NFT gallery.', links: [{ label: 'Open', href: 'https://taymcquaya.github.io/FireCats-Website/' }, { label: 'Code', href: gh('FireCats-Website') }] },
   { id: 'bali-bliss', poster: 'assets/tex/bali-bliss.jpg', name: 'Bali Bliss Travels', type: 'site', year: 2025, repo: 'BaliBlissTravels',
     text: 'A travel agency site with booking.', links: [{ label: 'Open', href: 'https://taymcquaya.github.io/BaliBlissTravels/' }, { label: 'Code', href: gh('BaliBlissTravels') }] },
-  { id: 'dr-omon', hide: true, name: 'Dr. Omon', type: 'site', year: 2024, repo: 'Dr.Omon-Website',
-    text: 'A multi-page site with research, team and donation pages.', links: [{ label: 'Code', href: gh('Dr.Omon-Website') }] },
-  { id: 'exoworks', hide: true, name: 'ExoWorks', type: 'site', year: 2025, repo: 'Exo-Works',
-    text: 'A one-page site.', links: [{ label: 'Code', href: gh('Exo-Works') }] },
-  { id: 'banksy', hide: true, name: 'Banksy', type: 'site', year: 2024, repo: 'banksy-website',
-    text: 'A one-page site.', links: [{ label: 'Code', href: gh('banksy-website') }] },
+  { id: 'dr-omon', poster: 'assets/tex/mycobridge.jpg', name: 'MycoBridge Network', type: 'site', year: 2024, repo: 'Dr.Omon-Website',
+    text: 'A multi-page site for a mushroom research network, with research, team and donation pages.',
+    links: [{ label: 'Open', href: 'https://taymcquaya.github.io/Dr.Omon-Website/' }, { label: 'Code', href: gh('Dr.Omon-Website') }],
+    check: 'Looks like it was made for someone. Hide it again if they would rather not be shown.' },
+  { id: 'exoworks', poster: 'assets/tex/exoworks.jpg', name: 'ExoWorks', type: 'site', year: 2025, repo: 'Exo-Works',
+    text: 'Landing page for an AI education platform aimed at schools, students and resellers.',
+    links: [{ label: 'Open', href: 'https://taymcquaya.github.io/Exo-Works/' }, { label: 'Code', href: gh('Exo-Works') }],
+    check: 'Looks like it was made for someone. Hide it again if they would rather not be shown.' },
+  { id: 'banksy', poster: 'assets/tex/banksy.jpg', name: 'Banksy to the Moon', type: 'site', year: 2024, repo: 'banksy-website',
+    text: 'One-page site for a token with one plan: send a Banksy into deep space.',
+    links: [{ label: 'Open', href: 'https://taymcquaya.github.io/banksy-website/' }, { label: 'Code', href: gh('banksy-website') }] },
   { id: 'team-murica', hide: true, name: 'Team Murica', type: 'site', year: 2025, repo: 'WebsiteTest',
     text: 'A one-page site.', links: [{ label: 'Code', href: gh('WebsiteTest') }] },
 ];

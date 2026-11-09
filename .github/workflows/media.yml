@@ -1,0 +1,37 @@
+name: Build small pictures
+
+# When a picture is added or changed, this makes the small copies the page loads first (assets/thumb),
+# and the lists the page reads them from (data/media.js, data/voxel.js). Same as running
+# python3 tools/build_media.py on your own computer.
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'images/**'
+      - 'assets/tex/**'
+      - 'data/projects.js'
+      - 'tools/build_media.py'
+      - '.github/workflows/media.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: media-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Pillow
+        run: python3 -m pip install --quiet pillow
+      - name: Build the small pictures
+        run: python3 tools/build_media.py
+      - name: Commit if something changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/thumb data/media.js data/voxel.js
+          git diff --cached --quiet || (git commit -m "Rebuild small pictures" && git pull --rebase && git push)

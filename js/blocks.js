@@ -145,11 +145,17 @@ export function createBlocks(host, cfg) {
     stacks.measure();
   }
 
-  // 3. a pixel artwork, one cube per pixel
+  // 3. a pixel artwork that moves: one cube per pixel, and every frame says which cubes show and in which colour
   const art = formation(0.06, -0.38, 0.95);
-  if (sprite && sprite.cells.length) {
-    sprite.cells.slice(0, N).forEach((c, n) => {
-      art.set(shuffled[n], c.x - sprite.w / 2, sprite.h / 2 - c.y, 0, 1, 1, 1, new THREE.Color(c.color));
+  let artFrames = null, artPal = null, artNow = null;
+  if (sprite && sprite.cells && sprite.cells.length) {
+    const cells = sprite.cells.slice(0, N);
+    artPal = sprite.palette.map((c) => new THREE.Color(c));
+    cells.forEach((c, n) => art.set(shuffled[n], c[0] - sprite.w / 2, sprite.h / 2 - c[1], 0, 1, 1, 1, WHITE));
+    artFrames = sprite.frames.map((row) => {
+      const a = new Int8Array(N).fill(-1);
+      for (let n = 0; n < cells.length; n++) { const ch = row.charCodeAt(n); if (ch !== 46) a[shuffled[n]] = ch - 48; }
+      return a;
     });
     art.measure();
   }
@@ -286,6 +292,7 @@ export function createBlocks(host, cfg) {
     if (runMix > 0) fq.slerp(qRun, ease(runMix));
     const hh0 = D * TAN, sRun = ((narrow ? 0.7 : 0.27) * 2 * hh0 * cam.aspect) / 7;
     const g = ease(runMix);
+    artNow = artFrames ? artFrames[sprite.seq[reduced ? 0 : Math.floor((time * 1000) / sprite.ms) % sprite.seq.length]] : null;
 
     for (let i = 0; i < N; i++) {
       const r0 = R[i * 6], r1 = R[i * 6 + 1], r2 = R[i * 6 + 2], r3 = R[i * 6 + 3], r4 = R[i * 6 + 4], r5 = R[i * 6 + 5];
@@ -311,8 +318,12 @@ export function createBlocks(host, cfg) {
       }
       // formed position
       const src = playing || runMix > 0 ? sky : f, d = days[i];
-      let sy = src.scl[i * 3 + 1];
+      let sy = src.scl[i * 3 + 1], sx = src.scl[i * 3], sz = src.scl[i * 3 + 2];
       C.setRGB(src.col[i * 3], src.col[i * 3 + 1], src.col[i * 3 + 2]);
+      if (src === art && artNow) {
+        if (artNow[i] < 0) sx = sy = sz = 0;          // this pixel is empty in the current frame
+        else C.copy(artPal[artNow[i]]);
+      }
       if (src === sky) {
         if (eaten[i]) { sy = 0.14; C.copy(GROUND); }
         if (run && d.col > run.col) sy = Math.min(sy, 0.3);
@@ -321,7 +332,7 @@ export function createBlocks(host, cfg) {
       }
       tmp.set(src.pos[i * 3], src.pos[i * 3 + 1], src.pos[i * 3 + 2]).applyQuaternion(fq);
       P.set(L.ax + L.s * (tmp.x - src.ext.cx), L.ay + L.s * (tmp.y - src.ext.cy), L.az + L.s * (tmp.z - src.ext.cz));
-      S.set(src.scl[i * 3] * L.s, sy * L.s, src.scl[i * 3 + 2] * L.s);
+      S.set(sx * L.s, sy * L.s, sz * L.s);
       if (g > 0) {
         const camCol = run ? run.camCol : cols - 2;
         const dz = d.col - camCol;

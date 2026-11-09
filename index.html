@@ -20,18 +20,29 @@
   <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
   <link rel="manifest" href="site.webmanifest">
+  <!-- the two fonts the first screen needs, then every script in one go instead of one after the other -->
   <link rel="preload" href="assets/fonts/pixelify-sans-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/site.css?v=8">
+  <link rel="preload" href="assets/fonts/figtree-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/site.css?v=9">
   <script type="importmap">
-  { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }
+  { "imports": { "three": "./assets/lib/three.module.min.js" } }
   </script>
+  <link rel="modulepreload" href="js/site.js?v=9">
+  <link rel="modulepreload" href="data/projects.js">
+  <link rel="modulepreload" href="data/activity.js">
+  <link rel="modulepreload" href="data/media.js">
+  <link rel="modulepreload" href="data/voxel.js">
+  <link rel="modulepreload" href="js/sprite.js">
+  <link rel="modulepreload" href="js/blocks.js">
+  <link rel="modulepreload" href="assets/lib/three.module.min.js">
+  <link rel="preconnect" href="https://github-contributions-api.jogruber.de" crossorigin>
 </head>
 <body>
   <a class="skip" href="#work">Skip to the work</a>
   <div id="world"></div>
 
   <header class="top">
-    <a class="brand" href="#top"><img src="assets/tex/avatar512.jpg" alt="" width="36" height="36">TayMcQuaya</a>
+    <a class="brand" href="#top"><img src="assets/thumb/avatar.webp" alt="" width="36" height="36">TayMcQuaya</a>
     <nav aria-label="Sections">
       <a href="#now">Now</a>
       <a href="#work">Work</a>
@@ -70,7 +81,7 @@
 
     <section class="band" id="work" data-bg="#5fcff2" aria-labelledby="h-work">
       <h2 id="h-work">Selected work</h2>
-      <p class="band-lead">Eight things that show the range: client builds, games, desktop apps and a free course.</p>
+      <p class="band-lead">Nine things that show the range: client builds, games, desktop apps and a free course.</p>
       <div class="rows" id="rows"></div>
     </section>
 
@@ -88,7 +99,7 @@
       <div class="art-head">
         <div>
           <h2 id="h-art">Pixel art</h2>
-          <p class="band-lead">This is where I started. Every piece is drawn by hand, one pixel at a time. The one on the right is rebuilt from the same blocks, one cube per pixel.</p>
+          <p class="band-lead">This is where I started. Every piece is drawn by hand, one pixel at a time. The girl next to this is one of them, rebuilt from the same blocks: one cube per pixel, and she moves like the drawing does.</p>
         </div>
         <div class="stage stage-art" id="stage-art"></div>
       </div>
@@ -166,6 +177,6 @@
     <p class="viewer-nav"><button type="button" class="btn btn-small" data-step="-1">Previous</button><span id="viewer-count"></span><button type="button" class="btn btn-small" data-step="1">Next</button></p>
   </dialog>
 
-  <script type="module" src="js/site.js?v=8"></script>
+  <script type="module" src="js/site.js?v=9"></script>
 </body>
 </html>
