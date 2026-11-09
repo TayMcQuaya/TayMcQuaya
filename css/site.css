@@ -303,10 +303,21 @@ dialog::backdrop { background: rgba(33, 11, 27, .72); }
   .nav-links a { padding: 14px var(--pad); font-size: 22px; border-bottom: 2px solid var(--bone); }
   .nav-links a:last-child { border-bottom: 0; }
   .nav-links a[aria-current]::after { left: auto; right: var(--pad); bottom: 50%; margin: 0 0 -9px; }
-  .hero { min-height: 0; }
-  .stage-sky { position: relative; left: auto; right: auto; top: auto; bottom: auto; height: 340px; margin-top: 4px; }
-  .sky-foot { padding-top: 6px; }
-  .sky-foot { justify-content: center; }
+  /* On a phone the whole hero fits the first screen: the text is set tighter, the three numbers share one row,
+     and the skyline takes whatever height is left. */
+  .hero { min-height: calc(100svh - 62px); padding-top: 16px; }
+  .hero h1 { font-size: clamp(30px, 9.4vw, 40px); }
+  .lead { font-size: 17px; line-height: 1.4; margin-top: 10px; max-width: none; }
+  .facts { display: grid; grid-template-columns: repeat(3, 1fr); align-items: start; gap: 10px; margin-top: 14px; }
+  .facts dd { font-size: 27px; }
+  .facts dt { font-size: 12.5px; line-height: 1.25; margin-top: 3px; }
+  .hero .actions { margin-top: 14px; gap: 10px; }
+  .hero .actions .btn { font-size: 17px; padding: 11px 14px; }
+  .stage-sky { position: relative; left: auto; right: auto; top: auto; bottom: auto; flex: 1 1 0; min-height: 190px; height: auto; margin-top: 4px; }
+  .sky-foot { margin: 0 auto; padding: 0 var(--pad) 12px; justify-content: stretch; }
+  .sky-note { max-width: none; width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 12px; text-align: left; font-size: 13px; line-height: 1.3; background: none; border: 0; box-shadow: none; padding: 0; }
+  .sky-note .more { display: none; }
+  .sky-note .sky-play { margin: 0; flex: none; }
   .sky-game { padding-top: 70px; }
   .sky-over { padding: 16px 18px; }
   .sky-over p:first-child { font-size: 17px; margin-bottom: 12px; }
