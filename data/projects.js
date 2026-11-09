@@ -20,9 +20,12 @@ export const SITE = {
 };
 
 // The animated pixel artwork that the cubes rebuild in the Pixel art section: one cube per pixel, frame by frame.
-// grid = how many drawn pixels the picture has across; skip = columns to leave out on the left (the signature).
+// Either a picture with all frames side by side on a see-through background (fw/fh = size of one frame,
+// count = how many, ms = time per frame; tools/cutout_schoolgirl.py made this one from images/art10.gif),
+// or an animated GIF on a flat background: { src: 'images/art16.gif', grid: 32, skip: 4 }
+// (grid = drawn pixels across, skip = columns to leave out on the left, for a signature).
 // After changing this, run: python3 tools/build_media.py
-export const VOXEL_ART = { src: 'images/art16.gif', grid: 32, skip: 4 };
+export const VOXEL_ART = { src: 'assets/voxel/schoolgirl.png', fw: 50, fh: 123, count: 167, ms: 100 };
 
 // Repos that are not on the page but still count in "Where the days went". Anything not listed counts as a tool.
 export const REPO_TYPES = {
@@ -175,15 +178,15 @@ export const PROJECTS = [
     text: 'A Web3 site with an AI assistant and an NFT gallery.', links: [{ label: 'Open', href: 'https://taymcquaya.github.io/FireCats-Website/' }, { label: 'Code', href: gh('FireCats-Website') }] },
   { id: 'bali-bliss', poster: 'assets/tex/bali-bliss.jpg', name: 'Bali Bliss Travels', type: 'site', year: 2025, repo: 'BaliBlissTravels',
     text: 'A travel agency site with booking.', links: [{ label: 'Open', href: 'https://taymcquaya.github.io/BaliBlissTravels/' }, { label: 'Code', href: gh('BaliBlissTravels') }] },
-  { id: 'dr-omon', poster: 'assets/tex/mycobridge.jpg', name: 'MycoBridge Network', type: 'site', year: 2024, repo: 'Dr.Omon-Website',
+  { id: 'dr-omon', hide: true, poster: 'assets/tex/mycobridge.jpg', name: 'MycoBridge Network', type: 'site', year: 2024, repo: 'Dr.Omon-Website',
     text: 'A multi-page site for a mushroom research network, with research, team and donation pages.',
     links: [{ label: 'Open', href: 'https://taymcquaya.github.io/Dr.Omon-Website/' }, { label: 'Code', href: gh('Dr.Omon-Website') }],
     check: 'Looks like it was made for someone. Hide it again if they would rather not be shown.' },
-  { id: 'exoworks', poster: 'assets/tex/exoworks.jpg', name: 'ExoWorks', type: 'site', year: 2025, repo: 'Exo-Works',
+  { id: 'exoworks', hide: true, poster: 'assets/tex/exoworks.jpg', name: 'ExoWorks', type: 'site', year: 2025, repo: 'Exo-Works',
     text: 'Landing page for an AI education platform aimed at schools, students and resellers.',
     links: [{ label: 'Open', href: 'https://taymcquaya.github.io/Exo-Works/' }, { label: 'Code', href: gh('Exo-Works') }],
     check: 'Looks like it was made for someone. Hide it again if they would rather not be shown.' },
-  { id: 'banksy', poster: 'assets/tex/banksy.jpg', name: 'Banksy to the Moon', type: 'site', year: 2024, repo: 'banksy-website',
+  { id: 'banksy', hide: true, poster: 'assets/tex/banksy.jpg', name: 'Banksy to the Moon', type: 'site', year: 2024, repo: 'banksy-website',
     text: 'One-page site for a token with one plan: send a Banksy into deep space.',
     links: [{ label: 'Open', href: 'https://taymcquaya.github.io/banksy-website/' }, { label: 'Code', href: gh('banksy-website') }] },
   { id: 'team-murica', hide: true, name: 'Team Murica', type: 'site', year: 2025, repo: 'WebsiteTest',

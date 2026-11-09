@@ -23,15 +23,14 @@
   <!-- the two fonts the first screen needs, then every script in one go instead of one after the other -->
   <link rel="preload" href="assets/fonts/pixelify-sans-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/figtree-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/site.css?v=9">
+  <link rel="stylesheet" href="css/site.css?v=10">
   <script type="importmap">
   { "imports": { "three": "./assets/lib/three.module.min.js" } }
   </script>
-  <link rel="modulepreload" href="js/site.js?v=9">
+  <link rel="modulepreload" href="js/site.js?v=10">
   <link rel="modulepreload" href="data/projects.js">
   <link rel="modulepreload" href="data/activity.js">
   <link rel="modulepreload" href="data/media.js">
-  <link rel="modulepreload" href="data/voxel.js">
   <link rel="modulepreload" href="js/sprite.js">
   <link rel="modulepreload" href="js/blocks.js">
   <link rel="modulepreload" href="assets/lib/three.module.min.js">
@@ -99,7 +98,7 @@
       <div class="art-head">
         <div>
           <h2 id="h-art">Pixel art</h2>
-          <p class="band-lead">This is where I started. Every piece is drawn by hand, one pixel at a time. The girl next to this is one of them, rebuilt from the same blocks: one cube per pixel, and she moves like the drawing does.</p>
+          <p class="band-lead">This is where I started. Every piece is drawn by hand, one pixel at a time. The girl next to this is one of them, rebuilt in cubes: one per pixel, and she moves like the drawing does. She needs more cubes than I have days, so the rest are borrowed.</p>
         </div>
         <div class="stage stage-art" id="stage-art"></div>
       </div>
@@ -177,6 +176,6 @@
     <p class="viewer-nav"><button type="button" class="btn btn-small" data-step="-1">Previous</button><span id="viewer-count"></span><button type="button" class="btn btn-small" data-step="1">Next</button></p>
   </dialog>
 
-  <script type="module" src="js/site.js?v=9"></script>
+  <script type="module" src="js/site.js?v=10"></script>
 </body>
 </html>

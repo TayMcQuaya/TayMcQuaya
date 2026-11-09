@@ -46,6 +46,9 @@ const FONT = {
 export function createBlocks(host, cfg) {
   const { days, stages, cat, cats, sprite } = cfg;
   const N = days.length;
+  // The pixel artwork has more pixels than there are days. The cubes it needs on top of the day cubes are only
+  // there for that one formation: everywhere else they have no size and cost nothing.
+  const M = Math.max(N, cfg.artCubes || 0);
   const cols = days[N - 1].col + 1;
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -67,7 +70,7 @@ export function createBlocks(host, cfg) {
 
   const geo = new THREE.BoxGeometry(1, 1, 1);
   geo.translate(0, 0.5, 0);
-  const mesh = new THREE.InstancedMesh(geo, new THREE.MeshLambertMaterial(), N);
+  const mesh = new THREE.InstancedMesh(geo, new THREE.MeshLambertMaterial(), M);
   mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
   mesh.frustumCulled = false;
   scene.add(mesh);
@@ -75,17 +78,18 @@ export function createBlocks(host, cfg) {
   // ---------- per-cube random numbers ----------
   let seed = 20240707;
   const rnd = () => { seed = (seed + 0x6d2b79f5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
-  const R = new Float32Array(N * 6);
-  for (let i = 0; i < N * 6; i++) R[i] = rnd();
+  const R = new Float32Array(M * 6);
+  for (let i = 0; i < M * 6; i++) R[i] = rnd();
   const shuffled = [...Array(N).keys()];
   for (let i = N - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]; }
   // loose cubes keep the colour of their day: greens for days with work, white for days off
   const idle = new THREE.Color(cfg.idle || '#fffaf1');
   const loose = days.map((d) => (d.n ? greenOf(d.n) : idle));
+  for (let i = N; i < M; i++) loose.push(idle);
 
   // ---------- formations ----------
   function formation(rotX, rotY, fit) {
-    const f = { pos: new Float32Array(N * 3), scl: new Float32Array(N * 3), col: new Float32Array(N * 3), on: new Uint8Array(N), fit,
+    const f = { pos: new Float32Array(M * 3), scl: new Float32Array(M * 3), col: new Float32Array(M * 3), on: new Uint8Array(M), fit,
       q: new THREE.Quaternion().setFromEuler(new THREE.Euler(rotX, rotY, 0, 'XYZ')), ext: { w: 1, h: 1, cx: 0, cy: 0, cz: 0 } };
     f.set = (i, x, y, z, sx, sy, sz, c) => {
       f.pos[i * 3] = x; f.pos[i * 3 + 1] = y; f.pos[i * 3 + 2] = z;
@@ -95,7 +99,7 @@ export function createBlocks(host, cfg) {
     f.measure = () => {
       const v = new THREE.Vector3();
       let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9, zs = 0, n = 0;
-      for (let i = 0; i < N; i++) {
+      for (let i = 0; i < M; i++) {
         if (!f.on[i]) continue;
         for (const top of [0, 1]) {
           v.set(f.pos[i * 3], f.pos[i * 3 + 1] + top * f.scl[i * 3 + 1], f.pos[i * 3 + 2]).applyQuaternion(f.q);
@@ -145,20 +149,27 @@ export function createBlocks(host, cfg) {
     stacks.measure();
   }
 
-  // 3. a pixel artwork that moves: one cube per pixel, and every frame says which cubes show and in which colour
+  // 3. a pixel artwork that moves: one cube per pixel, and every frame says which cubes show and in which colour.
+  // Its data is big, so it arrives after the page is up (setArt).
   const art = formation(0.06, -0.38, 0.95);
-  let artFrames = null, artPal = null, artNow = null;
-  if (sprite && sprite.cells && sprite.cells.length) {
-    const cells = sprite.cells.slice(0, N);
-    artPal = sprite.palette.map((c) => new THREE.Color(c));
-    cells.forEach((c, n) => art.set(shuffled[n], c[0] - sprite.w / 2, sprite.h / 2 - c[1], 0, 1, 1, 1, WHITE));
+  let artFrames = null, artPal = null, artNow = null, artSeq = null, artMs = 100, extrasOut = false;
+  function setArt(sprite) {
+    if (!sprite || !sprite.cells || !sprite.cells.length) return;
+    const cells = sprite.cells.slice(0, M);
+    // a little brighter than drawn, because the face of a cube that looks at you is never fully lit
+    artPal = sprite.palette.map((c) => new THREE.Color(c).multiplyScalar(1.4));
+    // the pixels used most get the day cubes, the rest get the extra ones
+    const cube = (n) => (n < N ? shuffled[n] : n);
+    cells.forEach((c, n) => art.set(cube(n), c[0] - sprite.w / 2, sprite.h / 2 - c[1], 0, 1, 1, 1, WHITE));
     artFrames = sprite.frames.map((row) => {
-      const a = new Int8Array(N).fill(-1);
-      for (let n = 0; n < cells.length; n++) { const ch = row.charCodeAt(n); if (ch !== 46) a[shuffled[n]] = ch - 48; }
+      const a = new Int8Array(M).fill(-1);
+      for (let n = 0; n < cells.length; n++) { const ch = row.charCodeAt(n); if (ch !== 46) a[cube(n)] = ch - 48; }
       return a;
     });
+    artSeq = sprite.seq; artMs = sprite.ms || 100;
     art.measure();
   }
+  if (sprite) setArt(sprite);
 
   // 4. SAY HI, standing on a floor made of the remaining cubes
   const hi = formation(0.3, -0.42, 0.95);
@@ -292,9 +303,13 @@ export function createBlocks(host, cfg) {
     if (runMix > 0) fq.slerp(qRun, ease(runMix));
     const hh0 = D * TAN, sRun = ((narrow ? 0.7 : 0.27) * 2 * hh0 * cam.aspect) / 7;
     const g = ease(runMix);
-    artNow = artFrames ? artFrames[sprite.seq[reduced ? 0 : Math.floor((time * 1000) / sprite.ms) % sprite.seq.length]] : null;
+    artNow = artFrames ? artFrames[artSeq[reduced ? 0 : Math.floor((time * 1000) / artMs) % artSeq.length]] : null;
+    // the extra cubes are only gone through while the artwork is up, and once more afterwards to put them away
+    const artUp = f === art && !playing && !!artNow && wAll > 0;
+    const end = artUp || extrasOut ? M : N;
+    extrasOut = artUp;
 
-    for (let i = 0; i < N; i++) {
+    for (let i = 0; i < end; i++) {
       const r0 = R[i * 6], r1 = R[i * 6 + 1], r2 = R[i * 6 + 2], r3 = R[i * 6 + 3], r4 = R[i * 6 + 4], r5 = R[i * 6 + 5];
       // confetti position: fixed to the screen, drifting up as the page scrolls, nearer cubes faster
       const depth = r2, z = 12 - depth * 0.95 * D, hh = (D - z) * TAN;
@@ -305,19 +320,20 @@ export function createBlocks(host, cfg) {
       let y = (r1 * 2 - 1) * Ry + scrollY * wpp * (0.95 - 0.6 * depth) + (reduced ? 0 : Math.sin(time * 0.25 + r3 * 40) * 1.4);
       y = ((((y + Ry) % (2 * Ry)) + 2 * Ry) % (2 * Ry)) - Ry;
       Pc.set(side * spread * hh * cam.aspect, y, z);
-      const cs = edge ? 0.8 + r4 * 1.4 : (r4 < 0.4 && !narrow ? 0.55 + r4 : 0);
+      const extra = i >= N;
+      const cs = extra ? 0 : edge ? 0.8 + r4 * 1.4 : (r4 < 0.4 && !narrow ? 0.55 + r4 : 0);
       E.set(time * (0.15 + r3 * 0.3) + r4 * 6, time * (0.1 + r5 * 0.25) + r0 * 6, 0);
       Qc.setFromEuler(E);
       const cc = loose[i];
 
-      const on = isSky ? 1 : f.on[i];
+      const on = extra ? (artUp ? f.on[i] : 0) : isSky ? 1 : f.on[i];
       const e = on ? ease((wAll - 0.4 * r3) / 0.6) : 0;
       if (e <= 0) {
         m4.compose(Pc, Qc, S.set(cs, cs, cs)); mesh.setMatrixAt(i, m4); mesh.setColorAt(i, cc);
         continue;
       }
       // formed position
-      const src = playing || runMix > 0 ? sky : f, d = days[i];
+      const src = !extra && (playing || runMix > 0) ? sky : f, d = days[i];
       let sy = src.scl[i * 3 + 1], sx = src.scl[i * 3], sz = src.scl[i * 3 + 2];
       C.setRGB(src.col[i * 3], src.col[i * 3 + 1], src.col[i * 3 + 2]);
       if (src === art && artNow) {
@@ -333,7 +349,7 @@ export function createBlocks(host, cfg) {
       tmp.set(src.pos[i * 3], src.pos[i * 3 + 1], src.pos[i * 3 + 2]).applyQuaternion(fq);
       P.set(L.ax + L.s * (tmp.x - src.ext.cx), L.ay + L.s * (tmp.y - src.ext.cy), L.az + L.s * (tmp.z - src.ext.cz));
       S.set(sx * L.s, sy * L.s, sz * L.s);
-      if (g > 0) {
+      if (g > 0 && !extra) {
         const camCol = run ? run.camCol : cols - 2;
         const dz = d.col - camCol;
         Pr.set(3 - d.row, 0, dz).applyQuaternion(qRun).multiplyScalar(sRun);
@@ -381,7 +397,7 @@ export function createBlocks(host, cfg) {
       ray.setFromCamera(p2, cam);
       mesh.boundingSphere = null;                 // the cubes move, so the cached bounds would be stale
       const hit = ray.intersectObject(mesh)[0];
-      if (hit) id = hit.instanceId;
+      if (hit && hit.instanceId < N) id = hit.instanceId;
     }
     if (id !== hover) { hover = id; cfg.onHover && cfg.onHover(id < 0 ? null : days[id], id < 0 ? null : projectDay(id, 0.7)); }
   }, { passive: true });
@@ -419,7 +435,7 @@ export function createBlocks(host, cfg) {
   requestAnimationFrame(frame);
 
   return {
-    play, stop, turn,
+    play, stop, turn, setArt,
     get playing() { return !!run; },
     stackInfo, projectDay, projectStack, cols, total,
     _skipIntro() { intro = 1; },

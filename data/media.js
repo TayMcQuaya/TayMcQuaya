@@ -59,3 +59,5 @@ export const MEDIA = {
   "images/art24.gif":{"t":"assets/thumb/art/art24.webp","w":512,"h":512,"c":"#1c4d95","px":1,"a":1},
   "images/art25.png":{"t":"assets/thumb/art/art25.webp","w":1920,"h":1080,"c":"#c1cf88","px":1},
   "images/art26.Png":{"t":"assets/thumb/art/art26.webp","w":760,"h":640,"c":"#4eab4d","px":1}};
+// how many cubes the animated character in data/voxel.js needs
+export const VOXEL_CELLS = 3724;

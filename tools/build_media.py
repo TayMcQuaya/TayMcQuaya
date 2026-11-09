@@ -111,23 +111,31 @@ for name in re.findall(r"'([^']+)'", art_block):
 av = Image.open('assets/tex/avatar512.jpg').convert('RGB')
 av.resize((96, 96), Image.LANCZOS).save(f"{THUMB}/avatar.webp", 'WEBP', quality=84, method=6)
 
-with open('data/media.js', 'w', encoding='utf-8') as f:
-    f.write('// Made by tools/build_media.py. Do not edit by hand: change the pictures and run the tool again.\n')
-    f.write('// t = small copy, w/h = size of the real picture, c = its average colour (shown while it loads),\n')
-    f.write('// px = pixel art (kept sharp when enlarged), a = 1 the small copy is animated, 2 only the real one is.\n')
-    f.write('export const MEDIA = ' + json.dumps(media, separators=(',', ':')).replace('},', '},\n  ').replace('{"', '{\n  "', 1) + ';\n')
-
 # ---------- the cube character ----------
 m = re.search(r"export const VOXEL_ART = \{(.*?)\};", SRC, re.S)
 cfg = dict(re.findall(r"(\w+):\s*'?([^,'}]+)'?", m.group(1)))
 src = cfg['src'].strip()
-skip = int(cfg.get('skip', 0))
-im = Image.open(src)
-fr, dur = frames_of(im)
-lw = int(cfg['grid'])
-lh = round(im.size[1] * lw / im.size[0])
-small = [f.convert('RGB').resize((lw, lh), Image.NEAREST) for f in fr]
-bg = small[0].getpixel((lw - 1, 0))
+if 'fw' in cfg:
+    # a prepared picture: all frames side by side, already at drawn size, see-through where there is nothing
+    sheet = Image.open(src).convert('RGBA')
+    lw, lh, count = int(cfg['fw']), int(cfg['fh']), int(cfg['count'])
+    per_row = sheet.size[0] // lw
+    cut = [sheet.crop(((k % per_row) * lw, (k // per_row) * lh, (k % per_row + 1) * lw, (k // per_row + 1) * lh)) for k in range(count)]
+    bg, skip, dur = (255, 0, 255), 0, [int(cfg.get('ms', 100))]
+    small = []
+    for f in cut:
+        flat = Image.new('RGB', f.size, bg)
+        flat.paste(f, (0, 0), f.split()[3].point(lambda v: 255 if v > 127 else 0))
+        small.append(flat)
+else:
+    # an animated GIF on a flat background colour
+    skip = int(cfg.get('skip', 0))
+    im = Image.open(src)
+    fr, dur = frames_of(im)
+    lw = int(cfg['grid'])
+    lh = round(im.size[1] * lw / im.size[0])
+    small = [f.convert('RGB').resize((lw, lh), Image.NEAREST) for f in fr]
+    bg = small[0].getpixel((lw - 1, 0))
 uniq, seq = [], []
 for f in small:
     b = f.tobytes()
@@ -152,7 +160,7 @@ for b in uniq:
 cells = sorted(used, key=lambda k: (-used[k], k[1], k[0]))
 x0 = min(x for x, y in cells); y0 = min(y for x, y in cells)
 x1 = max(x for x, y in cells); y1 = max(y for x, y in cells)
-assert len(palette) < 40, 'too many colours for the cube character'
+assert len(palette) <= 64, 'too many colours for the cube character'
 frames = [''.join(chr(48 + g[c]) if c in g else '.' for c in cells) for g in grids]
 voxel = {
     'w': x1 - x0 + 1, 'h': y1 - y0 + 1, 'ms': dur[0],
@@ -163,5 +171,12 @@ voxel = {
 with open('data/voxel.js', 'w', encoding='utf-8') as f:
     f.write(f"// Made by tools/build_media.py from {src}. One cube per pixel; each frame says which colour every cube has ('.' = hidden).\n")
     f.write('export const VOXEL = ' + json.dumps(voxel, separators=(',', ':')) + ';\n')
+with open('data/media.js', 'w', encoding='utf-8') as f:
+    f.write('// Made by tools/build_media.py. Do not edit by hand: change the pictures and run the tool again.\n')
+    f.write('// t = small copy, w/h = size of the real picture, c = its average colour (shown while it loads),\n')
+    f.write('// px = pixel art (kept sharp when enlarged), a = 1 the small copy is animated, 2 only the real one is.\n')
+    f.write('export const MEDIA = ' + json.dumps(media, separators=(',', ':')).replace('},', '},\n  ').replace('{"', '{\n  "', 1) + ';\n')
+    f.write(f'// how many cubes the animated character in data/voxel.js needs\nexport const VOXEL_CELLS = {len(cells)};\n')
+
 print(f"cube character: {src} {lw}x{lh}, {len(cells)} pixels, {len(uniq)} drawings, {len(seq)} steps, {len(palette)} colours")
 print('pictures:', len(media), ' thumbs:', sum(os.path.getsize(os.path.join(d, x)) for d, _, fs in os.walk(THUMB) for x in fs) // 1024, 'KB')

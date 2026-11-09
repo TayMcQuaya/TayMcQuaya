@@ -1,7 +1,6 @@
 import { SITE, NOW, PROJECTS, ART, REPO_TYPES } from '../data/projects.js';
 import { ACTIVITY } from '../data/activity.js';
-import { MEDIA } from '../data/media.js';
-import { VOXEL } from '../data/voxel.js';
+import { MEDIA, VOXEL_CELLS } from '../data/media.js';
 import { sprite, typeColor } from './sprite.js';
 
 const $ = (s, el = document) => el.querySelector(s);
@@ -350,7 +349,7 @@ async function startWorld() {
   let stackEls = [];
 
   const world = mod.createBlocks($('#world'), {
-    days, cat, cats, sprite: VOXEL,
+    days, cat, cats, artCubes: VOXEL_CELLS,
     stages: { sky: $('#stage-sky'), stacks: $('#stage-stacks'), art: $('#stage-art'), hi: $('#stage-hi') },
     floor: '#fffaf1', ink: '#210b1b', hiFront: '#fffaf1', hiFloor: '#f7c948',
     background: pageColour,
@@ -410,6 +409,9 @@ async function startWorld() {
       }
     },
   });
+
+  // the animated character is a big file, so it comes in after everything else is running
+  import('../data/voxel.js').then((m) => world.setArt(m.VOXEL)).catch(() => {});
 
   stackEls = world.stackInfo.map((s) => {
     const e = el('div', { class: 'stack-label' }, [el('b', { class: 'long', text: s.name }), el('b', { class: 'short', text: s.short }), el('span', { text: `${s.days} days` })]);
