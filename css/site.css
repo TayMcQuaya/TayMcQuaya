@@ -204,16 +204,17 @@ main, .foot { position: relative; z-index: 1; }
 .chip span { font-family: var(--body); font-size: 14px; }
 .chip:hover { background: var(--gold); }
 .chip[aria-pressed="true"] { background: var(--ink); color: var(--bone); }
-.wall { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 30px 22px; margin-top: 30px; }
+/* four across on a desktop: big enough to read a screenshot, small enough to still take in the whole wall */
+.wall { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 34px 26px; margin-top: 30px; }
 .tile { display: block; width: 100%; min-width: 0; text-align: left; }
 .wall li { min-width: 0; }
 .tile-pic { display: block; aspect-ratio: 16 / 10; overflow: hidden; border: 3px solid var(--ink); box-shadow: 6px 6px 0 var(--shadow); transition: transform .1s, box-shadow .1s; background: #000; }
 .tile-pic img { width: 100%; height: 100%; object-fit: cover; object-position: center top; }
 .tile-pic.is-sprite img { display: block; width: auto; height: 100%; aspect-ratio: 1; margin: 0 auto; }
 .tile:hover .tile-pic, .tile:focus-visible .tile-pic { transform: translate(-3px, -3px); box-shadow: 9px 9px 0 var(--shadow); }
-.tile-name { display: block; font-family: var(--pixel); font-weight: 700; font-size: 19px; line-height: 1.1; margin-top: 14px; }
-.tile-meta { display: block; font-size: 14px; margin-top: 3px; }
-.tile-more { aspect-ratio: 16 / 10; display: flex; flex-direction: column; justify-content: center; gap: 6px; padding: 14px; border: 3px dashed var(--ink); font-size: 14.5px; line-height: 1.35; }
+.tile-name { display: block; font-family: var(--pixel); font-weight: 700; font-size: 22px; line-height: 1.1; margin-top: 14px; }
+.tile-meta { display: block; font-size: 15px; margin-top: 3px; }
+.tile-more { aspect-ratio: 16 / 10; display: flex; flex-direction: column; justify-content: center; gap: 6px; padding: 18px; border: 3px dashed var(--ink); font-size: 15.5px; line-height: 1.35; }
 .tile-more b { font-weight: 600; font-size: 40px; line-height: 1; letter-spacing: -0.02em; }
 
 /* pixel art */
@@ -282,6 +283,7 @@ dialog::backdrop { background: rgba(33, 11, 27, .72); }
 
 /* ---------- small screens ---------- */
 @media (max-width: 1080px) {
+  .wall { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .row, .row:nth-child(even) { grid-template-columns: 1fr; }
   .row .media, .row:nth-child(even) .media { order: 0; border: 0; border-bottom: 3px solid var(--ink); }
 }
@@ -331,6 +333,9 @@ dialog::backdrop { background: rgba(33, 11, 27, .72); }
   .strip { grid-template-columns: repeat(2, 1fr); }
   .dev { grid-template-columns: 96px 1fr; }
   .wall { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 14px; }
+  .tile-name { font-size: 19px; }
+  .tile-meta { font-size: 14px; }
+  .tile-more { padding: 12px; font-size: 13.5px; }
   .art { columns: 2; column-gap: 12px; }
   .art li { margin-bottom: 12px; }
   .about-card { grid-template-columns: 1fr; }
