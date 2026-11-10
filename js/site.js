@@ -95,7 +95,7 @@ function comicStrip(steps) {
 function renderNow() {
   const L = NOW.lead;
   const lead = el('article', { class: 'card now-lead' }, [
-    el('div', { class: 'now-shot' }, pic(L.image, { alt: `${L.name} logo`, small: true })),
+    el('a', { class: 'now-shot', href: L.link.href, target: '_blank', rel: 'noopener', 'aria-label': `${L.link.label} (opens in a new tab)` }, pic(L.image, { alt: `${L.name} logo`, small: true })),
     el('div', { class: 'now-text' }, [
       el('h3', { text: L.name }),
       el('p', { class: 'meta', text: L.role }),
