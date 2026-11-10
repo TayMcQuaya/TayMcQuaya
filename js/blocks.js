@@ -186,7 +186,7 @@ export function createBlocks(host, cfg) {
   }
 
   const FORMS = [
-    { f: sky, el: stages.sky }, { f: stacks, el: stages.stacks }, { f: art, el: stages.art }, { f: hi, el: stages.hi },
+    { f: sky, el: stages.sky }, { f: stacks, el: stages.stacks }, { f: art, el: stages.art, range: [0.12, 0.7] },      // the artwork finishes later, so you see it build while it scrolls in { f: hi, el: stages.hi },
   ].filter((s) => s.el);
 
   // ---------- state ----------
@@ -275,7 +275,8 @@ export function createBlocks(host, cfg) {
       const r = st.el.getBoundingClientRect(), L = live[k];
       const cy = r.top + r.height / 2;
       const off = r.height > Hpx ? Math.max(0, Math.max(r.top, Hpx - r.bottom)) / Hpx : Math.abs(cy - Hpx / 2) / Hpx;
-      L.w = r.width ? 1 - smooth(0.34, 0.92, off) : 0;
+      const [full, none] = st.range || [0.34, 0.92];       // how far from the middle of the screen it is complete / gone
+      L.w = r.width ? 1 - smooth(full, none, off) : 0;
       L.ax = (r.left + r.width / 2 - W / 2) * wpp; L.ay = -(cy - Hpx / 2) * wpp;
       L.s = st.f.fit * Math.min((r.width * wpp) / st.f.ext.w, (r.height * wpp) / st.f.ext.h);
       L.az = 0;
