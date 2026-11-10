@@ -186,7 +186,10 @@ export function createBlocks(host, cfg) {
   }
 
   const FORMS = [
-    { f: sky, el: stages.sky }, { f: stacks, el: stages.stacks }, { f: art, el: stages.art, range: [0.12, 0.7] },      // the artwork finishes later, so you see it build while it scrolls in { f: hi, el: stages.hi },
+    { f: sky, el: stages.sky },
+    { f: stacks, el: stages.stacks },
+    { f: art, el: stages.art, range: [0.12, 0.7] },      // the artwork finishes later, so you see it build while it scrolls in
+    { f: hi, el: stages.hi },
   ].filter((s) => s.el);
 
   // ---------- state ----------
