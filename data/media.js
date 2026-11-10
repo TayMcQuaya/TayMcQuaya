@@ -5,7 +5,7 @@ export const MEDIA = {
   "assets/tex/animation-library.jpg":{"t":"assets/thumb/animation-library.webp","w":1000,"h":625,"c":"#e89a82"},
   "assets/tex/bali-bliss.jpg":{"t":"assets/thumb/bali-bliss.webp","w":1162,"h":726,"c":"#65806f"},
   "assets/tex/banksy.jpg":{"t":"assets/thumb/banksy.webp","w":1000,"h":625,"c":"#24272e"},
-  "assets/tex/blackpine.jpg":{"t":"assets/thumb/blackpine.webp","w":864,"h":540,"c":"#141718"},
+  "assets/tex/blackpine.jpg":{"t":"assets/thumb/blackpine.webp","w":1000,"h":625,"c":"#141817"},
   "assets/tex/cipherlock.jpg":{"t":"assets/thumb/cipherlock.webp","w":1280,"h":800,"c":"#cba04e"},
   "assets/tex/claude-den.jpg":{"t":"assets/thumb/claude-den.webp","w":1280,"h":800,"c":"#1f1a1d"},
   "assets/tex/coach-al.jpg":{"t":"assets/thumb/coach-al.webp","w":1600,"h":1000,"c":"#9fc098"},
