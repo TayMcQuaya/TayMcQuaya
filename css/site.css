@@ -135,8 +135,6 @@ main, .foot { position: relative; z-index: 1; }
 .now { display: grid; grid-template-columns: 1.25fr 1fr; gap: 28px; margin-top: 34px; align-items: start; }
 .now-lead { overflow: hidden; }
 .now-shot { display: block; aspect-ratio: 16 / 9; border-bottom: 3px solid var(--ink); background: #f9eacd; }
-.now-shot img { transition: transform .15s; }
-.now-shot:hover img { transform: scale(1.04); }
 .now-shot img { width: 100%; height: 100%; object-fit: contain; }
 .now-text { padding: 22px 26px 26px; }
 .media-sprite img, .tile-pic.is-sprite img { image-rendering: pixelated; }
