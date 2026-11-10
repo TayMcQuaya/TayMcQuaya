@@ -111,75 +111,84 @@ for name in re.findall(r"'([^']+)'", art_block):
 av = Image.open('assets/tex/avatar512.jpg').convert('RGB')
 av.resize((96, 96), Image.LANCZOS).save(f"{THUMB}/avatar.webp", 'WEBP', quality=84, method=6)
 
-# ---------- the cube character ----------
-m = re.search(r"export const VOXEL_ART = \{(.*?)\};", SRC, re.S)
-cfg = dict(re.findall(r"(\w+):\s*'?([^,'}]+)'?", m.group(1)))
-src = cfg['src'].strip()
-skip = int(cfg.get('skip', 0))
-im = Image.open(src)
-fr, dur = frames_of(im)
-lw = int(cfg.get('grid', im.size[0]))                      # without "grid" the picture is taken as drawn, pixel for pixel
-lh = round(im.size[1] * lw / im.size[0])
-bg = (255, 0, 255)
-clear = any(f.getextrema()[3][0] < 128 for f in fr)        # a see-through background, as Aseprite exports it
-small = []
-for f in fr:
-    f = f.resize((lw, lh), Image.NEAREST)
-    if clear:
-        flat = Image.new('RGB', f.size, bg)
-        flat.paste(f, (0, 0), f.split()[3].point(lambda v: 255 if v > 127 else 0))
-        small.append(flat)
-    else:
-        small.append(f.convert('RGB'))
-if not clear:
-    bg = small[0].getpixel((lw - 1, 0))                    # otherwise the colour of the top right corner is the background
-# frames can last differently long: the animation is stepped in the largest time unit that fits them all
+# ---------- the cube characters ----------
 from math import gcd
 from functools import reduce
-tick = reduce(gcd, dur)
-small = [f for f, d in zip(small, dur) for _ in range(d // tick)]
-dur = [tick]
-uniq, seq = [], []
-for f in small:
-    b = f.tobytes()
-    if b not in uniq:
-        uniq.append(b)
-    seq.append(uniq.index(b))
-palette, grids, used = [], [], {}
-for b in uniq:
-    f = Image.frombytes('RGB', (lw, lh), b)
-    g = {}
-    for y in range(lh):
-        for x in range(skip, lw):
-            c = f.getpixel((x, y))
-            if c == bg:
-                continue
-            if c not in palette:
-                palette.append(c)
-            g[(x, y)] = palette.index(c)
-            used[(x, y)] = used.get((x, y), 0) + 1
-    grids.append(g)
-# pixels used in most frames come first, so if there are ever fewer cubes than pixels the rare ones are dropped
-cells = sorted(used, key=lambda k: (-used[k], k[1], k[0]))
-x0 = min(x for x, y in cells); y0 = min(y for x, y in cells)
-x1 = max(x for x, y in cells); y1 = max(y for x, y in cells)
-assert len(palette) <= 64, 'too many colours for the cube character'
-frames = [''.join(chr(48 + g[c]) if c in g else '.' for c in cells) for g in grids]
-voxel = {
-    'w': x1 - x0 + 1, 'h': y1 - y0 + 1, 'ms': dur[0],
-    'palette': ['#%02x%02x%02x' % c for c in palette],
-    'cells': [[x - x0, y - y0] for x, y in cells],
-    'frames': frames, 'seq': seq,
-}
+
+
+def voxel(name):
+    """Turns one picture named in data/projects.js (VOXEL_ART, VOXEL_ME) into cubes: one per pixel, frame by frame."""
+    m = re.search(r"export const %s = \{(.*?)\};" % name, SRC, re.S)
+    cfg = dict(re.findall(r"(\w+):\s*'?([^,'}]+)'?", m.group(1)))
+    src = cfg['src'].strip()
+    skip = int(cfg.get('skip', 0))
+    im = Image.open(src)
+    fr, dur = frames_of(im)
+    lw = int(cfg.get('grid', im.size[0]))                      # without "grid" the picture is taken as drawn, pixel for pixel
+    lh = round(im.size[1] * lw / im.size[0])
+    bg = (255, 0, 255)
+    clear = any(f.getextrema()[3][0] < 128 for f in fr)        # a see-through background, as Aseprite exports it
+    small = []
+    for f in fr:
+        f = f.resize((lw, lh), Image.NEAREST)
+        if clear:
+            flat = Image.new('RGB', f.size, bg)
+            flat.paste(f, (0, 0), f.split()[3].point(lambda v: 255 if v > 127 else 0))
+            small.append(flat)
+        else:
+            small.append(f.convert('RGB'))
+    if not clear:
+        bg = small[0].getpixel((lw - 1, 0))                    # otherwise the colour of the top right corner is the background
+    # frames can last differently long: the animation is stepped in the largest time unit that fits them all
+    tick = reduce(gcd, dur)
+    small = [f for f, d in zip(small, dur) for _ in range(d // tick)]
+    uniq, seq = [], []
+    for f in small:
+        b = f.tobytes()
+        if b not in uniq:
+            uniq.append(b)
+        seq.append(uniq.index(b))
+    palette, grids, used = [], [], {}
+    for b in uniq:
+        f = Image.frombytes('RGB', (lw, lh), b)
+        g = {}
+        for y in range(lh):
+            for x in range(skip, lw):
+                c = f.getpixel((x, y))
+                if c == bg:
+                    continue
+                if c not in palette:
+                    palette.append(c)
+                g[(x, y)] = palette.index(c)
+                used[(x, y)] = used.get((x, y), 0) + 1
+        grids.append(g)
+    # pixels used in most frames come first, so if there are ever fewer cubes than pixels the rare ones are dropped
+    cells = sorted(used, key=lambda k: (-used[k], k[1], k[0]))
+    x0 = min(x for x, y in cells); y0 = min(y for x, y in cells)
+    x1 = max(x for x, y in cells); y1 = max(y for x, y in cells)
+    assert len(palette) <= 64, 'too many colours for a cube character: ' + src
+    print(f"cube character {name}: {src} {lw}x{lh}, {len(cells)} pixels, {len(uniq)} drawings, {len(seq)} steps, {len(palette)} colours")
+    return {
+        'w': x1 - x0 + 1, 'h': y1 - y0 + 1, 'ms': tick,
+        'palette': ['#%02x%02x%02x' % c for c in palette],
+        'cells': [[x - x0, y - y0] for x, y in cells],
+        'frames': [''.join(chr(48 + g[c]) if c in g else '.' for c in cells) for g in grids], 'seq': seq,
+    }
+
+
+figures = {'VOXEL': voxel('VOXEL_ART'), 'VOXEL_ME': voxel('VOXEL_ME')}
 with open('data/voxel.js', 'w', encoding='utf-8') as f:
-    f.write(f"// Made by tools/build_media.py from {src}. One cube per pixel; each frame says which colour every cube has ('.' = hidden).\n")
-    f.write('export const VOXEL = ' + json.dumps(voxel, separators=(',', ':')) + ';\n')
+    f.write("// Made by tools/build_media.py from the pictures named in data/projects.js.\n")
+    f.write("// One cube per pixel; each frame says which colour every cube has ('.' = hidden).\n")
+    for key, v in figures.items():
+        f.write(f'export const {key} = ' + json.dumps(v, separators=(',', ':')) + ';\n')
+# the most cubes any of them needs; the one in the contact section also stands on a floor of up to 400 tiles
+most = max(len(figures['VOXEL']['cells']), len(figures['VOXEL_ME']['cells']) + 400)
 with open('data/media.js', 'w', encoding='utf-8') as f:
     f.write('// Made by tools/build_media.py. Do not edit by hand: change the pictures and run the tool again.\n')
     f.write('// t = small copy, w/h = size of the real picture, c = its average colour (shown while it loads),\n')
     f.write('// px = pixel art (kept sharp when enlarged), a = 1 the small copy is animated, 2 only the real one is.\n')
     f.write('export const MEDIA = ' + json.dumps(media, separators=(',', ':')).replace('},', '},\n  ').replace('{"', '{\n  "', 1) + ';\n')
-    f.write(f'// how many cubes the animated character in data/voxel.js needs\nexport const VOXEL_CELLS = {len(cells)};\n')
+    f.write(f'// how many cubes the biggest cube character in data/voxel.js needs\nexport const VOXEL_CELLS = {most};\n')
 
-print(f"cube character: {src} {lw}x{lh}, {len(cells)} pixels, {len(uniq)} drawings, {len(seq)} steps, {len(palette)} colours")
 print('pictures:', len(media), ' thumbs:', sum(os.path.getsize(os.path.join(d, x)) for d, _, fs in os.walk(THUMB) for x in fs) // 1024, 'KB')

@@ -149,29 +149,35 @@ export function createBlocks(host, cfg) {
     stacks.measure();
   }
 
-  // 3. a pixel artwork that moves: one cube per pixel, and every frame says which cubes show and in which colour.
-  // Its data is big, so it arrives after the page is up (setArt).
-  const art = formation(0.06, -0.38, 0.95);
-  let artFrames = null, artPal = null, artNow = null, artSeq = null, artMs = 100, extrasOut = false;
-  function setArt(sprite) {
+  // Pixel figures: a formation built from a drawing, one cube per pixel, where every frame says which cubes show
+  // and in which colour. Their data is big, so it arrives after the page is up (setArt, setHi).
+  const figures = new Map();                 // formation -> { frames, pal, seq, ms }
+  let figNow = null, figPal = null, extrasOut = false;
+  function setFigure(form, sprite, place, more) {
     if (!sprite || !sprite.cells || !sprite.cells.length) return;
+    form.on.fill(0);
     const cells = sprite.cells.slice(0, M);
-    // a little brighter than drawn, because the face of a cube that looks at you is never fully lit
-    artPal = sprite.palette.map((c) => new THREE.Color(c).multiplyScalar(1.4));
     // the pixels used most get the day cubes, the rest get the extra ones
     const cube = (n) => (n < N ? shuffled[n] : n);
-    cells.forEach((c, n) => art.set(cube(n), c[0] - sprite.w / 2, sprite.h / 2 - c[1], 0, 1, 1, 1, WHITE));
-    artFrames = sprite.frames.map((row) => {
+    cells.forEach((c, n) => { const [x, y] = place(c); form.set(cube(n), x, y, 0, 1, 1, 1, WHITE); });
+    const frames = sprite.frames.map((row) => {
       const a = new Int8Array(M).fill(-1);
       for (let n = 0; n < cells.length; n++) { const ch = row.charCodeAt(n); if (ch !== 46) a[cube(n)] = ch - 48; }
       return a;
     });
-    artSeq = sprite.seq; artMs = sprite.ms || 100;
-    art.measure();
+    if (more) more(cells.length, cube, frames);
+    // a little brighter than drawn, because the face of a cube that looks at you is never fully lit
+    figures.set(form, { frames, pal: sprite.palette.map((c) => new THREE.Color(c).multiplyScalar(1.4)), seq: sprite.seq, ms: sprite.ms || 100 });
+    form.measure();
   }
+
+  // 3. a pixel artwork that moves
+  const art = formation(0.06, -0.38, 0.95);
+  const setArt = (sprite) => setFigure(art, sprite, (c) => [c[0] - sprite.w / 2, sprite.h / 2 - c[1]]);
   if (sprite) setArt(sprite);
 
-  // 4. SAY HI, standing on a floor made of the remaining cubes
+  // 4. SAY HI, standing on a floor made of the remaining cubes. Once the drawing of me has arrived (setHi),
+  //    it takes the place of the letters: the figure stands on a gold floor of wide tiles.
   const hi = formation(0.3, -0.42, 0.95);
   {
     const text = 'SAY HI', ink = new THREE.Color(cfg.ink || '#210b1b');
@@ -183,6 +189,18 @@ export function createBlocks(host, cfg) {
     const fw = wide + 8, tile = new THREE.Color(cfg.hiFloor || '#f7c948');
     for (let m = 0; n < N && m < fw * 9; n++, m++) hi.set(shuffled[n], (m % fw) - fw / 2 + 0.5, 0, Math.floor(m / fw) - 4, 0.94, 0.2, 0.94, tile);
     hi.measure();
+  }
+
+  function setHi(sprite) {
+    const tile = new THREE.Color(cfg.hiFloor || '#f7c948');
+    setFigure(hi, sprite, (c) => [c[0] - sprite.w / 2, sprite.h - 1 - c[1] + 0.5], (n, cube, frames) => {
+      const T = 3, wide = Math.ceil((sprite.w + 26) / T), deep = 6;
+      for (let m = 0; m < wide * deep && n < M; m++, n++) {
+        const i = cube(n);
+        hi.set(i, ((m % wide) - (wide - 1) / 2) * T, 0, (Math.floor(m / wide) - (deep - 1) / 2) * T, T * 0.94, 0.5, T * 0.94, tile);
+        frames.forEach((a) => { a[i] = -2; });        // always there, in the formation's own colour
+      }
+    });
   }
 
   const FORMS = [
@@ -307,11 +325,13 @@ export function createBlocks(host, cfg) {
     if (runMix > 0) fq.slerp(qRun, ease(runMix));
     const hh0 = D * TAN, sRun = ((narrow ? 0.7 : 0.27) * 2 * hh0 * cam.aspect) / 7;
     const g = ease(runMix);
-    artNow = artFrames ? artFrames[artSeq[reduced ? 0 : Math.floor((time * 1000) / artMs) % artSeq.length]] : null;
-    // the extra cubes are only gone through while the artwork is up, and once more afterwards to put them away
-    const artUp = f === art && !playing && !!artNow && wAll > 0;
-    const end = artUp || extrasOut ? M : N;
-    extrasOut = artUp;
+    const fig = playing ? null : figures.get(f);
+    figNow = fig ? fig.frames[fig.seq[reduced ? 0 : Math.floor((time * 1000) / fig.ms) % fig.seq.length]] : null;
+    figPal = fig ? fig.pal : null;
+    // the extra cubes are only gone through while a figure is up, and once more afterwards to put them away
+    const figUp = !!figNow && wAll > 0;
+    const end = figUp || extrasOut ? M : N;
+    extrasOut = figUp;
 
     for (let i = 0; i < end; i++) {
       const r0 = R[i * 6], r1 = R[i * 6 + 1], r2 = R[i * 6 + 2], r3 = R[i * 6 + 3], r4 = R[i * 6 + 4], r5 = R[i * 6 + 5];
@@ -330,7 +350,7 @@ export function createBlocks(host, cfg) {
       Qc.setFromEuler(E);
       const cc = loose[i];
 
-      const on = extra ? (artUp ? f.on[i] : 0) : isSky ? 1 : f.on[i];
+      const on = extra ? (figUp ? f.on[i] : 0) : isSky ? 1 : f.on[i];
       const e = on ? ease((wAll - 0.4 * r3) / 0.6) : 0;
       if (e <= 0) {
         m4.compose(Pc, Qc, S.set(cs, cs, cs)); mesh.setMatrixAt(i, m4); mesh.setColorAt(i, cc);
@@ -340,9 +360,10 @@ export function createBlocks(host, cfg) {
       const src = !extra && (playing || runMix > 0) ? sky : f, d = days[i];
       let sy = src.scl[i * 3 + 1], sx = src.scl[i * 3], sz = src.scl[i * 3 + 2];
       C.setRGB(src.col[i * 3], src.col[i * 3 + 1], src.col[i * 3 + 2]);
-      if (src === art && artNow) {
-        if (artNow[i] < 0) sx = sy = sz = 0;          // this pixel is empty in the current frame
-        else C.copy(artPal[artNow[i]]);
+      if (figNow && src === f) {
+        const v = figNow[i];
+        if (v === -1) sx = sy = sz = 0;               // this pixel is empty in the current frame
+        else if (v >= 0) C.copy(figPal[v]);
       }
       if (src === sky) {
         if (eaten[i]) { sy = 0.14; C.copy(GROUND); }
@@ -439,7 +460,7 @@ export function createBlocks(host, cfg) {
   requestAnimationFrame(frame);
 
   return {
-    play, stop, turn, setArt,
+    play, stop, turn, setArt, setHi,
     get playing() { return !!run; },
     stackInfo, projectDay, projectStack, cols, total,
     _skipIntro() { intro = 1; },

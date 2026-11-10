@@ -27,6 +27,9 @@ export const SITE = {
 // and skip: 4 (columns to leave out on the left, for a signature).
 // After changing this, run: python3 tools/build_media.py
 export const VOXEL_ART = { src: 'assets/voxel/schoolgirl.gif' };
+// The same for the contact section: me, standing on a floor of cubes. A single picture works, a GIF would move.
+// assets/voxel/me.png is the cleaned-up drawing (73x82, one pixel per drawn pixel); open it in Aseprite to change it.
+export const VOXEL_ME = { src: 'assets/voxel/me.png' };
 
 // Repos that are not on the page but still count in "Where the days went". Anything not listed counts as a tool.
 export const REPO_TYPES = {

@@ -431,7 +431,7 @@ async function startWorld() {
   });
 
   // the animated character is a big file, so it comes in after everything else is running
-  import('../data/voxel.js').then((m) => world.setArt(m.VOXEL)).catch(() => {});
+  import('../data/voxel.js').then((m) => { world.setArt(m.VOXEL); world.setHi(m.VOXEL_ME); }).catch(() => {});
 
   stackEls = world.stackInfo.map((s) => {
     const e = el('div', { class: 'stack-label' }, [el('b', { class: 'long', text: s.name }), el('b', { class: 'short', text: s.short }), el('span', { text: `${s.days} days` })]);
