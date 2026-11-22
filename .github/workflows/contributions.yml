@@ -1,6 +1,7 @@
 name: Refresh contribution data
 
-# Keeps data/activity.js (the blocks on the home page) in step with the GitHub profile.
+# Keeps data/activity.js (the blocks on the home page) in step with the GitHub profile,
+# and the repo count (data/projects.js, index.html) in step with the repos on the account (needs the REPOS_TOKEN secret).
 # The timer only runs from the repository's default branch. On other branches it runs when started by hand
 # (Actions tab, "Run workflow") or when the tools change.
 on:
@@ -11,6 +12,7 @@ on:
     paths:
       - 'tools/update_contributions.py'
       - 'tools/build_activity.py'
+      - 'tools/update_repo_count.py'
       - '.github/workflows/contributions.yml'
 
 permissions:
@@ -29,9 +31,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python3 tools/update_contributions.py
+      - name: Count the repos
+        continue-on-error: true   # a missing or expired token never stops the contribution refresh
+        env:
+          REPOS_TOKEN: ${{ secrets.REPOS_TOKEN }}
+        run: python3 tools/update_repo_count.py
       - name: Commit if something changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/activity.js tools/github-contributions.txt
+          git add data/activity.js tools/github-contributions.txt data/projects.js index.html
           git diff --cached --quiet || (git commit -m "Refresh contribution data" && git push)
