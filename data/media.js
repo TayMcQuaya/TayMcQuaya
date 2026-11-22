@@ -20,6 +20,7 @@ export const MEDIA = {
   "assets/tex/ippo.jpg":{"t":"assets/thumb/ippo.webp","w":1280,"h":800,"c":"#1d2131"},
   "assets/tex/javascript.jpg":{"t":"assets/thumb/javascript.webp","w":640,"h":314,"c":"#d1ca21"},
   "assets/tex/mad-scientist.jpg":{"t":"assets/thumb/mad-scientist.webp","w":1000,"h":625,"c":"#274244"},
+  "assets/tex/mochi-tennis.jpg":{"t":"assets/thumb/mochi-tennis.webp","w":960,"h":600,"c":"#d6dcd1"},
   "assets/tex/mycobridge.jpg":{"t":"assets/thumb/mycobridge.webp","w":1000,"h":625,"c":"#dbe8dc"},
   "assets/tex/openopen.jpg":{"t":"assets/thumb/openopen.webp","w":600,"h":438,"c":"#1b0c20"},
   "assets/tex/panel-haus.jpg":{"t":"assets/thumb/panel-haus.webp","w":771,"h":772,"c":"#dacaab"},
