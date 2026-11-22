@@ -109,11 +109,13 @@ export const PROJECTS = [
     video: 'assets/vid/zombieshooter.mp4', poster: 'assets/tex/zombieshooter.jpg',
     links: [{ label: 'Play', href: 'https://taymcquaya.github.io/Zombieshooter3D/', play: true }] },
 
-  // ---------- Games ----------
-  { id: 'mochi-tennis', name: 'Mochi Tennis Club', type: 'game', year: 2026, state: 'live', repo: 'Mochi-Tennis-Club',
+  { id: 'mochi-tennis', name: 'Mochi Tennis Club', type: 'game', year: 2026, tier: 'front', state: 'live', repo: 'Mochi-Tennis-Club',
     text: 'Tennis with toy poodles. Play the computer, or send a friend an invite link and play each other online. Nobody needs an account.',
+    tags: ['Online multiplayer', 'WebSockets', 'Cloudflare'],
     poster: 'assets/tex/mochi-tennis.jpg',
     links: [{ label: 'Play', href: 'https://mochi-tennis-club.taymcquaya.workers.dev/', play: true }, { label: 'Code', href: gh('Mochi-Tennis-Club') }] },
+
+  // ---------- Games ----------
   { id: 'road-fighter', name: 'Road Fighter', type: 'game', year: 2026, repo: 'Road-Racer',
     text: "A tribute to Konami's 1984 arcade racer, written in plain JavaScript on a canvas.",
     video: 'assets/vid/roadfighter.mp4', poster: 'assets/tex/roadfighter.jpg',
