@@ -29,13 +29,20 @@ def count(token):
     if me.get("login", "").lower() != LOGIN.lower():
         raise SystemExit(f"REPOS_TOKEN belongs to {me.get('login')}, not {LOGIN}. Nothing written.")
     total, page = 0, 1
+    seen = {"all": 0, "private": 0, "forks": 0, f"before {FIRST_YEAR}": 0, "other owners": 0}
     while True:
         repos = get(f"https://api.github.com/user/repos?affiliation=owner&visibility=all&per_page=100&page={page}", token)
         for r in repos:
-            if r["owner"]["login"].lower() != LOGIN.lower(): continue
+            seen["all"] += 1
+            seen["private"] += r["private"]
+            seen["forks"] += r["fork"]
+            if int(r["created_at"][:4]) < FIRST_YEAR: seen[f"before {FIRST_YEAR}"] += 1
+            if r["owner"]["login"].lower() != LOGIN.lower(): seen["other owners"] += 1; continue
             if r["fork"] and not COUNT_FORKS: continue
             if int(r["created_at"][:4]) >= FIRST_YEAR: total += 1
-        if len(repos) < 100: return total
+        if len(repos) < 100:
+            print("the token sees:", ", ".join(f"{k} {v}" for k, v in seen.items()))   # numbers only, no names
+            return total
         page += 1
 
 
