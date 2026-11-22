@@ -14,7 +14,7 @@
 const gh = (repo) => `https://github.com/TayMcQuaya/${repo}`;
 
 export const SITE = {
-  repos: 94,           // updated by tools/update_repo_count.py once the REPOS_TOKEN secret is set; until then change it by hand
+  repos: 54,           // counted by tools/update_repo_count.py: repos owned by TayMcQuaya, created since 2024, private included
   since: 2024,
   github: 'TayMcQuaya',   // the contribution numbers on the page are read live for this account
   // the flags on the skyline in the hero, most important first (ids from this file)
